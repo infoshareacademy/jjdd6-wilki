@@ -22,7 +22,7 @@ public class Share {
     // Lista z aktualnym stanem do wyliczenia avgBuyPrice i sharesAmount. Przy kupnie do listy dodany bedzie nowy wiersz, a sprzedaz bedzie zgodnie z metoda FIFO
     // Lista z historia transakcji do podgladu dla uzytkownika
 
-    
+
 
 
 
