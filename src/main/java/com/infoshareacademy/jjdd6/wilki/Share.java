@@ -1,4 +1,4 @@
-package com.infoshareacademy;
+package com.infoshareacademy.jjdd6.wilki;
 
 import java.math.BigDecimal;
 
