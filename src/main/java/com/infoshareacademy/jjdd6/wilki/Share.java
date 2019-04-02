@@ -22,8 +22,21 @@ public class Share {
     // Lista z aktualnym stanem do wyliczenia avgBuyPrice i sharesAmount. Przy kupnie do listy dodany bedzie nowy wiersz, a sprzedaz bedzie zgodnie z metoda FIFO
     // Lista z historia transakcji do podgladu dla uzytkownika
 
+    public void run() {
 
 
+    }
+
+    public Share(String ticker, BigDecimal takeProfitPrice, BigDecimal stopLossPrice, Integer sharesAmount) {
+        this.ticker = ticker;
+        this.takeProfitPrice = takeProfitPrice;
+        this.stopLossPrice = stopLossPrice;
+        this.sharesAmount = sharesAmount;
+    }
 
 
+    public Share(String ticker, Integer sharesAmount) {
+        this.ticker = ticker;
+        this.sharesAmount = sharesAmount;
+    }
 }
