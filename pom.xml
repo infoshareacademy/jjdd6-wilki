@@ -8,5 +8,10 @@
     <artifactId>jjdd6-wilki</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    
+    <name>StockWalletApp</name>
+    <packaging>pom</packaging>
+    <dependencies>
+        
+    </dependencies>
+
 </project>
