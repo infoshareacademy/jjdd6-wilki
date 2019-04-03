@@ -27,7 +27,7 @@ public class LoadData {
     public static void main(String[] args) {
         try {
             LoadData loadData = new LoadData();
-            List <String[]> dataLoaded = loadData.read("/home/ewelina/Downloads/wig20.csv");
+            List dataLoaded = loadData.read("/home/ewelina/Downloads/wig20.csv");
 
         } catch (IOException e) {
             e.printStackTrace();
