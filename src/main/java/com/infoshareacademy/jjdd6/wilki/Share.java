@@ -5,17 +5,17 @@ import java.util.LinkedList;
 
 public class Share {
     private String ticker;
-    private String fullCompanyName;
-    private BigDecimal currentPrice;
+    private String fullCompanyName; // imported?
+    private BigDecimal currentPrice; // imported
     private BigDecimal takeProfitPrice;
     private BigDecimal stopLossPrice;
     private Integer sharesTotalAmount;
     private BigDecimal avgBuyPrice;
-    private Double currentPE;
+    private Double currentPE; // imported
     private Double targetPE;
     private Double riskRewardRatio;
-    private Long volume;
-    private LinkedList<Transaction> transactionLinkedList = new LinkedList<Transaction>();
+    private Long volume; // imported
+    private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
 
     public Share(String ticker) {
         this.ticker = ticker;
@@ -41,12 +41,11 @@ public class Share {
                 .average().getAsDouble();
     }
 
-    public void addShares(Share share, int amount, double price) {
+    public void buyShares(Share share, int amount, double price) {
         share.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
-
     }
 
-    public BigDecimal removeShares(Share share, int amount, double price) {
+    public BigDecimal sellShares(Share share, int amount, double price) {
 
         BigDecimal profit = BigDecimal.valueOf(0);
 
@@ -65,7 +64,7 @@ public class Share {
         }
         return profit;
 
-        }
+    }
 
     public Integer getSharesTotalAmount() {
         return this.transactionLinkedList.stream()
