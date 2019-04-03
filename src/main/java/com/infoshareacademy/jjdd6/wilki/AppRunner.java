@@ -1,23 +1,26 @@
 package com.infoshareacademy.jjdd6.wilki;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.io.IOException;
 
 public class AppRunner {
-    public void run() {
+    public void run() throws IOException {
 
-//        String appName = Properties.getPropertyValue(Properties.APPLICATION_NAME);
-
-        String dateFormat = Properties.getPropertyValue(Properties.DATE_FORMAT);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Objects.requireNonNull(dateFormat));
-
-        Date localDate = new Date();
-
-//        String localDate = simpleDateFormat.format(LocalDate.now());
-
-        String date = simpleDateFormat.format(localDate);
-
-        System.out.println(date);
+        AppProperties appProperties = new AppProperties();
+        appProperties.getProperties(AppProperties.DATE_FORMAT);
     }
+
+//        String appName = AppProperties.getPropertyValue(AppProperties.APPLICATION_NAME);
+
+//        String dateFormat = AppProperties.getPropertyValue(AppProperties.DATE_FORMAT);
+//
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Objects.requireNonNull(dateFormat));
+////
+//        Date localDate = new Date();
+////
+////        String localDate = simpleDateFormat.format(LocalDate.now());
+////
+//        String date = simpleDateFormat.format(localDate);
+////
+//        System.out.println(date);
+//    }
 }
