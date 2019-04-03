@@ -11,7 +11,13 @@
     <name>StockWalletApp</name>
     <packaging>pom</packaging>
     <dependencies>
-        
+
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>
