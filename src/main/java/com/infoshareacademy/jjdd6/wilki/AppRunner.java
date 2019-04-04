@@ -12,40 +12,36 @@ public class AppRunner {
         chooseOption();
 
     }
-    public void chooseOption() throws InputMismatchException {
-        Scanner input = new Scanner(System.in);
-         do{
-            try {
-                int choice = input.nextInt();
-                switch (choice) {
-                    case 1: {
-                        System.out.println("1");
-                        break;
-                    }
-                    case 2: {
-                        System.out.println("2");
-                        break;
-                    }
-                    case 3: {
-                        System.out.println("3");
-                        break;
-                    }
-                    case 4: {
-                        System.out.println("4");
-                        break;
-                    }
-                    case 5: {
-                        System.out.println("5");
-                        break;
-                    }
-                    default: {
-                        System.out.println("Try again");
-                    }
+    private void chooseOption() throws InputMismatchException {
+        int choose = 0;
+        do{
+            Scanner input = new Scanner(System.in);
+            try{
+                choose = input.nextInt();
+                if(choose == 1){
+                    // show wallet
                 }
-            } catch (InputMismatchException e) {
+                else if(choose == 2){
+                    // add/
+                }
+                else if(choose == 3){
+
+                }
+                else if(choose == 4){
+
+                }
+                else if(choose == 5){
+
+                }
+                else{
+                    System.out.println("Try again");
+                }
+
+            }catch (InputMismatchException e){
                 System.out.println("Input valid number");
             }
-        }while(choice > 0 && choice < 6)
+        }while(choose < 1 || choose > 5);
+
 
     }
 }
