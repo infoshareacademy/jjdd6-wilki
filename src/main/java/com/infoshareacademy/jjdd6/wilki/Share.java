@@ -11,12 +11,12 @@ public class Share {
     private BigDecimal currentPrice; // imported
     private BigDecimal takeProfitPrice;
     private BigDecimal stopLossPrice;
-    private Integer sharesTotalAmount;
-    private BigDecimal avgBuyPrice;
-    private BigDecimal currentValue;
+//    private Integer sharesTotalAmount;
+//    private BigDecimal avgBuyPrice;
+//    private BigDecimal currentValue;
     private Double currentPE; // imported
-    private Double targetPE;
-    private Double riskRewardRatio;
+//    private Double targetPE;
+//    private Double riskRewardRatio;
     private Long volume; // imported
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
