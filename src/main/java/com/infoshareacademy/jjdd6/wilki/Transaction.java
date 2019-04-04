@@ -4,12 +4,18 @@ import java.math.BigDecimal;
 
 public class Transaction {
     private Integer amount;
-    private BigDecimal buyPrice;
-    private BigDecimal sellPrice;
+    private BigDecimal price;
+    private BigDecimal profit;
 
-    public Transaction(Integer amount, BigDecimal buyPrice) {
+    public Transaction(Integer amount, BigDecimal price) {
         this.amount = amount;
-        this.buyPrice = buyPrice;
+        this.price = price;
+    }
+
+    public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
+        this.amount = amount;
+        this.price = price;
+        this.profit = profit;
     }
 
     public Integer getAmount() {
@@ -20,19 +26,19 @@ public class Transaction {
         this.amount = amount;
     }
 
-    public BigDecimal getBuyPrice() {
-        return buyPrice;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setBuyPrice(BigDecimal buyPrice) {
-        this.buyPrice = buyPrice;
+    public void setPrice(BigDecimal buyPrice) {
+        this.price = price;
     }
 
-    public BigDecimal getSellPrice() {
-        return sellPrice;
+    public BigDecimal getProfit() {
+        return profit;
     }
 
-    public void setSellPrice(BigDecimal sellPrice) {
-        this.sellPrice = sellPrice;
+    public void setProfit(BigDecimal profit) {
+        this.profit = profit;
     }
 }

@@ -1,22 +1,53 @@
 package com.infoshareacademy.jjdd6.wilki;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.LinkedList;
 
 public class Wallet {
-    private Map<String, Share> wallet = new LinkedHashMap<>();
-    private String ticker;
+    private LinkedList<Share> myWallet = new LinkedList<>();
+    private BigDecimal cash;
+    private BigDecimal baseWorth;
+    private BigDecimal currentWorth;
+    private BigDecimal stopLossWorth;
+    private BigDecimal takeProfitWorth;
 
-    public void addToWallet (Share share) {
-        wallet.put(share.getTicker(), share);
+
+
+    public Wallet(LinkedList<Share> wallet) {
+        this.myWallet = wallet;
     }
 
-    public void removeFromWallet (Share share) {
-        wallet.remove(share.getTicker(), share);
+    public LinkedList<Share> getWallet() {
+        return myWallet;
     }
 
-    public Wallet(Map<String, Share> wallet, String ticker) {
-        this.wallet = wallet;
-        this.ticker = ticker;
+    public BigDecimal getCash() {
+        return cash;
+    }
+
+    public BigDecimal getBaseWorth() {
+        return this.myWallet.stream()
+                .map(Share::getBaseValue)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
+
+    }
+
+    public BigDecimal getCurrentWorth() {
+        return this.myWallet.stream()
+                .map(Share::getCurrentValue)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
+    }
+
+    public BigDecimal getStopLossWorth() {
+        return this.myWallet.stream()
+                .map(Share::getStopLossValue)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
+    }
+
+    public BigDecimal getTakeProfitWorth() {
+        return this.myWallet.stream()
+                .map(Share::getTakeProfitValue)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
     }
 }
+
