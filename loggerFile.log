@@ -1,6 +1,6 @@
-Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest main
-INFO: message 1
-Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest main
-SEVERE: message 2
-Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest2 thing
-WARNING: something to log
+Apr 04, 2019 10:12:03 PM com.infoshareacademy.jjdd6.wilki.AppRunner run
+INFO: LoggerFile initialized properly.
+Apr 04, 2019 10:12:03 PM com.infoshareacademy.jjdd6.wilki.AppProperties <clinit>
+INFO: Configuration file loading properly.
+Apr 04, 2019 10:12:03 PM com.infoshareacademy.jjdd6.wilki.AppRunner run
+INFO: Property formatted date printed.
