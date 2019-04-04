@@ -1,0 +1,6 @@
+Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest main
+INFO: message 1
+Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest main
+SEVERE: message 2
+Apr 04, 2019 8:16:29 PM com.infoshareacademy.jjdd6.wilki.LoggerTest2 thing
+WARNING: something to log
