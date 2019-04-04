@@ -137,6 +137,12 @@ public class Share {
 
     }
 
+    public BigDecimal getTotalProfit() {
+        return transactionHistory.stream()
+                .map(Transaction::getProfit)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
+    }
+
     public Integer getSharesTotalAmount() {
         return this.transactionLinkedList.stream()
                 .mapToInt(Transaction::getAmount)
