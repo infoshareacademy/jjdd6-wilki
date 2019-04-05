@@ -100,11 +100,11 @@ public class Share {
         this.ticker = ticker;
     }
 
-    public BigDecimal getAvgBuyPrice() {  ///todo do zmiany sposob liczenia sredniej na srednia wazona
+    public BigDecimal getAvgBuyPrice() {
         return BigDecimal.valueOf(this.transactionLinkedList.stream()
-                .mapToDouble((o) -> o.getPrice().doubleValue())
-                .average()
-                .getAsDouble());
+                .mapToDouble((o) -> o.getPrice().doubleValue() * o.getAmount().doubleValue())
+                .sum())
+                .divide(BigDecimal.valueOf(getSharesTotalAmount()));
     }
 
     public void buyShares(Share share, int amount, double price) {

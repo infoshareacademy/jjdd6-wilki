@@ -5,12 +5,12 @@ import java.util.LinkedList;
 
 public class Wallet {
     private LinkedList<Share> myWallet = new LinkedList<>();
-    private BigDecimal freeCash;
+//    private BigDecimal freeCash;
     private BigDecimal baseCash;
-    private BigDecimal baseWorth;
-    private BigDecimal currentWorth;
-    private BigDecimal stopLossWorth;
-    private BigDecimal takeProfitWorth;
+//    private BigDecimal baseWorth;
+//    private BigDecimal currentWorth;
+//    private BigDecimal stopLossWorth;
+//    private BigDecimal takeProfitWorth;
 
     public Wallet(LinkedList<Share> wallet) {
         this.myWallet = wallet;
@@ -30,6 +30,12 @@ public class Wallet {
     public BigDecimal getCurrentWorth() {
         return this.myWallet.stream()
                 .map(Share::getCurrentValue)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e)).add(getFreeCash());
+    }
+
+    public BigDecimal getSharesCurrentWorth() {
+        return this.myWallet.stream()
+                .map(Share::getCurrentValue)
                 .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
     }
 
@@ -46,11 +52,9 @@ public class Wallet {
     }
 
     public BigDecimal getFreeCash() {
-        return freeCash;
-    }
-
-    public void setFreeCash(BigDecimal freeCash) {
-        this.freeCash = freeCash;
+        return getBaseWorth().add(this.myWallet.stream()
+                .map(Share::getTotalProfit)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e).subtract(getBaseCash())));
     }
 
     public BigDecimal getBaseCash() {
@@ -62,7 +66,18 @@ public class Wallet {
     }
 
     public Double getROE() {
-        return getCurrentWorth().divide(getBaseWorth()).doubleValue() - 1;
+        return (getCurrentWorth().add(getFreeCash())).divide(getBaseCash()).doubleValue() - 1;
     }
+
+    public void increaseBaseCash (BigDecimal amount) {
+        setBaseCash(getBaseCash().add(amount));
+    }
+
+    public void decreaseBaseCash (BigDecimal amount) {
+        setBaseCash(getBaseCash().subtract(amount));
+
+    }
+
+
 }
 
