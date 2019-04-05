@@ -2,12 +2,10 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.opencsv.CSVReader;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LoadData {
+
     public List read(String file) {
 
         List<String[]> allData = new ArrayList<>();
@@ -28,16 +27,20 @@ public class LoadData {
         return allData;
     }
 
-    public List<DataFromFile> loadToList(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Prosze podac sciezke do danych");
-            System.exit(1);
+    public void listFilesForFolder(File folder){
+        folder = new File("/data");
+
+        for (final File fileEntry : folder.listFiles()){
+            if (fileEntry.isDirectory()){
+                listFilesForFolder(fileEntry);
+            } else{
+                System.out.println(fileEntry.getName());
+            }
         }
+    }
 
-        String path = args[0];
-        System.out.println("Podana sciezka to: " + path);
+    public List<DataFromFile> loadToList(String path) {
 
-//        try {
             LoadData loadData = new LoadData();
             List<String[]> dataLoaded = loadData.read(path);
             List<DataFromFile> collect = dataLoaded.stream()
@@ -55,9 +58,6 @@ public class LoadData {
                         return dataFromFile;
                     }).collect(Collectors.toList());
             return collect;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
     }
 }
