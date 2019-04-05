@@ -2,6 +2,7 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import java.io.IOException;
 import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Loggers {
@@ -14,7 +15,7 @@ public class Loggers {
         } catch (SecurityException | IOException e) {
             e.printStackTrace();
         }
-        java.util.logging.Logger logger = java.util.logging.Logger.getLogger("");
+        Logger logger = Logger.getLogger("");
         fileHandler.setFormatter(new SimpleFormatter());
         logger.addHandler(fileHandler);
     }
