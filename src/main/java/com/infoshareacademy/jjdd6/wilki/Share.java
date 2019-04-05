@@ -100,7 +100,7 @@ public class Share {
         this.ticker = ticker;
     }
 
-    public BigDecimal getAvgBuyPrice() {
+    public BigDecimal getAvgBuyPrice() {  ///todo do zmiany sposob liczenia sredniej na srednia wazona
         return BigDecimal.valueOf(this.transactionLinkedList.stream()
                 .mapToDouble((o) -> o.getPrice().doubleValue())
                 .average()
