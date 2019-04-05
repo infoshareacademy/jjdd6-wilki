@@ -1,0 +1,6 @@
+Apr 05, 2019 3:48:25 PM com.infoshareacademy.jjdd6.wilki.AppRunner run
+INFO: LoggerFile initialized properly.
+Apr 05, 2019 3:48:25 PM com.infoshareacademy.jjdd6.wilki.AppProperties <clinit>
+INFO: Configuration file loading properly.
+Apr 05, 2019 3:48:25 PM com.infoshareacademy.jjdd6.wilki.AppRunner run
+INFO: Property formatted date printed.
