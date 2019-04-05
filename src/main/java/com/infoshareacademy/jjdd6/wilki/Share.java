@@ -96,10 +96,6 @@ public class Share {
         return currentPrice;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
-    }
-
     public BigDecimal getAvgBuyPrice() {
         return BigDecimal.valueOf(this.transactionLinkedList.stream()
                 .mapToDouble((o) -> o.getPrice().doubleValue() * o.getAmount().doubleValue())
@@ -124,14 +120,9 @@ public class Share {
             share.transactionLinkedList.remove(0);
         }
 
-        if (amount <= share.transactionLinkedList.get(0).getAmount()) {
-            profit = profit.add(BigDecimal.valueOf(amount).multiply((BigDecimal.valueOf(price).subtract(share.transactionLinkedList.get(0).getPrice()))));
-            share.transactionLinkedList.get(0).setAmount(share.transactionLinkedList.get(0).getAmount() - amount);
-
-            if (share.transactionLinkedList.get(0).getAmount() == 0) {
-                share.transactionLinkedList.remove(0);}
-        }
-
+        profit = profit.add(BigDecimal.valueOf(amount).multiply((BigDecimal.valueOf(price).subtract(share.transactionLinkedList.get(0).getPrice()))));
+        share.transactionLinkedList.get(0).setAmount(share.transactionLinkedList.get(0).getAmount() - amount);
+        if (share.transactionLinkedList.get(0).getAmount() == 0) { share.transactionLinkedList.remove(0); }
         share.transactionHistory.add(new Transaction(-tempAmount,BigDecimal.valueOf(price),profit));
         return profit;
 
@@ -147,15 +138,5 @@ public class Share {
         return this.transactionLinkedList.stream()
                 .mapToInt(Transaction::getAmount)
                 .sum();
-
     }
-
-
-
-
-
-
-
-
-
 }
