@@ -1,7 +1,6 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import java.io.File;
-import java.nio.file.Path;
 
 public class AppRunner {
     public void run(String[] args) {
@@ -16,7 +15,7 @@ public class AppRunner {
         LoadData loadData = new LoadData();
         File folder = new File("./data");
         loadData.listFilesForFolder(folder);
-        //loadData.loadToList("/data/wig20.csv");
+        System.out.println(loadData.loadToList());
 
     }
 }

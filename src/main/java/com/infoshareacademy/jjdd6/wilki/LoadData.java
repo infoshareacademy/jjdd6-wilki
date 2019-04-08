@@ -43,9 +43,12 @@ public class LoadData {
             System.out.println("There are no files in given directory");
         }
     }
+    public void chooseFile(){
 
-    public List<DataFromFile> loadToList(String path) {
-        path = "/data";
+    }
+
+    public List<DataFromFile> loadToList() {
+        String path = "./data/kgh.csv";
 
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
