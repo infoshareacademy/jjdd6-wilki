@@ -23,7 +23,7 @@ public class LoadData {
             CSVReader csvReader = new CSVReader(fileReader);
             allData = csvReader.readAll();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println();
         }
         return allData;
     }

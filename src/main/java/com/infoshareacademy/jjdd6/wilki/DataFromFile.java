@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class DataFromFile {
-private String symbol;
-private LocalDate date;
-private LocalTime time;
-private BigDecimal openingPrice;
-private BigDecimal highestPrice;
-private BigDecimal lowestPrice;
-private BigDecimal closingPrice;
-private Long volume;
+    private String symbol;
+    private LocalDate date;
+    private LocalTime time;
+    private BigDecimal openingPrice;
+    private BigDecimal highestPrice;
+    private BigDecimal lowestPrice;
+    private BigDecimal closingPrice;
+    private Long volume;
 
     public String getSymbol() {
         return symbol;
