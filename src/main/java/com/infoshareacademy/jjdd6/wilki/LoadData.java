@@ -10,11 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class LoadData {
 
-    public List read(String file) {
+    private List read(String file) {
 
         List<String[]> allData = new ArrayList<>();
         try {
@@ -27,14 +28,14 @@ public class LoadData {
         return allData;
     }
 
-    public void listFilesForFolder(File folder) {
+    public List<File> listFilesForFolder(File folder) {
         folder = new File("./data");
-        File[] listOfFiles = folder.listFiles();
+        File[] arrayOfFiles = folder.listFiles();
 
-        if (listOfFiles != null) {
-            for (File listOfFile : listOfFiles) {
+        if (arrayOfFiles != null) {
+            for (File listOfFile : arrayOfFiles) {
                 if (listOfFile.isFile()) {
-                    System.out.println("Data " + listOfFile.getName());
+                    System.out.println(listOfFile.getName());
                 } else if (listOfFile.isDirectory()) {
                     System.out.println("Directory " + listOfFile.getName());
                 }
@@ -42,14 +43,19 @@ public class LoadData {
         } else {
             System.out.println("There are no files in given directory");
         }
+        return List.of(arrayOfFiles);
     }
-    public void chooseFile(){
 
+    public String chooseFile(){
+        System.out.println("Choose file: ");
+        Scanner scanner = new Scanner(System.in);
+        String s = scanner.nextLine();
+        return s;
     }
 
     public List<DataFromFile> loadToList() {
-        String path = "./data/kgh.csv";
 
+        String path = "./data/" + chooseFile();
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
         return dataLoaded.stream()
