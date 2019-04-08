@@ -14,7 +14,9 @@ public class AppRunner {
         System.out.println("Podana sciezka to: " + path);
 
         LoadData loadData = new LoadData();
-        loadData.listFilesForFolder();
+        File folder = new File("/data");
+        loadData.listFilesForFolder(folder);
+        //loadData.loadToList("/data/wig20.csv");
 
     }
 }
