@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import java.io.File;
+
 public class AppRunner {
 
     private final static Logger logger = Logger.getLogger(Logger.getLogger("").getClass().getName());
@@ -12,6 +14,12 @@ public class AppRunner {
 
         Loggers.init();
         logger.log(Level.INFO, "LoggerFile initialized properly.");
+
+
+        LoadData loadData = new LoadData();
+        File folder = new File("./data");
+        loadData.listFilesForFolder(folder);
+
 
         String s = AppProperties.getDateFormat().format(LocalDate.now());
         System.out.println(s);
