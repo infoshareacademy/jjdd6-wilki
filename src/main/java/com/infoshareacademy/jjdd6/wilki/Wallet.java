@@ -89,5 +89,12 @@ public class Wallet {
 
     }
 
+    public BigDecimal getTotalBuyFees() {
+
+        return this.myWallet.stream()
+                .map(Share::getFeeAmount)
+                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+    }
+
 }
 

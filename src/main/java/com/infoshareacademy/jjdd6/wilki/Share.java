@@ -164,4 +164,11 @@ public class Share {
                 .mapToInt(Transaction::getAmount)
                 .sum();
     }
+
+    public BigDecimal getFeeAmount() {
+
+        return transactionHistory.stream()
+                .map(Transaction::getTransactionFee)
+                .reduce(BigDecimal.ZERO,(a,e) -> a.add(e));
+    }
 }

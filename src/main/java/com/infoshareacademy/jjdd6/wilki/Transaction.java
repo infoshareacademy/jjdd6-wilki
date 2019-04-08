@@ -9,12 +9,15 @@ public class Transaction {
     private BigDecimal price;
     private BigDecimal profit;
     private LocalDate date;
+    private BigDecimal transactionFee;
+    private BigDecimal transactionFeeValue;
 
     public Transaction(Integer amount, BigDecimal price) {
 
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
     }
 
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
@@ -22,7 +25,16 @@ public class Transaction {
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
         this.profit = profit;
+    }
+
+    public BigDecimal getTransactionFee() {
+        return transactionFee;
+    }
+
+    public void setTransactionFee(BigDecimal transactionFee) {
+        this.transactionFee = transactionFee;
     }
 
     public Integer getAmount() {
