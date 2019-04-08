@@ -21,5 +21,13 @@ public class AppRunner {
         System.out.println(date);
         logger.log(Level.INFO, "Property formatted date printed.");
 
+        TextInterface textInterface = new TextInterface();
+        textInterface.drawMenu();
+        textInterface.chooseOption();
+
     }
+
 }
+
+
+
