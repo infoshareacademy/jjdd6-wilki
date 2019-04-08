@@ -7,12 +7,12 @@ import java.util.List;
 
 public class Share {
     private String ticker;
-    private String fullCompanyName; // imported?
-    private BigDecimal currentPrice; // imported
+    private String fullCompanyName;
+    private BigDecimal currentPrice;
     private BigDecimal takeProfitPrice;
     private BigDecimal stopLossPrice;
-    private Double currentPE; // imported
-    private Long volume; // imported
+    private Double currentPE;
+    private Long volume;
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
 
