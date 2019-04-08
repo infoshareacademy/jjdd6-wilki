@@ -28,7 +28,7 @@ public class LoadData {
     }
 
     public void listFilesForFolder(File folder) {
-        folder = new File("/data");
+        folder = new File("./data");
         File[] listOfFiles = folder.listFiles();
 
         if (listOfFiles != null) {
