@@ -12,5 +12,13 @@ public class AppRunner {
         String date = date1.format(AppProperties.getDateFormat());
         System.out.println(date);
 
+        TextInterface textInterface = new TextInterface();
+        textInterface.drawMenu();
+        textInterface.chooseOption();
+
     }
+
 }
+
+
+
