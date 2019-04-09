@@ -8,9 +8,9 @@ public class TextInterface {
     public void drawMenu() {
         String menu = "------------------------------------------------------------------" +
                 "\n| [1] Show wallet \t \t \t \t \t \t \t \t \t \t \t \t |" +
-                "\n| [2] Add new stocks / Increase stocks amount \t \t \t \t \t |" +
-                "\n| [3] Delete stocks / Reduce stocks amount \t \t \t \t \t \t |" +
-                "\n| [4] Change parameters of your stocks (e.g. stop-loss price) \t |" +
+                "\n| [2] Add new share / Increase share amount \t \t \t \t \t |" +
+                "\n| [3] Delete share / Reduce share amount \t \t \t \t \t \t |" +
+                "\n| [4] Change parameters of your share (e.g. stop-loss price) \t |" +
                 "\n| [5] Add / Remove money amount \t \t \t \t \t \t \t \t |" +
                 "\n------------------------------------------------------------------";
         System.out.println(menu);
@@ -28,13 +28,13 @@ public class TextInterface {
 //                  Show wallet
                 } else if (choose == 2) {
                     clearScreen();
-//                  Add new stocks / Increase stocks amount
+//                  Add new share / Increase share amount
                 } else if (choose == 3) {
                     clearScreen();
-//                  Delete stocks / Reduce stocks amount
+//                  Delete share / Reduce share amount
                 } else if (choose == 4) {
                     clearScreen();
-//                  Change parameters of your stocks (e.g. stop-loss price)
+//                  Change parameters of your share (e.g. stop-loss price)
                 } else if (choose == 5) {
                     clearScreen();
 //                  Add / Remove money amount

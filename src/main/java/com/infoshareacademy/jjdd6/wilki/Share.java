@@ -47,7 +47,7 @@ public class Share {
     public void setCurrentPrice() {
 
         this.currentPrice = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .loadToList(getTicker().toLowerCase() + ".csv")
                 .get(0)
                 .getClosingPrice();
     }
@@ -65,7 +65,7 @@ public class Share {
     public void setCurrentPE() {
 
         this.currentPE = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + "_pe.csv")
+                .loadToList(getTicker().toLowerCase() + "_pe.csv")
                 .get(0)
                 .getClosingPrice()
                 .doubleValue();
@@ -74,7 +74,7 @@ public class Share {
     public void setVolume() {
 
         this.volume = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .loadToList(getTicker().toLowerCase() + ".csv")
                 .get(0)
                 .getVolume();
     }
