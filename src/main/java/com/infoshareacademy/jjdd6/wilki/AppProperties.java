@@ -1,14 +1,15 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AppProperties {
 
-    private final static Logger logger = Logger.getLogger(Logger.getLogger("").getClass().getName());
+    private static Logger logger = LoggerFactory.getLogger(AppProperties.class.getName());
 
     private static final String DATE_FORMAT = "dateFormat";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
@@ -24,22 +25,20 @@ public class AppProperties {
             properties.load(new FileInputStream(CONFIG_PROPERTIES_FILENAME));
             String dateFormat = properties.getProperty(DATE_FORMAT);
             dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
-            logger.log(Level.INFO, "Configuration file loading properly.");
+            logger.info("Configuration file loaded properly.");
         } catch (Exception e) {
             System.err.println("Error while loading configuration: " + e.getMessage());
-            logger.log(Level.WARNING, "Error while loading configuration: " + e.getMessage());
+            logger.error("Error while loading configuration: " + e.getMessage());
             dateTimeFormatter = DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT);
             System.err.println("Using default value: " + DEFAULT_DATE_FORMAT);
-            logger.log(Level.INFO, "Default DateTimeFormatter created.");
+            logger.warn("Default DateTimeFormatter created.");
         }
     }
 
     private AppProperties() {
-
     }
 
     public static DateTimeFormatter getDateFormat() {
         return dateTimeFormatter;
     }
-
 }
