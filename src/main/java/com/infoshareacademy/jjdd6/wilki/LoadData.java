@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class LoadData {
@@ -46,16 +45,9 @@ public class LoadData {
         return List.of(arrayOfFiles);
     }
 
-    public String chooseFile(){
-        System.out.println("Choose file: ");
-        Scanner scanner = new Scanner(System.in);
-        String s = scanner.nextLine();
-        return s;
-    }
+    public List<DataFromFile> loadToList(String filename) {
 
-    public List<DataFromFile> loadToList() {
-
-        String path = "./data/" + chooseFile();
+        String path = "./data/" + filename;
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
         return dataLoaded.stream()
@@ -72,6 +64,5 @@ public class LoadData {
                     dataFromFile.setVolume(Long.parseLong(a[7]));
                     return dataFromFile;
                 }).collect(Collectors.toList());
-
     }
 }
