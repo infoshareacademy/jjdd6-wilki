@@ -30,7 +30,7 @@ public class Share {
             return (getAvgBuyPrice()
                     .subtract(getStopLossPrice()))
                     .divide((getTakeProfitPrice()
-                    .subtract(getStopLossPrice()))).doubleValue();
+                    .subtract(getStopLossPrice())),RoundingMode.HALF_UP).doubleValue();
         }
     }
 
@@ -52,7 +52,7 @@ public class Share {
     public void setCurrentPrice() {
 
         this.currentPrice = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .loadToList(getTicker().toLowerCase() + ".csv")
                 .get(0)
                 .getClosingPrice();
     }
@@ -70,7 +70,7 @@ public class Share {
     public void setCurrentPE() {
 
         this.currentPE = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + "_pe.csv")
+                .loadToList(getTicker().toLowerCase() + "_pe.csv")
                 .get(0)
                 .getClosingPrice()
                 .doubleValue();
@@ -79,9 +79,21 @@ public class Share {
     public void setVolume() {
 
         this.volume = new LoadData()
-                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .loadToList(getTicker().toLowerCase() + ".csv")
                 .get(0)
                 .getVolume();
+    }
+
+    public String getFullCompanyName() {
+        return fullCompanyName;
+    }
+
+    public Long getVolume() {
+        return volume;
+    }
+
+    public List<Transaction> getTransactionHistory() {
+        return transactionHistory;
     }
 
     public BigDecimal getTakeProfitPrice() {
@@ -131,13 +143,13 @@ public class Share {
         }
     }
 
-    public void buyShares(Integer amount, double price) {
+    public void buy(Integer amount, double price) {
 
         this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
         this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price)));
     }
 
-    public BigDecimal sellShares(int amount, double price) {
+    public BigDecimal sell(int amount, double price) {
 
         BigDecimal profit = BigDecimal.valueOf(0);
         int tempAmount = amount;
@@ -147,16 +159,16 @@ public class Share {
 
             profit = profit
                     .add(BigDecimal.valueOf(this.transactionLinkedList.get(0).getAmount())
-                    .multiply((BigDecimal.valueOf(price)
-                    .subtract(this.transactionLinkedList.get(0).getPrice()))));
+                            .multiply((BigDecimal.valueOf(price)
+                                    .subtract(this.transactionLinkedList.get(0).getPrice()))));
 
             this.transactionLinkedList.remove(0);
         }
 
         profit = profit
                 .add(BigDecimal.valueOf(amount)
-                .multiply((BigDecimal.valueOf(price)
-                .subtract(this.transactionLinkedList.get(0).getPrice()))));
+                        .multiply((BigDecimal.valueOf(price)
+                                .subtract(this.transactionLinkedList.get(0).getPrice()))));
 
         this.transactionLinkedList.get(0)
                 .setAmount(this.transactionLinkedList.get(0).getAmount() - amount);
@@ -164,11 +176,10 @@ public class Share {
         if (this.transactionLinkedList.get(0).getAmount() == 0) {
             this.transactionLinkedList.remove(0);
 
+
+            this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price), profit));
         }
-
-        this.transactionHistory.add(new Transaction(-tempAmount,BigDecimal.valueOf(price),profit));
-
-        return profit;
+    return profit;
     }
 
     public BigDecimal getTotalProfit() {
@@ -194,7 +205,7 @@ public class Share {
     public BigDecimal getFeeAmount() {
 
         return transactionHistory.stream()
-                .map(Transaction::getTransactionFee)
+                .map(Transaction::getTransactionFeeValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

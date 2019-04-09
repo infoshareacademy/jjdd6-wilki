@@ -8,35 +8,15 @@ public class WalletTest {
     public void walletTest() {
 
         Wallet wallet = new Wallet();
-
-//        String filter = "KGH";
-//        Share found = wallet.getShares().stream()
-//                .filter((o) -> o.getTicker().contains(filter))
-//                .findFirst()
-//                .orElse(new Share(filter));
-//        found.buyShares();
-
-        wallet.scanWalletForShare("kgh").buyShares(100,100.3);
-        wallet.scanWalletForShare("kgh").buyShares(101,103.3);
-        wallet.scanWalletForShare("pkn").buyShares(1020,10.3);
-        wallet.scanWalletForShare("pkn").sellShares(1010,10.3);
-
-//        Share share = new Share("kgh");
-//        share.buyShares(share, 1000, 100.2);
-//        wallet.getShares().add(share);
-//
-//        Share share2 = new Share("pkn");
-//        share.buyShares(share2, 1000, 120.2);
-//        wallet.getShares().add(share2);
-//
-//        share.buyShares(share, 100, 200);
-//        share.sellShares(share2, 100, 101.3);
-//        share.setStopLossPrice(BigDecimal.valueOf(100.0));
-//        share.setTakeProfitPrice(BigDecimal.valueOf(200.4));
+        wallet.setBaseCash(BigDecimal.valueOf(23000));
+        wallet.buyShare("kgh", 100, 90.1);
+        wallet.buyShare("pkn", 100, 90.3);
+        wallet.sellShare("pkn", 99, 140.0);
         printWallet(wallet);
 
     }
         public void printWallet(Wallet wallet){
+
 
         for (int i = 0; i < wallet.getShares().size(); i++) {
             wallet.getShares().get(i).setCurrentPE();
@@ -56,11 +36,15 @@ public class WalletTest {
                     + wallet.getShares().get(i).getTargetPE() + "\t\t"
                     + wallet.getShares().get(i).getRiskRewardRatio() + "\t\t"
                     + wallet.getShares().get(i).getTotalProfit()
+                    + wallet.getShares().get(i).getVolume() + "\t\t"
+                    + wallet.getShares().get(i).getFeeAmount()
             );
 
         }
 
-
+            System.out.println(wallet.getROE());
+            System.out.println(wallet.getBaseCash());
+            System.out.println(wallet.getCurrentWorth());
     }
 
 }

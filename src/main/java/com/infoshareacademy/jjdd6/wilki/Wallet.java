@@ -1,12 +1,14 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 
 public class Wallet extends SaveData {
 
     private LinkedList<Share> shares = new LinkedList<>();
-    private BigDecimal baseCash;
+    private BigDecimal baseCash = BigDecimal.ZERO;
+    private BigDecimal cashFromProfits = BigDecimal.ZERO;
 
     public Wallet() {
 
@@ -28,16 +30,14 @@ public class Wallet extends SaveData {
 
     public BigDecimal getCurrentWorth() {
 
-        return this.shares.stream()
-                .map(Share::getCurrentValue)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e)).add(getFreeCash());
+        return this.getSharesCurrentWorth().add(getFreeCash());
     }
 
     public BigDecimal getSharesCurrentWorth() {
 
         return this.shares.stream()
                 .map(Share::getCurrentValue)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getStopLossWorth() {
@@ -54,11 +54,19 @@ public class Wallet extends SaveData {
                 .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
     }
 
+    public BigDecimal getCashFromProfits() {
+        return cashFromProfits;
+    }
+
+    public void addToCashFromProfits(BigDecimal profit) {
+        this.cashFromProfits = this.cashFromProfits.add(profit);
+    }
+
     public BigDecimal getFreeCash() {
 
-        return getBaseWorth().add(this.shares.stream()
+        return getCashFromProfits().add(this.shares.stream()
                 .map(Share::getTotalProfit)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e).subtract(getBaseCash())));
+                .reduce(BigDecimal.ZERO, BigDecimal::add).add(getBaseCash()).subtract(getBaseWorth()));
     }
 
     public BigDecimal getBaseCash() {
@@ -74,8 +82,7 @@ public class Wallet extends SaveData {
     public Double getROE() {
 
         return (getCurrentWorth()
-                .add(getFreeCash()))
-                .divide(getBaseCash()).doubleValue() - 1;
+                .divide(getBaseCash(), RoundingMode.HALF_UP).doubleValue()) - 1.0000;
     }
 
     public void increaseBaseCash(BigDecimal amount) {
@@ -101,28 +108,30 @@ public class Wallet extends SaveData {
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
                 .orElse(null);
-        if (result == null) {
-            result = new Share(ticker.toUpperCase());
-            this.getShares().add(result);
-        }
         return result;
     }
 
     public void sellShare (String ticker, int amount, double price) {
-        Share result = this.getShares().stream()
+        this.addToCashFromProfits(this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
-                .orElse(null);
-        result.sellShares(amount, price);
-        if (result.getSharesTotalAmount() == 0) {
-            this.getShares().stream()
-                    .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
-                    .findFirst().
-            getShares().
+                .get()
+                .sell(amount, price));
 
+        for (int i = 0; i < getShares().size(); i++) {
+                if (getShares().get(i).getSharesTotalAmount() == 0) {
+                    getShares().remove(i);
+                }
+            }
         }
 
-    }
-
+        public void buyShare (String ticker, int amount, double price) {
+            Share result = scanWalletForShare(ticker.toUpperCase());
+            if (result == null) {
+                result = new Share(ticker.toUpperCase());
+                this.getShares().add(result);
+            }
+            result.buy(amount, price);
+        }
 }
 

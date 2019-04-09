@@ -17,7 +17,8 @@ public class Transaction {
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
+        this.profit = BigDecimal.ZERO;
     }
 
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
@@ -25,11 +26,12 @@ public class Transaction {
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
 
     public BigDecimal getTransactionFee() {
+
         return transactionFee;
     }
 
@@ -61,5 +63,9 @@ public class Transaction {
     public void setProfit(BigDecimal profit) {
 
         this.profit = profit;
+    }
+
+    public BigDecimal getTransactionFeeValue() {
+        return transactionFeeValue;
     }
 }
