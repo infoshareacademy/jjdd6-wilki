@@ -9,7 +9,7 @@ public class Transaction {
     private BigDecimal price;
     private BigDecimal profit;
     private LocalDate date;
-    private BigDecimal transactionFee;
+    public static final BigDecimal transactionFee = BigDecimal.valueOf(0.0039);
     private BigDecimal transactionFeeValue;
 
     public Transaction(Integer amount, BigDecimal price) {
@@ -33,9 +33,6 @@ public class Transaction {
         return transactionFee;
     }
 
-    public void setTransactionFee(BigDecimal transactionFee) {
-        this.transactionFee = transactionFee;
-    }
 
     public Integer getAmount() {
 

@@ -91,7 +91,7 @@ public class LoadData {
                     dataFromFile.setHighestPrice(new BigDecimal(a[4]));
                     dataFromFile.setLowestPrice(new BigDecimal(a[5]));
                     dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    dataFromFile.setVolume(Long.parseLong(a[7]));
+                    if (!filename.contains("_pe.csv")) dataFromFile.setVolume(Long.parseLong(a[7]));
                     return dataFromFile;
                 }).collect(Collectors.toList());
 
