@@ -74,4 +74,26 @@ public class LoadData {
                 }).collect(Collectors.toList());
 
     }
+
+    public List<DataFromFile> autoLoadToList(String filename) {
+
+        String path = "./data/" + filename;
+        LoadData loadData = new LoadData();
+        List<String[]> dataLoaded = loadData.read(path);
+        return dataLoaded.stream()
+                .skip(1)
+                .map(a -> {
+                    DataFromFile dataFromFile = new DataFromFile();
+                    dataFromFile.setSymbol(a[0]);
+                    dataFromFile.setDate(LocalDate.parse(a[1]));
+                    dataFromFile.setTime(LocalTime.parse(a[2]));
+                    dataFromFile.setOpeningPrice(new BigDecimal(a[3]));
+                    dataFromFile.setHighestPrice(new BigDecimal(a[4]));
+                    dataFromFile.setLowestPrice(new BigDecimal(a[5]));
+                    dataFromFile.setClosingPrice(new BigDecimal(a[6]));
+                    dataFromFile.setVolume(Long.parseLong(a[7]));
+                    return dataFromFile;
+                }).collect(Collectors.toList());
+
+    }
 }

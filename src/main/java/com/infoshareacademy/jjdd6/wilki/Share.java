@@ -44,9 +44,12 @@ public class Share {
         return currentPE;
     }
 
-    public void setCurrentPrice(BigDecimal currentPrice) {
+    public void setCurrentPrice() {
 
-        this.currentPrice = currentPrice;
+        this.currentPrice = new LoadData()
+                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .get(0)
+                .getClosingPrice();
     }
 
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
@@ -59,14 +62,21 @@ public class Share {
         this.stopLossPrice = stopLossPrice;
     }
 
-    public void setCurrentPE(Double currentPE) {
+    public void setCurrentPE() {
 
-        this.currentPE = currentPE;
+        this.currentPE = new LoadData()
+                .autoLoadToList(getTicker().toLowerCase() + "_pe.csv")
+                .get(0)
+                .getClosingPrice()
+                .doubleValue();
     }
 
-    public void setVolume(Long volume) {
+    public void setVolume() {
 
-        this.volume = volume;
+        this.volume = new LoadData()
+                .autoLoadToList(getTicker().toLowerCase() + ".csv")
+                .get(0)
+                .getVolume();
     }
 
     public BigDecimal getTakeProfitPrice() {
