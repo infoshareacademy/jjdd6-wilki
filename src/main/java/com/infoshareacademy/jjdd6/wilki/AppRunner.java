@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class AppRunner {
 
-    private static Logger logger = LoggerFactory.getLogger(AppRunner.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
 
     public void run() {
 

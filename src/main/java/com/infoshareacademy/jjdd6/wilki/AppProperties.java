@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class AppProperties {
 
-    private static Logger logger = LoggerFactory.getLogger(AppProperties.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(AppProperties.class);
 
     private static final String DATE_FORMAT = "dateFormat";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
