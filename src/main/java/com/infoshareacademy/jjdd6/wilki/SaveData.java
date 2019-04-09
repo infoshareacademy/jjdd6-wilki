@@ -1,9 +1,8 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 
 public class SaveData {
 
@@ -24,6 +23,17 @@ public class SaveData {
         else System.out.println("Nothing to save!");
         if (encoder != null) {
             encoder.close();
+        }
+    }
+    public void deserializeFromXml(){
+        XMLDecoder xmlDecoder = null;
+        try{
+            xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
+        }catch (FileNotFoundException e){
+            System.out.println("ERROR: File wallet.xml not found");
+        }
+        if (xmlDecoder != null) {
+            Wallet wallet = (Wallet)xmlDecoder.readObject();
         }
     }
 }
