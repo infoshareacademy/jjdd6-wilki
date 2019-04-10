@@ -1,7 +1,6 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.LinkedList;
 
 public class Wallet extends SaveData {
@@ -81,8 +80,7 @@ public class Wallet extends SaveData {
 
     public Double getROE() {
 
-        return (getCurrentWorth()
-                .divide(getBaseCash(), RoundingMode.HALF_UP).doubleValue()) - 1.0000;
+        return getCurrentWorth().doubleValue() / getBaseCash().doubleValue() - 1.0000;
     }
 
     public void increaseBaseCash(BigDecimal amount) {
@@ -133,7 +131,5 @@ public class Wallet extends SaveData {
             }
             result.buy(amount, price);
         }
-
-        public
 }
 

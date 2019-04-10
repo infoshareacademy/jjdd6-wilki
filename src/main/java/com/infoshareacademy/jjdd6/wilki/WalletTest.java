@@ -24,6 +24,7 @@ public class WalletTest {
             wallet.getShares().get(i).setCurrentPE();
             wallet.getShares().get(i).setCurrentPrice();
             wallet.getShares().get(i).setVolume();
+            wallet.getShares().get(i).setFullCompanyName();
             System.out.println(wallet.getShares().get(i).getTicker() + "\t\t"
                     + wallet.getShares().get(i).getCurrentPE() + "\t\t"
                     + wallet.getShares().get(i).getSharesTotalAmount() + "\t\t"
@@ -39,7 +40,8 @@ public class WalletTest {
                     + wallet.getShares().get(i).getRiskRewardRatio() + "\t\t"
                     + wallet.getShares().get(i).getTotalProfit()
                     + wallet.getShares().get(i).getVolume() + "\t\t"
-                    + wallet.getShares().get(i).getFeeAmount()
+                    + wallet.getShares().get(i).getFeeAmount() + "\t\t"
+                    + wallet.getShares().get(i).getFullCompanyName()
             );
 
         }
