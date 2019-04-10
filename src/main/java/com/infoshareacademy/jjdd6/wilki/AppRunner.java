@@ -35,10 +35,13 @@ public class AppRunner {
 
     }
 
-    public static void walletInit() {
+    public static Wallet walletInit() {
         WalletToXML walletToXML = new WalletToXML();
         Wallet wallet = walletToXML.loadFromXml();
         Transaction.transactionFee = BigDecimal.valueOf(0.0039);
-
+        wallet.buyShare("kgh",100,100);
+        wallet.buyShare("pge", 100,20);
+        DownloadData.updateWalletData(wallet);
+        return wallet;
     }
 }

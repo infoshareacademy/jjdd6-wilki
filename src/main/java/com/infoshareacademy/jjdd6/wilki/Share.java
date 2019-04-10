@@ -2,6 +2,9 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +19,11 @@ public class Share {
     private Long volume;
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
+    private BigDecimal highestPrice;
+    private BigDecimal lowestPrice;
+    private LocalDate dataDate;
+    private LocalTime dataTime;
+    private int delay;
 
     public Share(String ticker) {
 
@@ -29,10 +37,6 @@ public class Share {
             return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
                     / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
         }
-    }
-
-    public void setFullCompanyName() {
-        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
     }
 
     public String getTicker() {
@@ -50,13 +54,6 @@ public class Share {
         return currentPE;
     }
 
-    public void setCurrentPrice() {
-
-        this.currentPrice = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv")
-                .get(0)
-                .getClosingPrice();
-    }
 
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
 
@@ -68,21 +65,22 @@ public class Share {
         this.stopLossPrice = stopLossPrice;
     }
 
-    public void setCurrentPE() {
-
+    public void pullExternalData() {
+        List<DataFromFile> data = new LoadData()
+                .loadToList(getTicker().toLowerCase() + ".csv");
+        this.volume = data.get(0).getVolume();
+        this.currentPrice = data.get(0).getClosingPrice();
+        this.highestPrice = data.get(0).getHighestPrice();
+        this.lowestPrice = data.get(0).getLowestPrice();
+        this.dataTime = data.get(0).getTime();
+        this.dataDate = data.get(0).getDate();
         this.currentPE = new LoadData()
                 .loadToList(getTicker().toLowerCase() + "_pe.csv")
                 .get(0)
                 .getClosingPrice()
                 .doubleValue();
-    }
-
-    public void setVolume() {
-
-        this.volume = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv")
-                .get(0)
-                .getVolume();
+        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
+        this.delay = calculateDelay(data.get(0).getTime());
     }
 
     public String getFullCompanyName() {
@@ -144,10 +142,6 @@ public class Share {
     }
 
     public void buy(Integer amount, double price) {
-        this.setFullCompanyName();
-        this.setVolume();
-        this.setCurrentPrice();
-        this.setCurrentPE();
         this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
         this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price)));
     }
@@ -207,5 +201,9 @@ public class Share {
         return transactionHistory.stream()
                 .map(Transaction::getTransactionFeeValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public int calculateDelay (LocalTime time) {
+        return (int) Duration.between(time, LocalTime.now()).toMinutes();
     }
 }

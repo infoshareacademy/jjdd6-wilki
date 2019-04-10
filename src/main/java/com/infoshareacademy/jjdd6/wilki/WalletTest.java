@@ -22,10 +22,7 @@ public class WalletTest {
     public static void printWallet(Wallet wallet) {
 
         for (int i = 0; i < wallet.getShares().size(); i++) {
-            wallet.getShares().get(i).setCurrentPE();
-            wallet.getShares().get(i).setCurrentPrice();
-            wallet.getShares().get(i).setVolume();
-            wallet.getShares().get(i).setFullCompanyName();
+            wallet.getShares().get(i).pullExternalData();
             System.out.println(wallet.getShares().get(i).getTicker() + "\t\t"
                     + wallet.getShares().get(i).getCurrentPE() + "\t\t"
                     + wallet.getShares().get(i).getSharesTotalAmount() + "\t\t"

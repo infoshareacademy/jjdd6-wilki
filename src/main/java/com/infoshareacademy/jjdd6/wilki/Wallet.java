@@ -124,9 +124,9 @@ public class Wallet {
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = scanWalletForShare(ticker.toUpperCase());
-        DownloadData.getCurrentCSV(result.getTicker());
-        this.getShares().add(result);
         result.buy(amount, price);
+        this.getShares().add(result);
+        DownloadData.updateWalletData(this);
     }
 }
 
