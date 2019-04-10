@@ -3,7 +3,7 @@ package com.infoshareacademy.jjdd6.wilki;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
-public class Wallet extends SaveData {
+public class Wallet {
 
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
@@ -102,11 +102,10 @@ public class Wallet extends SaveData {
     }
 
     public Share scanWalletForShare(String ticker) {
-        Share result = this.getShares().stream()
+        return this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
-                .orElse(null);
-        return result;
+                .orElse(new Share(ticker.toUpperCase()));
     }
 
     public void sellShare(String ticker, int amount, double price) {
@@ -125,10 +124,7 @@ public class Wallet extends SaveData {
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = scanWalletForShare(ticker.toUpperCase());
-        if (result == null) {
-            result = new Share(ticker.toUpperCase());
-            this.getShares().add(result);
-        }
+        this.getShares().add(result);
         result.buy(amount, price);
     }
 }

@@ -63,9 +63,14 @@ public class LoadData {
                     dataFromFile.setHighestPrice(new BigDecimal(a[4]));
                     dataFromFile.setLowestPrice(new BigDecimal(a[5]));
                     dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    if (!filename.contains("_pe.csv")) dataFromFile.setVolume(Long.parseLong(a[7]));
+                    if (!filename.contains("_pe.csv")) {
+                        dataFromFile.setVolume(Long.parseLong(a[7]));
+                    }
+
                     return dataFromFile;
-                }).collect(Collectors.toList());
+                }).
+
+                        collect(Collectors.toList());
     }
 
     public String loadAndScanTickers(String ticker) {
@@ -75,8 +80,5 @@ public class LoadData {
         Map<String, String> tickersMap = dataLoaded.stream()
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);
-
-
     }
-
 }

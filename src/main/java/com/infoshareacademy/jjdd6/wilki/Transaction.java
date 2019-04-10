@@ -6,14 +6,16 @@ import java.time.LocalDate;
 import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 
 public class Transaction {
+    public static BigDecimal transactionFee;
 
     private Integer amount;
     private BigDecimal price;
     private BigDecimal profit;
     private LocalDate date;
-    public static final BigDecimal TRANSACTION_FEE = BigDecimal.valueOf(0.0039);
     private BigDecimal transactionFeeValue;
     private TransactionType type;
+
+
 
     public Transaction(Integer amount, BigDecimal price) {
 
@@ -25,7 +27,7 @@ public class Transaction {
         }
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(TRANSACTION_FEE);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
         this.profit = BigDecimal.ZERO;
     }
 
@@ -34,13 +36,13 @@ public class Transaction {
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(TRANSACTION_FEE);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
 
     public BigDecimal getTransactionFee() {
 
-        return TRANSACTION_FEE;
+        return transactionFee;
     }
 
 
@@ -75,5 +77,9 @@ public class Transaction {
 
     public BigDecimal getTransactionFeeValue() {
         return transactionFeeValue;
+    }
+
+    public void setTransactionFee(BigDecimal transactionFee) {
+        this.transactionFee = transactionFee;
     }
 }

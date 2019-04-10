@@ -4,12 +4,12 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 
-public class SaveData {
+public class WalletToXML {
 
 
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-    public void serializeToXml(Wallet wallet) {
+    public void saveToXml(Wallet wallet) {
         XMLEncoder encoder = null;
         try {
             encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
@@ -24,7 +24,7 @@ public class SaveData {
         }
     }
 
-    public Wallet deserializeFromXml() {
+    public Wallet loadFromXml() {
         XMLDecoder xmlDecoder = null;
         try {
             xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
@@ -35,6 +35,6 @@ public class SaveData {
             Wallet wallet = (Wallet) xmlDecoder.readObject();
             return wallet;
         }
-        return null;
+        return new Wallet();
     }
 }

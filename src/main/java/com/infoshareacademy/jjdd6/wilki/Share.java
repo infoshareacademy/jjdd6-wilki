@@ -144,7 +144,10 @@ public class Share {
     }
 
     public void buy(Integer amount, double price) {
-
+        this.setFullCompanyName();
+        this.setVolume();
+        this.setCurrentPrice();
+        this.setCurrentPE();
         this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
         this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price)));
     }
@@ -175,10 +178,9 @@ public class Share {
 
         if (this.transactionLinkedList.get(0).getAmount() == 0) {
             this.transactionLinkedList.remove(0);
-
-
-            this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price), profit));
         }
+
+        this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price), profit));
         return profit;
     }
 
