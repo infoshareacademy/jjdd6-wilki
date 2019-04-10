@@ -9,8 +9,7 @@ public class SaveData {
 
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-    public void serializeToXml() {
-        Wallet wallet = new Wallet();
+    public void serializeToXml(Wallet wallet) {
         XMLEncoder encoder = null;
         try {
             encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
@@ -25,7 +24,8 @@ public class SaveData {
             encoder.close();
         }
     }
-    public void deserializeFromXml(){
+
+    public Wallet deserializeFromXml(){
         XMLDecoder xmlDecoder = null;
         try{
             xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
@@ -34,6 +34,8 @@ public class SaveData {
         }
         if (xmlDecoder != null) {
             Wallet wallet = (Wallet)xmlDecoder.readObject();
+            return wallet;
         }
+        return null;
     }
 }

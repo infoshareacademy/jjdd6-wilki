@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LoadData {
@@ -65,4 +67,16 @@ public class LoadData {
                     return dataFromFile;
                 }).collect(Collectors.toList());
     }
+
+    public String loadAndScanTickers(String ticker) {
+
+        LoadData loadData = new LoadData();
+        List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
+        Map <String, String> tickersMap = dataLoaded.stream()
+                .collect(Collectors.toMap(l -> l[0], l -> l[1]));
+        return tickersMap.get(ticker);
+
+
+    }
+
 }

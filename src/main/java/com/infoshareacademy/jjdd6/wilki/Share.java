@@ -27,11 +27,13 @@ public class Share {
             return 0.0;
         }
         else {
-            return (getAvgBuyPrice()
-                    .subtract(getStopLossPrice()))
-                    .divide((getTakeProfitPrice()
-                    .subtract(getStopLossPrice())),RoundingMode.HALF_UP).doubleValue();
+            return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
+                    / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
         }
+    }
+
+    public void setFullCompanyName() {
+        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
     }
 
     public String getTicker() {
@@ -185,10 +187,9 @@ public class Share {
     public BigDecimal getTotalProfit() {
 
         try {
-            BigDecimal totalProfit = transactionHistory.stream()
+            return transactionHistory.stream()
                     .map(Transaction::getProfit)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            return totalProfit;
         }
         catch (NullPointerException e) {
             return BigDecimal.ZERO;
