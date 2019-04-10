@@ -109,7 +109,7 @@ public class Wallet extends SaveData {
         return result;
     }
 
-    public void sellShare (String ticker, int amount, double price) {
+    public void sellShare(String ticker, int amount, double price) {
         this.addToCashFromProfits(this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
@@ -117,19 +117,19 @@ public class Wallet extends SaveData {
                 .sell(amount, price));
 
         for (int i = 0; i < getShares().size(); i++) {
-                if (getShares().get(i).getSharesTotalAmount() == 0) {
-                    getShares().remove(i);
-                }
+            if (getShares().get(i).getSharesTotalAmount() == 0) {
+                getShares().remove(i);
             }
         }
+    }
 
-        public void buyShare (String ticker, int amount, double price) {
-            Share result = scanWalletForShare(ticker.toUpperCase());
-            if (result == null) {
-                result = new Share(ticker.toUpperCase());
-                this.getShares().add(result);
-            }
-            result.buy(amount, price);
+    public void buyShare(String ticker, int amount, double price) {
+        Share result = scanWalletForShare(ticker.toUpperCase());
+        if (result == null) {
+            result = new Share(ticker.toUpperCase());
+            this.getShares().add(result);
         }
+        result.buy(amount, price);
+    }
 }
 

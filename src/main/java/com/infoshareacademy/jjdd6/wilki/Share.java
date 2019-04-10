@@ -25,8 +25,7 @@ public class Share {
     public Double getRiskRewardRatio() {
         if ((getTakeProfitPrice().subtract(getStopLossPrice())).doubleValue() <= 0) {
             return 0.0;
-        }
-        else {
+        } else {
             return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
                     / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
         }
@@ -139,8 +138,7 @@ public class Share {
                     .mapToDouble((o) -> o.getPrice().doubleValue() * o.getAmount().doubleValue())
                     .sum())
                     .divide(BigDecimal.valueOf(getSharesTotalAmount()), RoundingMode.HALF_UP);
-        }
-        catch (ArithmeticException e) {
+        } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }
     }
@@ -181,7 +179,7 @@ public class Share {
 
             this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price), profit));
         }
-    return profit;
+        return profit;
     }
 
     public BigDecimal getTotalProfit() {
@@ -190,8 +188,7 @@ public class Share {
             return transactionHistory.stream()
                     .map(Transaction::getProfit)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return BigDecimal.ZERO;
         }
     }

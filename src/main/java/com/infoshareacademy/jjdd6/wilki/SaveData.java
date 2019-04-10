@@ -18,22 +18,21 @@ public class SaveData {
         }
         if (encoder != null) {
             encoder.writeObject(wallet);
-        }
-        else System.out.println("Nothing to save!");
+        } else System.out.println("Nothing to save!");
         if (encoder != null) {
             encoder.close();
         }
     }
 
-    public Wallet deserializeFromXml(){
+    public Wallet deserializeFromXml() {
         XMLDecoder xmlDecoder = null;
-        try{
+        try {
             xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("ERROR: File wallet.xml not found");
         }
         if (xmlDecoder != null) {
-            Wallet wallet = (Wallet)xmlDecoder.readObject();
+            Wallet wallet = (Wallet) xmlDecoder.readObject();
             return wallet;
         }
         return null;

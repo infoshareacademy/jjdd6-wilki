@@ -72,7 +72,7 @@ public class LoadData {
 
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
-        Map <String, String> tickersMap = dataLoaded.stream()
+        Map<String, String> tickersMap = dataLoaded.stream()
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);
 
