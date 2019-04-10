@@ -9,8 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LoadData {
@@ -46,36 +47,7 @@ public class LoadData {
         return List.of(arrayOfFiles);
     }
 
-    public String chooseFile(){
-        System.out.println("Choose file: ");
-        Scanner scanner = new Scanner(System.in);
-        String s = scanner.nextLine();
-        return s;
-    }
-
-    public List<DataFromFile> loadToList() {
-
-        String path = "./data/" + chooseFile();
-        LoadData loadData = new LoadData();
-        List<String[]> dataLoaded = loadData.read(path);
-        return dataLoaded.stream()
-                .skip(1)
-                .map(a -> {
-                    DataFromFile dataFromFile = new DataFromFile();
-                    dataFromFile.setSymbol(a[0]);
-                    dataFromFile.setDate(LocalDate.parse(a[1]));
-                    dataFromFile.setTime(LocalTime.parse(a[2]));
-                    dataFromFile.setOpeningPrice(new BigDecimal(a[3]));
-                    dataFromFile.setHighestPrice(new BigDecimal(a[4]));
-                    dataFromFile.setLowestPrice(new BigDecimal(a[5]));
-                    dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    dataFromFile.setVolume(Long.parseLong(a[7]));
-                    return dataFromFile;
-                }).collect(Collectors.toList());
-
-    }
-
-    public List<DataFromFile> autoLoadToList(String filename) {
+    public List<DataFromFile> loadToList(String filename) {
 
         String path = "./data/" + filename;
         LoadData loadData = new LoadData();
@@ -91,9 +63,22 @@ public class LoadData {
                     dataFromFile.setHighestPrice(new BigDecimal(a[4]));
                     dataFromFile.setLowestPrice(new BigDecimal(a[5]));
                     dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    dataFromFile.setVolume(Long.parseLong(a[7]));
-                    return dataFromFile;
-                }).collect(Collectors.toList());
+                    if (!filename.contains("_pe.csv")) {
+                        dataFromFile.setVolume(Long.parseLong(a[7]));
+                    }
 
+                    return dataFromFile;
+                }).
+
+                        collect(Collectors.toList());
+    }
+
+    public String loadAndScanTickers(String ticker) {
+
+        LoadData loadData = new LoadData();
+        List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
+        Map<String, String> tickersMap = dataLoaded.stream()
+                .collect(Collectors.toMap(l -> l[0], l -> l[1]));
+        return tickersMap.get(ticker);
     }
 }
