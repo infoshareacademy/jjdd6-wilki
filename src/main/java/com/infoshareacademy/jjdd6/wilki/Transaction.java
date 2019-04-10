@@ -11,10 +11,16 @@ public class Transaction {
     private LocalDate date;
     public static final BigDecimal transactionFee = BigDecimal.valueOf(0.0039);
     private BigDecimal transactionFeeValue;
+    private String type;
 
     public Transaction(Integer amount, BigDecimal price) {
 
         this.date = LocalDate.now();
+        if (amount > 0) {
+            this.type = "BUY"; }
+        else {
+            this.type = "SELL";
+        }
         this.amount = amount;
         this.price = price;
         this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
