@@ -133,5 +133,7 @@ public class Wallet extends SaveData {
             }
             result.buy(amount, price);
         }
+
+        public
 }
 

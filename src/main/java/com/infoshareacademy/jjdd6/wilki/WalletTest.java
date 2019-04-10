@@ -13,6 +13,8 @@ public class WalletTest {
         wallet.buyShare("pkn", 100, 90.3);
         wallet.sellShare("pkn", 99, 140.0);
         printWallet(wallet);
+        SaveData saveData = new SaveData();
+        saveData.serializeToXml(wallet);
 
     }
         public void printWallet(Wallet wallet){
