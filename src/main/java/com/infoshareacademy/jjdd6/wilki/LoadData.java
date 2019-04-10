@@ -9,7 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LoadData {
@@ -61,8 +63,22 @@ public class LoadData {
                     dataFromFile.setHighestPrice(new BigDecimal(a[4]));
                     dataFromFile.setLowestPrice(new BigDecimal(a[5]));
                     dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    dataFromFile.setVolume(Long.parseLong(a[7]));
+                    if (!filename.contains("_pe.csv")) {
+                        dataFromFile.setVolume(Long.parseLong(a[7]));
+                    }
+
                     return dataFromFile;
-                }).collect(Collectors.toList());
+                }).
+
+                        collect(Collectors.toList());
+    }
+
+    public String loadAndScanTickers(String ticker) {
+
+        LoadData loadData = new LoadData();
+        List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
+        Map<String, String> tickersMap = dataLoaded.stream()
+                .collect(Collectors.toMap(l -> l[0], l -> l[1]));
+        return tickersMap.get(ticker);
     }
 }

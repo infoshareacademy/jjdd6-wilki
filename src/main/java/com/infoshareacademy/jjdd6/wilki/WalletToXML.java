@@ -4,13 +4,12 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
 
-public class SaveData {
+public class WalletToXML {
 
 
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-    public void serializeToXml() {
-        Wallet wallet = new Wallet();
+    public void saveToXml(Wallet wallet) {
         XMLEncoder encoder = null;
         try {
             encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(SERIALIZED_FILE_NAME)));
@@ -19,21 +18,23 @@ public class SaveData {
         }
         if (encoder != null) {
             encoder.writeObject(wallet);
-        }
-        else System.out.println("Nothing to save!");
+        } else System.out.println("Nothing to save!");
         if (encoder != null) {
             encoder.close();
         }
     }
-    public void deserializeFromXml(){
+
+    public Wallet loadFromXml() {
         XMLDecoder xmlDecoder = null;
-        try{
+        try {
             xmlDecoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(SERIALIZED_FILE_NAME)));
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("ERROR: File wallet.xml not found");
         }
         if (xmlDecoder != null) {
-            Wallet wallet = (Wallet)xmlDecoder.readObject();
+            Wallet wallet = (Wallet) xmlDecoder.readObject();
+            return wallet;
         }
+        return new Wallet();
     }
 }
