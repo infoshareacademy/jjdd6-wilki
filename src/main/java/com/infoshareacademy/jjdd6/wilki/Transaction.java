@@ -1,23 +1,39 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class Transaction {
+import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Transaction implements Serializable {
+    public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
     private Integer amount;
     private BigDecimal price;
     private BigDecimal profit;
     private LocalDate date;
-    private BigDecimal transactionFee;
     private BigDecimal transactionFeeValue;
+    private TransactionType type;
+
+    public Transaction() {
+    }
 
     public Transaction(Integer amount, BigDecimal price) {
 
         this.date = LocalDate.now();
+        if (amount > 0) {
+            this.type = BUY;
+        } else {
+            this.type = SELL;
+        }
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
+        this.profit = BigDecimal.ZERO;
     }
 
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
@@ -25,17 +41,15 @@ public class Transaction {
         this.date = LocalDate.now();
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(this.transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
 
     public BigDecimal getTransactionFee() {
+
         return transactionFee;
     }
 
-    public void setTransactionFee(BigDecimal transactionFee) {
-        this.transactionFee = transactionFee;
-    }
 
     public Integer getAmount() {
 
@@ -64,5 +78,33 @@ public class Transaction {
     public void setProfit(BigDecimal profit) {
 
         this.profit = profit;
+    }
+
+    public BigDecimal getTransactionFeeValue() {
+        return transactionFeeValue;
+    }
+
+    public void setTransactionFee(BigDecimal transactionFee) {
+        this.transactionFee = transactionFee;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTransactionFeeValue(BigDecimal transactionFeeValue) {
+        this.transactionFeeValue = transactionFeeValue;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }
