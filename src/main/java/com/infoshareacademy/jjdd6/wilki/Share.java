@@ -1,12 +1,17 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Share {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Share implements Serializable {
+
     private String ticker;
     private String fullCompanyName;
     private BigDecimal currentPrice;
@@ -16,6 +21,9 @@ public class Share {
     private Long volume;
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
+
+    public Share() {
+    }
 
     public Share(String ticker) {
 
@@ -207,5 +215,52 @@ public class Share {
         return transactionHistory.stream()
                 .map(Transaction::getTransactionFeeValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
+    }
+
+    public void setFullCompanyName(String fullCompanyName) {
+        this.fullCompanyName = fullCompanyName;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public void setCurrentPE(Double currentPE) {
+        this.currentPE = currentPE;
+    }
+
+    public void setVolume(Long volume) {
+        this.volume = volume;
+    }
+
+    public LinkedList<Transaction> getTransactionLinkedList() {
+        return transactionLinkedList;
+    }
+
+    public void setTransactionLinkedList(LinkedList<Transaction> transactionLinkedList) {
+        this.transactionLinkedList = transactionLinkedList;
+    }
+
+    public void setTransactionHistory(List<Transaction> transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    @Override
+    public String toString() {
+        return "Share{" +
+                "ticker='" + ticker + '\'' +
+                ", fullCompanyName='" + fullCompanyName + '\'' +
+                ", currentPrice=" + currentPrice +
+                ", takeProfitPrice=" + takeProfitPrice +
+                ", stopLossPrice=" + stopLossPrice +
+                ", currentPE=" + currentPE +
+                ", volume=" + volume +
+                ", transactionLinkedList=" + transactionLinkedList +
+                ", transactionHistory=" + transactionHistory +
+                '}';
     }
 }
