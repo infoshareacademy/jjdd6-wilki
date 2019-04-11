@@ -1,5 +1,8 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -9,7 +12,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Share {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Share implements Serializable {
+
     private String ticker;
     private String fullCompanyName;
     private BigDecimal currentPrice;
@@ -39,6 +44,10 @@ public class Share {
         }
     }
 
+    public void setFullCompanyName() {
+        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
+    }
+
     public String getTicker() {
 
         return ticker.toUpperCase();
@@ -54,6 +63,13 @@ public class Share {
         return currentPE;
     }
 
+    public void setCurrentPrice() {
+
+        this.currentPrice = new LoadData()
+                .loadToList(getTicker().toLowerCase() + ".csv")
+                .get(0)
+                .getClosingPrice();
+    }
 
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
 

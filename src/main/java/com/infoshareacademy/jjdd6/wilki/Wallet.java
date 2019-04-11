@@ -1,9 +1,15 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 
-public class Wallet {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Wallet implements Serializable {
+
+
 
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
@@ -129,6 +135,23 @@ public class Wallet {
         this.getShares().add(result);
         System.out.println("Bought " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
         DownloadData.updateWalletData(this);
+    }
+
+    public void setShares(LinkedList<Share> shares) {
+        this.shares = shares;
+    }
+
+    public void setCashFromProfits(BigDecimal cashFromProfits) {
+        this.cashFromProfits = cashFromProfits;
+    }
+
+    @Override
+    public String toString() {
+        return "Wallet{" +
+                "shares=" + shares +
+                ", baseCash=" + baseCash +
+                ", cashFromProfits=" + cashFromProfits +
+                '}';
     }
 }
 

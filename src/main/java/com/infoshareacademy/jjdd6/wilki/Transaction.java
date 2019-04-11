@@ -1,12 +1,16 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 
-public class Transaction {
-    public static BigDecimal transactionFee;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Transaction implements Serializable {
+    public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
     private Integer amount;
     private BigDecimal price;
@@ -15,7 +19,8 @@ public class Transaction {
     private BigDecimal transactionFeeValue;
     private TransactionType type;
 
-
+    public Transaction() {
+    }
 
     public Transaction(Integer amount, BigDecimal price) {
 
@@ -81,5 +86,25 @@ public class Transaction {
 
     public void setTransactionFee(BigDecimal transactionFee) {
         this.transactionFee = transactionFee;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTransactionFeeValue(BigDecimal transactionFeeValue) {
+        this.transactionFeeValue = transactionFeeValue;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }
