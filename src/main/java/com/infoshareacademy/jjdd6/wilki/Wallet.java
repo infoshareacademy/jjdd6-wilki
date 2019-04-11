@@ -141,5 +141,14 @@ public class Wallet implements Serializable {
     public void setCashFromProfits(BigDecimal cashFromProfits) {
         this.cashFromProfits = cashFromProfits;
     }
+
+    @Override
+    public String toString() {
+        return "Wallet{" +
+                "shares=" + shares +
+                ", baseCash=" + baseCash +
+                ", cashFromProfits=" + cashFromProfits +
+                '}';
+    }
 }
 

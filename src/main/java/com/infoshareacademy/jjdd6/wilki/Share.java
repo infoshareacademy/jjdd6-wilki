@@ -248,4 +248,19 @@ public class Share implements Serializable {
     public void setTransactionHistory(List<Transaction> transactionHistory) {
         this.transactionHistory = transactionHistory;
     }
+
+    @Override
+    public String toString() {
+        return "Share{" +
+                "ticker='" + ticker + '\'' +
+                ", fullCompanyName='" + fullCompanyName + '\'' +
+                ", currentPrice=" + currentPrice +
+                ", takeProfitPrice=" + takeProfitPrice +
+                ", stopLossPrice=" + stopLossPrice +
+                ", currentPE=" + currentPE +
+                ", volume=" + volume +
+                ", transactionLinkedList=" + transactionLinkedList +
+                ", transactionHistory=" + transactionHistory +
+                '}';
+    }
 }
