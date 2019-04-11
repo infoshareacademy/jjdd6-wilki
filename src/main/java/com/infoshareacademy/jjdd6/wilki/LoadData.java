@@ -84,10 +84,12 @@ public class LoadData {
 
     public boolean validateTicker(String ticker) {
         try {
-            loadAndScanTickers(ticker);
-            return true;
+            if (loadAndScanTickers(ticker.toUpperCase()) != null) {
+                return true;
+            }
         } catch (Exception e) {
             return false;
         }
+        return false;
     }
 }
