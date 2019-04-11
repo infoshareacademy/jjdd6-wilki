@@ -30,6 +30,9 @@ public class Share implements Serializable {
     private LocalTime dataTime;
     private int delay;
 
+    public Share() {
+    }
+
     public Share(String ticker) {
 
         this.ticker = ticker;
@@ -42,10 +45,6 @@ public class Share implements Serializable {
             return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
                     / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
         }
-    }
-
-    public void setFullCompanyName() {
-        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
     }
 
     public String getTicker() {
@@ -61,14 +60,6 @@ public class Share implements Serializable {
     public Double getCurrentPE() {
 
         return currentPE;
-    }
-
-    public void setCurrentPrice() {
-
-        this.currentPrice = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv")
-                .get(0)
-                .getClosingPrice();
     }
 
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
@@ -219,7 +210,40 @@ public class Share implements Serializable {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public int calculateDelay (LocalTime time) {
+    public int calculateDelay(LocalTime time) {
         return (int) Duration.between(time, LocalTime.now()).toMinutes();
+    }
+
+    public LinkedList<Transaction> getTransactionLinkedList() {
+        return transactionLinkedList;
+    }
+
+    public void setTransactionLinkedList(LinkedList<Transaction> transactionLinkedList) {
+        this.transactionLinkedList = transactionLinkedList;
+    }
+
+    public void setTransactionHistory(List<Transaction> transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Share{");
+        sb.append("ticker='").append(ticker).append('\'');
+        sb.append(", fullCompanyName='").append(fullCompanyName).append('\'');
+        sb.append(", currentPrice=").append(currentPrice);
+        sb.append(", takeProfitPrice=").append(takeProfitPrice);
+        sb.append(", stopLossPrice=").append(stopLossPrice);
+        sb.append(", currentPE=").append(currentPE);
+        sb.append(", volume=").append(volume);
+        sb.append(", transactionLinkedList=").append(transactionLinkedList);
+        sb.append(", transactionHistory=").append(transactionHistory);
+        sb.append(", highestPrice=").append(highestPrice);
+        sb.append(", lowestPrice=").append(lowestPrice);
+        sb.append(", dataDate=").append(dataDate);
+        sb.append(", dataTime=").append(dataTime);
+        sb.append(", delay=").append(delay);
+        sb.append('}');
+        return sb.toString();
     }
 }

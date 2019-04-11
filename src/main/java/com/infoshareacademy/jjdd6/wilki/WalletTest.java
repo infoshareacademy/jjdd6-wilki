@@ -8,15 +8,17 @@ public class WalletTest {
     public static void main(String[] args) {
         WalletToXML walletToXML = new WalletToXML();
         Wallet wallet = walletToXML.loadFromXml();
-        Transaction.transactionFee = BigDecimal.valueOf(0.0039);
-
-        wallet.setBaseCash(BigDecimal.valueOf(23000));
-        if (new LoadData().validateTicker("kgh")) wallet.buyShare("kgh", 100, 90.1);
-        if (new LoadData().validateTicker("kek")) wallet.buyShare("kek", 100,100);
-        wallet.buyShare("pkn", 100, 90.3);
-        wallet.sellShare("pkn", 99, 140.0);
-        wallet.buyShare("pge", 100,10.1);
+//        Wallet wallet = new Wallet();
+//        Transaction.transactionFee = BigDecimal.valueOf(0.0039);
+//
+//        wallet.setBaseCash(BigDecimal.valueOf(23000));
+//        if (new LoadData().validateTicker("kgh")) wallet.buyShare("kgh", 100, 90.1);
+//        if (new LoadData().validateTicker("kek")) wallet.buyShare("kek", 100,100);
+//        wallet.buyShare("pkn", 100, 90.3);
+//        wallet.sellShare("pkn", 99, 140.0);
+//        wallet.buyShare("pge", 100,10.1);
         printWallet(wallet);
+//        walletToXML.saveToXml(wallet);
 
     }
 

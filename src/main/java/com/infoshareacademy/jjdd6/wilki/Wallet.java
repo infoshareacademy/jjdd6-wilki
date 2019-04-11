@@ -9,8 +9,6 @@ import java.util.LinkedList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wallet implements Serializable {
 
-
-
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
@@ -126,14 +124,14 @@ public class Wallet implements Serializable {
                 getShares().remove(i);
             }
         }
-        System.out.println("Sold " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+        System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
     }
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = scanWalletForShare(ticker.toUpperCase());
         result.buy(amount, price);
         this.getShares().add(result);
-        System.out.println("Bought " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+        System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
         DownloadData.updateWalletData(this);
     }
 

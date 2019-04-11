@@ -65,7 +65,7 @@ public class Transaction implements Serializable {
         return price;
     }
 
-    public void setPrice(BigDecimal buyPrice) {
+    public void setPrice(BigDecimal price) {
 
         this.price = price;
     }
@@ -106,5 +106,20 @@ public class Transaction implements Serializable {
 
     public void setType(TransactionType type) {
         this.type = type;
+    }
+
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Transaction{");
+        sb.append("amount=").append(amount);
+        sb.append(", price=").append(price);
+        sb.append(", profit=").append(profit);
+        sb.append(", date=").append(date);
+        sb.append(", transactionFeeValue=").append(transactionFeeValue);
+        sb.append(", type=").append(type);
+        sb.append('}');
+        return sb.toString();
     }
 }
