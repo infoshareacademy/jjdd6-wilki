@@ -81,4 +81,13 @@ public class LoadData {
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);
     }
+
+    public boolean validateTicker(String ticker) {
+        try {
+            loadAndScanTickers(ticker);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
