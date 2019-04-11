@@ -1,9 +1,13 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TextInterface {
+
+    private Wallet wallet = new WalletInitializer().init();
 
     public void drawMenu() {
         String menu = "+----------------------------------------------------------------+" +
@@ -88,19 +92,35 @@ public class TextInterface {
     }
 
     public void drawWallet() {
-        String leftAlignFormat = "| %-7s | %-4d | %-10s | %-1s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s | %-10s |%-10s | %-10s | %-10s |%n";
 
-        System.out.format("+------------+---------------------------------------------------------------------------------------------------+%n");
-        System.out.format("|   Ticker   |  ID  |%n");
-        System.out.format("+------------+------+%n");
-        for (int i = 0; i < 10; i++) {
-            System.out.format(leftAlignFormat, "ticker" + i, i * i,i,i,i,i,i,i,i,i,i,i,i,i);
+        String leftAlignFormat = "| %6s | %6s | %13s | %13s | %13s | %13s | %10s | %15s | %17s |%n";
+
+        System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
+        System.out.format("| TICKER | AMOUNT | AVG BUY PRICE |     VALUE     | CURRENT PRICE | CURRENT VALUE |   RETURN   | STOP-LOSS PRICE | TAKE-PROFIT PRICE |%n");
+        System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
+
+        for (int i = 0; i < wallet.getShares().size(); i++) {
+            System.out.format(leftAlignFormat,
+                    wallet.getShares().get(i).getTicker(),
+                    wallet.getShares().get(i).getSharesTotalAmount(),
+                    wallet.getShares().get(i).getAvgBuyPrice() + " pln",
+                    wallet.getShares().get(i).getBaseValue() + " pln",
+                    wallet.getShares().get(i).getCurrentPrice() + " pln",
+                    wallet.getShares().get(i).getCurrentValue() + " pln",
+                    wallet.getShares().get(i).getCurrentValue().divide(wallet.getShares().get(i).getBaseValue()).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100)).doubleValue() + " %",
+                    wallet.getShares().get(i).getStopLossPrice() + " pln",
+                    wallet.getShares().get(i).getTakeProfitPrice() + " pln");
         }
-        System.out.format("------------+----------------------------------------------------------------------------------------------------+%n");
+
+        System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
+        System.out.format("|               TOTAL                                                                          |%n");
+        System.out.format("+----------------------------------------------------------------------------------------------+%n");
     }
 
     public void showWallet() {
         drawWallet();
         chooseOptionWallet();
     }
+
+
 }

@@ -13,8 +13,6 @@ public class AppRunner {
 
     public void run() {
 
-        walletInit();
-
         LoadData loadData = new LoadData();
         File folder = new File("./data");
         loadData.listFilesForFolder(folder);
@@ -27,16 +25,10 @@ public class AppRunner {
         String date = date1.format(AppProperties.getDateFormat());
         System.out.println(date);
         logger.info("Property formatted date printed.");
-
         System.out.println("---");
 
         TextInterface textInterface = new TextInterface();
         textInterface.drawMainMenu();
     }
 
-    public static void walletInit() {
-        WalletToXML walletToXML = new WalletToXML();
-        Wallet wallet = walletToXML.loadFromXml();
-        Transaction.transactionFee = BigDecimal.valueOf(0.0039);
-    }
 }
