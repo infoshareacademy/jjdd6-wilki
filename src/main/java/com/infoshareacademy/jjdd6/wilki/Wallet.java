@@ -143,6 +143,10 @@ public class Wallet implements Serializable {
         this.cashFromProfits = cashFromProfits;
     }
 
+    public boolean checkCash (int amount, double price){
+        return amount * price  >= getFreeCash().doubleValue();
+    }
+
     @Override
     public String toString() {
         return "Wallet{" +
