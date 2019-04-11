@@ -57,29 +57,28 @@ public class LoadData {
         String path = "./data/" + filename;
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
-            return dataLoaded.stream()
-                    .skip(1)
-                    .map(a -> {
-                        DataFromFile dataFromFile = new DataFromFile();
-                        dataFromFile.setSymbol(a[0]);
-                        dataFromFile.setDate(LocalDate.parse(a[1]));
-                        dataFromFile.setTime(LocalTime.parse(a[2]));
-                        dataFromFile.setOpeningPrice(new BigDecimal(a[3]));
-                        dataFromFile.setHighestPrice(new BigDecimal(a[4]));
-                        dataFromFile.setLowestPrice(new BigDecimal(a[5]));
-                        dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                        if (!filename.contains("_pe.csv")) {
-                            dataFromFile.setVolume(Long.parseLong(a[7]));
-                        }
+        return dataLoaded.stream()
+                .skip(1)
+                .map(a -> {
+                    DataFromFile dataFromFile = new DataFromFile();
+                    dataFromFile.setSymbol(a[0]);
+                    dataFromFile.setDate(LocalDate.parse(a[1]));
+                    dataFromFile.setTime(LocalTime.parse(a[2]));
+                    dataFromFile.setOpeningPrice(new BigDecimal(a[3]));
+                    dataFromFile.setHighestPrice(new BigDecimal(a[4]));
+                    dataFromFile.setLowestPrice(new BigDecimal(a[5]));
+                    dataFromFile.setClosingPrice(new BigDecimal(a[6]));
+                    if (!filename.contains("_pe.csv")) {
+                        dataFromFile.setVolume(Long.parseLong(a[7]));
+                    }
 
-                        return dataFromFile;
-                    }).
+                    return dataFromFile;
+                }).
 
-                            collect(Collectors.toList());
+                        collect(Collectors.toList());
 
 
     }
-
 
 
     public String loadAndScanTickers(String ticker) {
@@ -96,8 +95,9 @@ public class LoadData {
             if (loadAndScanTickers(ticker.toUpperCase()) != null) {
                 return true;
             }
-        } catch (Exception e) { }
-        logger.info("Ticker " + ticker.toUpperCase() + " not valid");
+        } catch (Exception e) {
+        }
+        logger.error("Ticker " + ticker.toUpperCase() + " not valid");
         System.out.println("Ticker not valid");
         return false;
     }
