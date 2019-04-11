@@ -8,9 +8,14 @@ import java.net.URL;
 public class DownloadData {
 
     public static void getCurrentCSV(String ticker) {
-        System.out.println("INFO: Downloading current " + ticker + " data...");
-        download(ticker.toLowerCase() + ".csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() +"&f=sd2t2ohlcv&h&e=csv");
-        download(ticker.toLowerCase() + "_pe.csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() +"_pe&f=sd2t2ohlc&h&e=csv");
+        if (new LoadData().validateTicker(ticker.toUpperCase())) {
+            System.out.println("INFO: Downloading current " + ticker + " data...");
+            download(ticker.toLowerCase() + ".csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() + "&f=sd2t2ohlcv&h&e=csv");
+            download(ticker.toLowerCase() + "_pe.csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() + "_pe&f=sd2t2ohlc&h&e=csv");
+        }
+        else {
+            System.out.println("ERROR: Ticker not valid");
+        }
     }
 
     private static void download(String filename, String url) {
@@ -23,7 +28,7 @@ public class DownloadData {
                 fileOS.write(data, 0, byteContent);
             }
         } catch (IOException e) {
-            System.out.println("ERROR: Download failed");
+            System.out.println("ERROR: No connection with remote database");
         }
     }
 

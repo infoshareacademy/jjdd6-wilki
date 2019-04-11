@@ -87,9 +87,8 @@ public class LoadData {
             if (loadAndScanTickers(ticker.toUpperCase()) != null) {
                 return true;
             }
-        } catch (Exception e) {
-            return false;
-        }
+        } catch (Exception e) { }
+        System.out.println("ERROR: Ticker not valid");
         return false;
     }
 }
