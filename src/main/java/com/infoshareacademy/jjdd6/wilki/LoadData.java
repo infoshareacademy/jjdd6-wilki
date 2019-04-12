@@ -20,7 +20,6 @@ public class LoadData {
 
     private static Logger logger = LoggerFactory.getLogger(LoadData.class);
 
-
     private List read(String file) {
 
         List<String[]> allData = new ArrayList<>();
@@ -71,13 +70,9 @@ public class LoadData {
                     if (!filename.contains("_pe.csv")) {
                         dataFromFile.setVolume(Long.parseLong(a[7]));
                     }
-
                     return dataFromFile;
                 }).
-
                         collect(Collectors.toList());
-
-
     }
 
 
