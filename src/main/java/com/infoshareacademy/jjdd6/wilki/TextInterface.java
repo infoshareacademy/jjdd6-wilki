@@ -103,10 +103,7 @@ public class TextInterface {
 
         while(ticker !="") {
             do {
-                System.out.print("Enter amount: ");
-                Scanner scanner2 = new Scanner(System.in);
-                amount = scanner2.nextInt();
-                System.out.println();
+                amount = inputAmount();
                 System.out.print("Enter buy price: ");
                 Scanner scanner3 = new Scanner(System.in);
                 price = scanner3.nextDouble();
@@ -116,5 +113,14 @@ public class TextInterface {
             wallet.sellShare(ticker.toUpperCase(), amount, price);
         }
 //        drawMainMenu();
+    }
+
+    private int inputAmount() {
+        int amount;
+        System.out.print("Enter amount: ");
+        Scanner scanner2 = new Scanner(System.in);
+        amount = scanner2.nextInt();
+        System.out.println();
+        return amount;
     }
 }
