@@ -1,9 +1,14 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Objects;
 
-public class Wallet {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Wallet implements Serializable {
 
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
@@ -108,6 +113,12 @@ public class Wallet {
                 .orElse(new Share(ticker.toUpperCase()));
     }
 
+    public boolean checkIfShareIsPresent(String ticker) {
+        return this.getShares().stream()
+                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
+                .count() == 1;
+    }
+
     public void sellShare(String ticker, int amount, double price) {
         this.addToCashFromProfits(this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
@@ -120,12 +131,55 @@ public class Wallet {
                 getShares().remove(i);
             }
         }
+        System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
     }
 
     public void buyShare(String ticker, int amount, double price) {
-        Share result = scanWalletForShare(ticker.toUpperCase());
-        this.getShares().add(result);
-        result.buy(amount, price);
+        if (checkIfEnoughCash(amount, price)) {
+            Share result = scanWalletForShare(ticker.toUpperCase());
+            result.buy(amount, price);
+            this.getShares().add(result);
+            System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+            DownloadData.updateWalletData(this);
+        } else {
+            System.out.println("Not enough cash!");
+        }
+    }
+
+    public void setShares(LinkedList<Share> shares) {
+        this.shares = shares;
+    }
+
+    public void setCashFromProfits(BigDecimal cashFromProfits) {
+        this.cashFromProfits = cashFromProfits;
+    }
+
+    public boolean checkIfEnoughCash(int amount, double price) {
+        return amount * price >= getFreeCash().doubleValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Wallet{" +
+                "shares=" + shares +
+                ", baseCash=" + baseCash +
+                ", cashFromProfits=" + cashFromProfits +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wallet wallet = (Wallet) o;
+        return Objects.equals(shares, wallet.shares) &&
+                Objects.equals(baseCash, wallet.baseCash) &&
+                Objects.equals(cashFromProfits, wallet.cashFromProfits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shares, baseCash, cashFromProfits);
     }
 }
 

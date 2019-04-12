@@ -1,6 +1,8 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import com.opencsv.CSVReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 public class LoadData {
 
+    private static Logger logger = LoggerFactory.getLogger(LoadData.class);
+
     private List read(String file) {
 
         List<String[]> allData = new ArrayList<>();
@@ -24,7 +28,7 @@ public class LoadData {
             CSVReader csvReader = new CSVReader(fileReader);
             allData = csvReader.readAll();
         } catch (IOException e) {
-            System.err.println();
+            logger.error("Unable to read file " + file);
         }
         return allData;
     }
@@ -66,12 +70,11 @@ public class LoadData {
                     if (!filename.contains("_pe.csv")) {
                         dataFromFile.setVolume(Long.parseLong(a[7]));
                     }
-
                     return dataFromFile;
                 }).
-
                         collect(Collectors.toList());
     }
+
 
     public String loadAndScanTickers(String ticker) {
 
@@ -80,5 +83,17 @@ public class LoadData {
         Map<String, String> tickersMap = dataLoaded.stream()
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);
+    }
+
+    public boolean validateTicker(String ticker) {
+        try {
+            if (loadAndScanTickers(ticker.toUpperCase()) != null) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        logger.error("Ticker " + ticker.toUpperCase() + " not valid");
+        System.out.println("Ticker not valid");
+        return false;
     }
 }

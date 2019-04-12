@@ -30,5 +30,4 @@ public class AppRunner {
         TextInterface textInterface = new TextInterface();
         textInterface.drawMainMenu();
     }
-
 }

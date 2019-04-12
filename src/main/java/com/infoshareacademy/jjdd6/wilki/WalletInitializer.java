@@ -6,7 +6,7 @@ public class WalletInitializer {
 
     public Wallet init() {
 
-        Wallet wallet = new Wallet();
+        Wallet wallet;
         WalletToXML walletToXML = new WalletToXML();
         wallet = walletToXML.loadFromXml();
         Transaction.transactionFee = BigDecimal.valueOf(0.0039);

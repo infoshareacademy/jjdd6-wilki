@@ -1,12 +1,17 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 
-public class Transaction {
-    public static BigDecimal transactionFee;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Transaction implements Serializable {
+    public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
     private Integer amount;
     private BigDecimal price;
@@ -15,7 +20,8 @@ public class Transaction {
     private BigDecimal transactionFeeValue;
     private TransactionType type;
 
-
+    public Transaction() {
+    }
 
     public Transaction(Integer amount, BigDecimal price) {
 
@@ -60,7 +66,7 @@ public class Transaction {
         return price;
     }
 
-    public void setPrice(BigDecimal buyPrice) {
+    public void setPrice(BigDecimal price) {
 
         this.price = price;
     }
@@ -81,5 +87,57 @@ public class Transaction {
 
     public void setTransactionFee(BigDecimal transactionFee) {
         this.transactionFee = transactionFee;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setTransactionFeeValue(BigDecimal transactionFeeValue) {
+        this.transactionFeeValue = transactionFeeValue;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Transaction{");
+        sb.append("amount=").append(amount);
+        sb.append(", price=").append(price);
+        sb.append(", profit=").append(profit);
+        sb.append(", date=").append(date);
+        sb.append(", transactionFeeValue=").append(transactionFeeValue);
+        sb.append(", type=").append(type);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return amount.equals(that.amount) &&
+                price.equals(that.price) &&
+                profit.equals(that.profit) &&
+                date.equals(that.date) &&
+                transactionFeeValue.equals(that.transactionFeeValue) &&
+                type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amount, price, profit, date, transactionFeeValue, type);
     }
 }

@@ -1,12 +1,21 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
-public class Share {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Share implements Serializable {
+
     private String ticker;
     private String fullCompanyName;
     private BigDecimal currentPrice;
@@ -16,6 +25,14 @@ public class Share {
     private Long volume;
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
     private List<Transaction> transactionHistory = new ArrayList<>();
+    private BigDecimal highestPrice;
+    private BigDecimal lowestPrice;
+    private LocalDate dataDate;
+    private LocalTime dataTime;
+    private int delay;
+
+    public Share() {
+    }
 
     public Share(String ticker) {
 
@@ -29,10 +46,6 @@ public class Share {
             return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
                     / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
         }
-    }
-
-    public void setFullCompanyName() {
-        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
     }
 
     public String getTicker() {
@@ -50,14 +63,6 @@ public class Share {
         return currentPE;
     }
 
-    public void setCurrentPrice() {
-
-        this.currentPrice = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv")
-                .get(0)
-                .getClosingPrice();
-    }
-
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
 
         this.takeProfitPrice = takeProfitPrice;
@@ -68,21 +73,22 @@ public class Share {
         this.stopLossPrice = stopLossPrice;
     }
 
-    public void setCurrentPE() {
-
+    public void pullExternalData() {
+        List<DataFromFile> data = new LoadData()
+                .loadToList(getTicker().toLowerCase() + ".csv");
+        this.volume = data.get(0).getVolume();
+        this.currentPrice = data.get(0).getClosingPrice();
+        this.highestPrice = data.get(0).getHighestPrice();
+        this.lowestPrice = data.get(0).getLowestPrice();
+        this.dataTime = data.get(0).getTime();
+        this.dataDate = data.get(0).getDate();
         this.currentPE = new LoadData()
                 .loadToList(getTicker().toLowerCase() + "_pe.csv")
                 .get(0)
                 .getClosingPrice()
                 .doubleValue();
-    }
-
-    public void setVolume() {
-
-        this.volume = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv")
-                .get(0)
-                .getVolume();
+        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
+        this.delay = calculateDelay(data.get(0).getTime());
     }
 
     public String getFullCompanyName() {
@@ -144,10 +150,6 @@ public class Share {
     }
 
     public void buy(Integer amount, double price) {
-        this.setFullCompanyName();
-        this.setVolume();
-        this.setCurrentPrice();
-        this.setCurrentPE();
         this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
         this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price)));
     }
@@ -207,5 +209,60 @@ public class Share {
         return transactionHistory.stream()
                 .map(Transaction::getTransactionFeeValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public int calculateDelay(LocalTime time) {
+        return (int) Duration.between(time, LocalTime.now()).toMinutes();
+    }
+
+    public LinkedList<Transaction> getTransactionLinkedList() {
+        return transactionLinkedList;
+    }
+
+    public void setTransactionLinkedList(LinkedList<Transaction> transactionLinkedList) {
+        this.transactionLinkedList = transactionLinkedList;
+    }
+
+    public void setTransactionHistory(List<Transaction> transactionHistory) {
+        this.transactionHistory = transactionHistory;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Share{");
+        sb.append("ticker='").append(ticker).append('\'');
+        sb.append(", fullCompanyName='").append(fullCompanyName).append('\'');
+        sb.append(", currentPrice=").append(currentPrice);
+        sb.append(", takeProfitPrice=").append(takeProfitPrice);
+        sb.append(", stopLossPrice=").append(stopLossPrice);
+        sb.append(", currentPE=").append(currentPE);
+        sb.append(", volume=").append(volume);
+        sb.append(", transactionLinkedList=").append(transactionLinkedList);
+        sb.append(", transactionHistory=").append(transactionHistory);
+        sb.append(", highestPrice=").append(highestPrice);
+        sb.append(", lowestPrice=").append(lowestPrice);
+        sb.append(", dataDate=").append(dataDate);
+        sb.append(", dataTime=").append(dataTime);
+        sb.append(", delay=").append(delay);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Share share = (Share) o;
+        return ticker.equals(share.ticker) &&
+                Objects.equals(fullCompanyName, share.fullCompanyName) &&
+                Objects.equals(takeProfitPrice, share.takeProfitPrice) &&
+                Objects.equals(stopLossPrice, share.stopLossPrice) &&
+                Objects.equals(transactionLinkedList, share.transactionLinkedList) &&
+                Objects.equals(transactionHistory, share.transactionHistory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticker, fullCompanyName, takeProfitPrice, stopLossPrice, transactionLinkedList, transactionHistory);
     }
 }
