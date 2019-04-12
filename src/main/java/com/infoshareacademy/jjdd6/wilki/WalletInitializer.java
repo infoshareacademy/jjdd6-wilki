@@ -11,10 +11,6 @@ public class WalletInitializer {
         wallet = walletToXML.loadFromXml();
         Transaction.transactionFee = BigDecimal.valueOf(0.0039);
 
-        wallet.setBaseCash(BigDecimal.valueOf(200000));
-        wallet.buyShare("KGH", 254, 500);
-        wallet.buyShare("PKN", 164, 500);
-
         return wallet;
     }
 }
