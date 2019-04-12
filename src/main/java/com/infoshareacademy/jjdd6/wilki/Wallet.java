@@ -113,6 +113,12 @@ public class Wallet implements Serializable {
                 .orElse(new Share(ticker.toUpperCase()));
     }
 
+    public boolean checkIfShareIsPresent(String ticker) {
+        return this.getShares().stream()
+                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
+                .count() == 1;
+    }
+
     public void sellShare(String ticker, int amount, double price) {
         this.addToCashFromProfits(this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))

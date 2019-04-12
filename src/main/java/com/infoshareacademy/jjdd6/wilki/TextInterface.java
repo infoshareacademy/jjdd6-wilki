@@ -54,4 +54,67 @@ public class TextInterface {
     public void clearScreen() {
         System.out.flush();
     }
+
+    public void buyShareInterface(Wallet wallet) {
+        String ticker="";
+        int amount;
+        double price;
+        do {
+            System.out.print("Enter valid ticker (or press ENTER to cancel): ");
+            Scanner scanner = new Scanner(System.in);
+            ticker = scanner.nextLine();
+            if (ticker == "") {
+                break;
+            }
+            System.out.println();
+        } while (!new LoadData().validateTicker(ticker));
+
+        while(ticker !="") {
+            do {
+                System.out.print("Enter amount: ");
+                Scanner scanner2 = new Scanner(System.in);
+                amount = scanner2.nextInt();
+                System.out.println();
+                System.out.print("Enter buy price: ");
+                Scanner scanner3 = new Scanner(System.in);
+                price = scanner3.nextDouble();
+                System.out.println();
+            } while (!wallet.checkIfEnoughCash(amount, price));
+
+            wallet.buyShare(ticker.toUpperCase(), amount, price);
+        }
+//        drawMainMenu();
+    }
+
+    public void sellShareInterface(Wallet wallet) {
+        String ticker="";
+        int amount;
+        double price;
+        do {
+            System.out.print("Enter valid ticker (or press ENTER to cancel): ");
+            Scanner scanner = new Scanner(System.in);
+            ticker = scanner.nextLine();
+            System.out.println();
+            if (ticker.equals("") || wallet.checkIfShareIsPresent(ticker)) {
+                break;
+            }
+            System.out.println("Ticker is not in your wallet");
+        } while (!wallet.checkIfShareIsPresent(ticker));
+
+        while(ticker !="") {
+            do {
+                System.out.print("Enter amount: ");
+                Scanner scanner2 = new Scanner(System.in);
+                amount = scanner2.nextInt();
+                System.out.println();
+                System.out.print("Enter buy price: ");
+                Scanner scanner3 = new Scanner(System.in);
+                price = scanner3.nextDouble();
+                System.out.println();
+            } while (wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount);
+
+            wallet.sellShare(ticker.toUpperCase(), amount, price);
+        }
+//        drawMainMenu();
+    }
 }
