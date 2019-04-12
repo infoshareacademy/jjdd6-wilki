@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 public class WalletToXML {
 
-
+    private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
     public void saveToXml(Wallet wallet) {
@@ -22,7 +24,7 @@ public class WalletToXML {
         try {
             xmlMapper.writeValue(new File(SERIALIZED_FILE_NAME), wallet);
         } catch (IOException e) {
-            System.err.println();
+            logger.error("Wallet export to XML failed");
         }
     }
 
@@ -38,7 +40,7 @@ public class WalletToXML {
             String xml = inputStreamToString(new FileInputStream(file));
             return xmlMapper.readValue(xml, Wallet.class);
         } catch (Exception e) {
-            System.err.println();
+            logger.error("Wallet import from XML failed");
         }
         return new Wallet();
     }

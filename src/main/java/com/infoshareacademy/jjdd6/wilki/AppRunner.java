@@ -46,7 +46,7 @@ public class AppRunner {
         walletToXML.saveToXml(wallet);
 
         wallet =  walletToXML.loadFromXml();
-        System.out.println(wallet);
+        System.out.println(wallet.getShares());
 
     }
 }
