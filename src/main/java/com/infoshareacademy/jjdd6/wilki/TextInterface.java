@@ -1,7 +1,7 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -94,10 +94,13 @@ public class TextInterface {
     public void drawWallet() {
 
         String leftAlignFormat = "| %6s | %6s | %13s | %13s | %13s | %13s | %10s | %15s | %17s |%n";
+        String leftAlignTotalFormat = "| %31s | %13s | %13s | %13s | %10s |%n";
 
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format("| TICKER | AMOUNT | AVG BUY PRICE |     VALUE     | CURRENT PRICE | CURRENT VALUE |   RETURN   | STOP-LOSS PRICE | TAKE-PROFIT PRICE |%n");
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
+
+
 
         for (int i = 0; i < wallet.getShares().size(); i++) {
             System.out.format(leftAlignFormat,
@@ -112,8 +115,14 @@ public class TextInterface {
                     wallet.getShares().get(i).getTakeProfitPrice() + " pln");
         }
 
+        BigDecimal totalBaseValue = wallet.getBaseWorth();
+        BigDecimal totalCurrentValue = wallet.getSharesCurrentWorth();
+        Double totalReturn = (totalCurrentValue.doubleValue()/totalBaseValue.doubleValue()-1) * 100;
+        DecimalFormat df = new DecimalFormat("0.00");
+
+
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
-        System.out.format("|               TOTAL                                                                          |%n");
+        System.out.format(leftAlignTotalFormat,"TOTAL",totalBaseValue + " pln","",totalCurrentValue + " pln", df.format(totalReturn) + " %");
         System.out.format("+----------------------------------------------------------------------------------------------+%n");
     }
 
