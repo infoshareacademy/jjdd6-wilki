@@ -2,7 +2,6 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class DownloadData {
 
     public static void getCurrentCSV(String ticker) {
         if (new LoadData().validateTicker(ticker.toUpperCase())) {
-            System.out.println("INFO: Downloading current " + ticker + " data...");
+            logger.info("Downloading current " + ticker + " data...");
             download(ticker.toLowerCase() + ".csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() + "&f=sd2t2ohlcv&h&e=csv");
             download(ticker.toLowerCase() + "_pe.csv", "https://stooq.pl/q/l/?s=" + ticker.toLowerCase() + "_pe&f=sd2t2ohlc&h&e=csv");
         } else {
