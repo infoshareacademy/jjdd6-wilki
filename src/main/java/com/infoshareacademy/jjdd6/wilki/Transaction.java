@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 
@@ -120,5 +121,23 @@ public class Transaction implements Serializable {
         sb.append(", type=").append(type);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return amount.equals(that.amount) &&
+                price.equals(that.price) &&
+                profit.equals(that.profit) &&
+                date.equals(that.date) &&
+                transactionFeeValue.equals(that.transactionFeeValue) &&
+                type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amount, price, profit, date, transactionFeeValue, type);
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wallet implements Serializable {
@@ -158,6 +159,21 @@ public class Wallet implements Serializable {
                 ", baseCash=" + baseCash +
                 ", cashFromProfits=" + cashFromProfits +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wallet wallet = (Wallet) o;
+        return Objects.equals(shares, wallet.shares) &&
+                Objects.equals(baseCash, wallet.baseCash) &&
+                Objects.equals(cashFromProfits, wallet.cashFromProfits);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shares, baseCash, cashFromProfits);
     }
 }
 

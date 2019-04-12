@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Share implements Serializable {
@@ -245,5 +246,23 @@ public class Share implements Serializable {
         sb.append(", delay=").append(delay);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Share share = (Share) o;
+        return ticker.equals(share.ticker) &&
+                Objects.equals(fullCompanyName, share.fullCompanyName) &&
+                Objects.equals(takeProfitPrice, share.takeProfitPrice) &&
+                Objects.equals(stopLossPrice, share.stopLossPrice) &&
+                Objects.equals(transactionLinkedList, share.transactionLinkedList) &&
+                Objects.equals(transactionHistory, share.transactionHistory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ticker, fullCompanyName, takeProfitPrice, stopLossPrice, transactionLinkedList, transactionHistory);
     }
 }
