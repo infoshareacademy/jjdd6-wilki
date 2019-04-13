@@ -47,7 +47,6 @@ public class TextInterface {
                 System.out.println("Input valid number");
             }
         } while (choose < 1 || choose > 5);
-
     }
 
     private void chooseOptionWallet() {
@@ -84,7 +83,6 @@ public class TextInterface {
         System.out.format("| TICKER | AMOUNT | AVG BUY PRICE |     VALUE     | CURRENT PRICE | CURRENT VALUE |   RETURN   | STOP-LOSS PRICE | TAKE-PROFIT PRICE |%n");
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
 
-
         for (int i = 0; i < wallet.getShares().size(); i++) {
             DecimalFormat df = new DecimalFormat("0.00");
             System.out.format(leftAlignFormat,
@@ -98,13 +96,10 @@ public class TextInterface {
                     wallet.getShares().get(i).getStopLossPrice() + " pln",
                     wallet.getShares().get(i).getTakeProfitPrice() + " pln");
         }
-
         BigDecimal totalBaseValue = wallet.getBaseWorth();
         BigDecimal totalCurrentValue = wallet.getSharesCurrentWorth();
         Double totalReturn = (totalCurrentValue.doubleValue() / totalBaseValue.doubleValue() - 1) * 100;
         DecimalFormat df = new DecimalFormat("0.00");
-
-
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format(leftAlignTotalFormat, "TOTAL", totalBaseValue + " pln", "", totalCurrentValue + " pln", df.format(totalReturn) + " %");
         System.out.format("+----------------------------------------------------------------------------------------------+%n");
@@ -114,7 +109,6 @@ public class TextInterface {
         drawWallet();
         chooseOptionWallet();
     }
-
 
     private void buyShareInterface() {
 
@@ -136,20 +130,15 @@ public class TextInterface {
 
         System.out.println("Found! " + new LoadData().loadAndScanTickers(ticker.toUpperCase()));
         System.out.println();
-
         amount = validateAmount();
         System.out.println();
         price = validatePrice(price);
 
-
-        if (!wallet.checkIfEnoughCash(amount, price)){
+        if (!wallet.checkIfEnoughCash(amount, price)) {
             System.out.println("You don't have enough money!");
-        }
-        else{
+        } else {
             wallet.buyShare(ticker.toUpperCase(), amount, price);
         }
-
-
         drawMainMenu();
     }
 
@@ -169,7 +158,6 @@ public class TextInterface {
             }
 
         } while (price < 1 || isPriceInvalid);
-
         return price;
     }
 
@@ -191,7 +179,6 @@ public class TextInterface {
             }
 
         } while (amount < 1 || isAmountInvalid);
-
         return amount;
     }
 
