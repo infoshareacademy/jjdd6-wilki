@@ -131,13 +131,16 @@ public class TextInterface {
 
 
     public void buyShareInterface() {
-        Scanner scanner = new Scanner(System.in);
+
         String ticker;
-        int amount;
-        double price;
+        int amount = 0;
+        double price = 0;
+        boolean isAmountInvalid;
+        boolean isPriceInvalid;
         System.out.println("Add shares");
 
         do {
+            Scanner scanner = new Scanner(System.in);
             System.out.print("Enter valid ticker (or press ENTER to cancel): ");
             ticker = scanner.nextLine();
             if (ticker.equals("")) {
@@ -149,16 +152,38 @@ public class TextInterface {
 
         System.out.println("Found! " + new LoadData().loadAndScanTickers(ticker.toUpperCase()));
         System.out.println();
-
         do {
-            System.out.print("Enter amount: ");
-            amount = scanner.nextInt();
+            do {
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter amount: ");
+
+                try {
+                    isAmountInvalid = false;
+                    amount = scanner.nextInt();
+
+                } catch (InputMismatchException e) {
+                    System.out.println("Input valid amount");
+                    isAmountInvalid = true;
+                }
+            } while (amount < 1 || isAmountInvalid);
+
             System.out.println();
-            System.out.print("Enter buy price: ");
-            price = scanner.nextDouble();
-            System.out.println();
+
+            do {
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter buy price: ");
+                try {
+                    isPriceInvalid = false;
+                    price = scanner.nextDouble();
+                } catch (InputMismatchException e) {
+                    System.out.println("Input valid price");
+                    isPriceInvalid = true;
+                }
+            } while (price < 1 || isPriceInvalid);
         } while (!wallet.checkIfEnoughCash(amount, price));
+
         wallet.buyShare(ticker.toUpperCase(), amount, price);
+
         drawMainMenu();
     }
 
