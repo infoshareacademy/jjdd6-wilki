@@ -3,14 +3,13 @@ package com.infoshareacademy.jjdd6.wilki;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.InputMismatchException;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class TextInterface {
 
     private Wallet wallet = new WalletInitializer().init();
 
-    public void drawMenu() {
+    private void drawMenu() {
         String menu = "+----------------------------------------------------------------+" +
                 "\n| [1] Show wallet \t \t \t \t \t \t \t \t \t \t \t \t |" +
                 "\n| [2] Add new share / Increase share amount \t \t \t \t \t |" +
@@ -21,7 +20,7 @@ public class TextInterface {
         System.out.println(menu);
     }
 
-    public void chooseOptionMainMenu() throws InputMismatchException {
+    private void chooseOptionMainMenu() throws InputMismatchException {
         int choose = 0;
         do {
             Scanner input = new Scanner(System.in);
@@ -29,28 +28,21 @@ public class TextInterface {
                 System.out.print("Choose option: ");
                 choose = input.nextInt();
                 if (choose == 1) {
-                    clearScreen();
                     showWallet();
                 } else if (choose == 2) {
-                    clearScreen();
                     buyShareInterface();
                 } else if (choose == 3) {
-                    clearScreen();
                     sellShareInterface();
                 } else if (choose == 4) {
 
-                    clearScreen();
 //                  Change parameters of your share (e.g. stop-loss price)
                 } else if (choose == 5) {
-                    clearScreen();
 //                  Add / Remove money amount
                 } else {
-                    clearScreen();
                     drawMenu();
                     System.out.println("Try again");
                 }
             } catch (InputMismatchException e) {
-                clearScreen();
                 drawMenu();
                 System.out.println("Input valid number");
             }
@@ -58,7 +50,7 @@ public class TextInterface {
 
     }
 
-    public void chooseOptionWallet() {
+    private void chooseOptionWallet() {
         int choose = 1;
         do {
             Scanner input = new Scanner(System.in);
@@ -66,31 +58,24 @@ public class TextInterface {
                 System.out.print("Type 0 to return to main menu: ");
                 choose = input.nextInt();
                 if (choose == 0) {
-                    clearScreen();
                     drawMainMenu();
                 } else {
-                    clearScreen();
                     drawWallet();
                     System.out.println("Try again");
                 }
             } catch (InputMismatchException e) {
-                clearScreen();
                 drawWallet();
                 System.out.println("Input valid number");
             }
         } while (choose != 0);
     }
 
-    public void clearScreen() {
-        System.out.flush();
-    }
-
-    public void drawMainMenu() {
+    void drawMainMenu() {
         drawMenu();
         chooseOptionMainMenu();
     }
 
-    public void drawWallet() {
+    private void drawWallet() {
 
         String leftAlignFormat = "| %6s | %6s | %13s | %13s | %13s | %13s | %10s | %15s | %17s |%n";
         String leftAlignTotalFormat = "| %31s | %13s | %13s | %13s | %10s |%n";
@@ -124,20 +109,21 @@ public class TextInterface {
         System.out.format("+----------------------------------------------------------------------------------------------+%n");
     }
 
-    public void showWallet() {
+    private void showWallet() {
         drawWallet();
         chooseOptionWallet();
     }
 
 
-    public void buyShareInterface() {
-        Scanner scanner = new Scanner(System.in);
+    private void buyShareInterface() {
+
         String ticker;
         int amount;
-        double price;
+        double price = 0;
         System.out.println("Add shares");
 
         do {
+            Scanner scanner = new Scanner(System.in);
             System.out.print("Enter valid ticker (or press ENTER to cancel): ");
             ticker = scanner.nextLine();
             if (ticker.equals("")) {
@@ -150,51 +136,98 @@ public class TextInterface {
         System.out.println("Found! " + new LoadData().loadAndScanTickers(ticker.toUpperCase()));
         System.out.println();
 
-        do {
-            System.out.print("Enter amount: ");
-            amount = scanner.nextInt();
-            System.out.println();
-            System.out.print("Enter buy price: ");
-            price = scanner.nextDouble();
-            System.out.println();
-        } while (!wallet.checkIfEnoughCash(amount, price));
-        wallet.buyShare(ticker.toUpperCase(), amount, price);
+        amount = validateAmount();
+        System.out.println();
+        price = validatePrice(price);
+
+
+        if (!wallet.checkIfEnoughCash(amount, price)){
+            System.out.println("You don't have enough money!");
+        }
+        else{
+            wallet.buyShare(ticker.toUpperCase(), amount, price);
+        }
+
+
         drawMainMenu();
     }
 
-    public void sellShareInterface() {
-        String ticker = "";
-        int amount;
-        double price;
+    private double validatePrice(double price) {
+        boolean isPriceInvalid;
         do {
-            System.out.print("Enter valid ticker (or press ENTER to cancel): ");
+
             Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter price: ");
+
+            try {
+                isPriceInvalid = false;
+                price = scanner.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("Input valid price");
+                isPriceInvalid = true;
+            }
+
+        } while (price < 1 || isPriceInvalid);
+
+        return price;
+    }
+
+    private int validateAmount() {
+        int amount = 0;
+        boolean isAmountInvalid;
+        do {
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter amount: ");
+
+            try {
+                isAmountInvalid = false;
+                amount = scanner.nextInt();
+
+            } catch (InputMismatchException e) {
+                System.out.println("Input valid amount");
+                isAmountInvalid = true;
+            }
+
+        } while (amount < 1 || isAmountInvalid);
+
+        return amount;
+    }
+
+    private void sellShareInterface() {
+        String ticker;
+        int amount;
+        double price = 0;
+        System.out.println("Sell shares");
+        System.out.println();
+
+        do {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter valid ticker (or press ENTER to cancel): ");
             ticker = scanner.nextLine();
             System.out.println();
-            if (ticker.equals("") || wallet.checkIfShareIsPresent(ticker)) {
+
+            if (ticker.equals("")) {
+                drawMainMenu();
                 break;
             }
-            System.out.println("Ticker is not in your wallet");
+            if (!(wallet.checkIfShareIsPresent(ticker))) {
+                System.out.println("There's no shares with such ticker in your wallet");
+                System.out.println();
+            }
         } while (!wallet.checkIfShareIsPresent(ticker));
 
-        do {
-            amount = inputAmount();
-            System.out.print("Enter buy price: ");
-            Scanner scanner3 = new Scanner(System.in);
-            price = scanner3.nextDouble();
-            System.out.println();
-        } while (wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount);
-
-        wallet.sellShare(ticker.toUpperCase(), amount, price);
-        drawMainMenu();
-    }
-
-    private int inputAmount() {
-        int amount;
-        System.out.print("Enter amount: ");
-        Scanner scanner2 = new Scanner(System.in);
-        amount = scanner2.nextInt();
+        amount = validateAmount();
         System.out.println();
-        return amount;
+        price = validatePrice(price);
+        System.out.println();
+
+        if (!(wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount)) {
+            wallet.sellShare(ticker.toUpperCase(), amount, price);
+        } else {
+            System.out.println("You trying to sell " + amount + " shares, but you have " + wallet.scanWalletForShare(ticker).getSharesTotalAmount());
+        }
+        System.out.println();
+        drawMainMenu();
     }
 }
