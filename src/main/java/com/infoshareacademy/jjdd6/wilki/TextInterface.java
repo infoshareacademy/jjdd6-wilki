@@ -86,6 +86,7 @@ public class TextInterface {
 
 
         for (int i = 0; i < wallet.getShares().size(); i++) {
+            DecimalFormat df = new DecimalFormat("0.00");
             System.out.format(leftAlignFormat,
                     wallet.getShares().get(i).getTicker(),
                     wallet.getShares().get(i).getSharesTotalAmount(),
@@ -93,7 +94,7 @@ public class TextInterface {
                     wallet.getShares().get(i).getBaseValue() + " pln",
                     wallet.getShares().get(i).getCurrentPrice() + " pln",
                     wallet.getShares().get(i).getCurrentValue() + " pln",
-                    wallet.getShares().get(i).getCurrentValue().divide(wallet.getShares().get(i).getBaseValue()).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100)).doubleValue() + " %",
+                    df.format(((wallet.getShares().get(i).getCurrentValue().doubleValue() / (wallet.getShares().get(i).getBaseValue()).doubleValue()) - 1) * 100) + " %",
                     wallet.getShares().get(i).getStopLossPrice() + " pln",
                     wallet.getShares().get(i).getTakeProfitPrice() + " pln");
         }
