@@ -213,11 +213,13 @@ public class TextInterface {
                 break;
             }
             if (!(wallet.checkIfShareIsPresent(ticker))) {
-                System.out.println("There's no shares with such ticker in your wallet");
+                System.out.println("There are no shares with such ticker in your wallet");
                 System.out.println();
             }
         } while (!wallet.checkIfShareIsPresent(ticker));
-
+        Share share = wallet.scanWalletForShare(ticker);
+        System.out.println(share.getFullCompanyName() + " [" + share.getTicker() + "] available amount: " + share.getSharesTotalAmount() + "   avg buy price: " + share.getAvgBuyPrice());
+        System.out.println();
         amount = validateAmount();
         System.out.println();
         price = validatePrice(price);
