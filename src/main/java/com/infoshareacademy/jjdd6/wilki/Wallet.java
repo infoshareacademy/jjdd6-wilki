@@ -138,9 +138,15 @@ public class Wallet implements Serializable {
         if (checkIfEnoughCash(amount, price)) {
             Share result = scanWalletForShare(ticker.toUpperCase());
             result.buy(amount, price);
-            this.getShares().add(result);
             System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+
+            if (this.getShares().stream()
+                    .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
+                    .count() == 0) {
+                this.getShares().add(result);
+            }
             DownloadData.updateWalletData(this);
+
         } else {
             System.out.println("Not enough cash!");
         }
@@ -155,7 +161,7 @@ public class Wallet implements Serializable {
     }
 
     public boolean checkIfEnoughCash(int amount, double price) {
-        return amount * price >= getFreeCash().doubleValue();
+        return amount * price <= getFreeCash().doubleValue();
     }
 
     @Override
