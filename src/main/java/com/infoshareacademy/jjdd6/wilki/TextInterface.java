@@ -16,6 +16,7 @@ public class TextInterface {
                 "\n| [3] Delete share / Reduce share amount \t \t \t \t \t \t |" +
                 "\n| [4] Change parameters of your share (e.g. stop-loss price) \t |" +
                 "\n| [5] Add / Remove money amount \t \t \t \t \t \t \t \t |" +
+                "\n| [6] Save to XML and exit \t \t \t \t \t \t \t \t \t \t |" +
                 "\n+----------------------------------------------------------------+";
         System.out.println(menu);
     }
@@ -34,10 +35,13 @@ public class TextInterface {
                 } else if (choose == 3) {
                     sellShareInterface();
                 } else if (choose == 4) {
-
 //                  Change parameters of your share (e.g. stop-loss price)
                 } else if (choose == 5) {
-//                  Add / Remove money amount
+                    addRemoveMoneyAmount();
+                } else if (choose == 6) {
+                    WalletToXML walletToXML = new WalletToXML();
+                    walletToXML.saveToXml(wallet);
+                    break;
                 } else {
                     drawMenu();
                     System.out.println("Try again");
@@ -46,7 +50,7 @@ public class TextInterface {
                 drawMenu();
                 System.out.println("Input valid number");
             }
-        } while (choose < 1 || choose > 5);
+        } while (choose < 1 || choose > 6);
     }
 
     private void chooseOptionWallet() {
@@ -54,7 +58,7 @@ public class TextInterface {
         do {
             Scanner input = new Scanner(System.in);
             try {
-                System.out.print("Type 0 to return to main menu: ");
+                System.out.print("Type 0 to go to main menu: ");
                 choose = input.nextInt();
                 if (choose == 0) {
                     drawMainMenu();
@@ -98,7 +102,10 @@ public class TextInterface {
         }
         BigDecimal totalBaseValue = wallet.getBaseWorth();
         BigDecimal totalCurrentValue = wallet.getSharesCurrentWorth();
-        Double totalReturn = (totalCurrentValue.doubleValue() / totalBaseValue.doubleValue() - 1) * 100;
+        double totalReturn = totalBaseValue.doubleValue();
+        if (totalReturn != 0.0) {
+            totalReturn = (totalCurrentValue.doubleValue() / totalBaseValue.doubleValue() - 1) * 100;
+        }
         DecimalFormat df = new DecimalFormat("0.00");
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format(leftAlignTotalFormat, "TOTAL", totalBaseValue + " pln", "", totalCurrentValue + " pln", df.format(totalReturn) + " %");
@@ -114,7 +121,6 @@ public class TextInterface {
 
         String ticker;
         int amount;
-        double price = 0;
         System.out.println("Add shares");
 
         do {
@@ -132,7 +138,7 @@ public class TextInterface {
         System.out.println();
         amount = validateAmount();
         System.out.println();
-        price = validatePrice(price);
+        double price = validatePrice();
 
         if (!wallet.checkIfEnoughCash(amount, price)) {
             System.out.println("You don't have enough money!");
@@ -142,7 +148,8 @@ public class TextInterface {
         drawMainMenu();
     }
 
-    private double validatePrice(double price) {
+    private double validatePrice() {
+        double price = 0;
         boolean isPriceInvalid;
         do {
 
@@ -185,7 +192,6 @@ public class TextInterface {
     private void sellShareInterface() {
         String ticker;
         int amount;
-        double price = 0;
         System.out.println("Sell shares");
         System.out.println();
 
@@ -209,7 +215,7 @@ public class TextInterface {
         System.out.println();
         amount = validateAmount();
         System.out.println();
-        price = validatePrice(price);
+        double price = validatePrice();
         System.out.println();
 
         if (!(wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount)) {
@@ -219,5 +225,30 @@ public class TextInterface {
         }
         System.out.println();
         drawMainMenu();
+    }
+
+    private void addRemoveMoneyAmount() {
+        System.out.println("Your current balance is: " + wallet.getFreeCash() + " pln");
+
+        int choose = 0;
+        do {
+            Scanner input = new Scanner(System.in);
+            try {
+                System.out.println("To credit your balance press 1 \n" +
+                        "To debit your balance press 2");
+                choose = input.nextInt();
+                if (choose == 1) {
+                    System.out.println("Type amount: ");
+                    double amount = validatePrice();
+//                    wallet.se
+                } else if (choose == 2) {
+                    System.out.println("Type amount: ");
+                } else {
+                    System.out.println("Wrong number - try again");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Input valid number");
+            }
+        } while (choose < 1 || choose > 2);
     }
 }

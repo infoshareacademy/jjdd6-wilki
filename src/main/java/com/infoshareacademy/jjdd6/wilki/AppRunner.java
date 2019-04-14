@@ -12,10 +12,6 @@ public class AppRunner {
 
     public void run() {
 
-        LoadData loadData = new LoadData();
-        File folder = new File("./data");
-//        loadData.listFilesForFolder(folder);
-
         String actualDate = AppProperties.getDateFormat().format(LocalDate.now());
 
         System.out.println("=====================");
@@ -26,3 +22,7 @@ public class AppRunner {
         textInterface.drawMainMenu();
     }
 }
+
+//    LoadData loadData = new LoadData();
+//    File folder = new File("./data");
+//    loadData.listFilesForFolder(folder);
