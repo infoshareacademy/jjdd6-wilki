@@ -15,7 +15,7 @@ public class TextInterface {
                 "\n| [2] Add new share / Increase share amount \t \t \t \t \t |" +
                 "\n| [3] Delete share / Reduce share amount \t \t \t \t \t \t |" +
                 "\n| [4] Change parameters of your share (e.g. stop-loss price) \t |" +
-                "\n| [5] Add / Remove money amount \t \t \t \t \t \t \t \t |" +
+                "\n| [5] Credit or debit your free cash \t \t \t \t \t \t \t |" +
                 "\n| [6] Save to XML and exit \t \t \t \t \t \t \t \t \t \t |" +
                 "\n+----------------------------------------------------------------+";
         System.out.println(menu);
@@ -82,6 +82,7 @@ public class TextInterface {
 
         String leftAlignFormat = "| %6s | %6s | %13s | %13s | %13s | %13s | %10s | %15s | %17s |%n";
         String leftAlignTotalFormat = "| %31s | %13s | %13s | %13s | %10s |%n";
+        String leftAlignFreeCashFormat = "| %15s | %13s |%n";
 
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format("| TICKER | AMOUNT | AVG BUY PRICE |     VALUE     | CURRENT PRICE | CURRENT VALUE |   RETURN   | STOP-LOSS PRICE | TAKE-PROFIT PRICE |%n");
@@ -110,6 +111,8 @@ public class TextInterface {
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format(leftAlignTotalFormat, "TOTAL", totalBaseValue + " pln", "", totalCurrentValue + " pln", df.format(totalReturn) + " %");
         System.out.format("+----------------------------------------------------------------------------------------------+%n");
+        System.out.format(leftAlignFreeCashFormat, "FREE CASH", wallet.getFreeCash() + " pln");
+        System.out.format("+---------------------------------+%n");
     }
 
     private void showWallet() {
