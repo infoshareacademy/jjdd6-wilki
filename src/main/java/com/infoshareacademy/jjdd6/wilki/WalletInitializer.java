@@ -10,7 +10,6 @@ public class WalletInitializer {
         WalletToXML walletToXML = new WalletToXML();
         wallet = walletToXML.loadFromXml();
         Transaction.transactionFee = BigDecimal.valueOf(0.0039);
-        wallet.setBaseCash(BigDecimal.valueOf(1000000));
 
         return wallet;
     }

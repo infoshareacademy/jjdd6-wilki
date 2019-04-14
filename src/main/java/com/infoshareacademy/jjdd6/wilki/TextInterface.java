@@ -37,7 +37,7 @@ public class TextInterface {
                 } else if (choose == 4) {
 //                  Change parameters of your share (e.g. stop-loss price)
                 } else if (choose == 5) {
-                    addRemoveMoneyAmount();
+                    creditDebitFreeCash();
                 } else if (choose == 6) {
                     WalletToXML walletToXML = new WalletToXML();
                     walletToXML.saveToXml(wallet);
@@ -110,7 +110,7 @@ public class TextInterface {
         DecimalFormat df = new DecimalFormat("0.00");
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
         System.out.format(leftAlignTotalFormat, "TOTAL", totalBaseValue + " pln", "", totalCurrentValue + " pln", df.format(totalReturn) + " %");
-        System.out.format("+----------------------------------------------------------------------------------------------+%n");
+        System.out.format("+-----------------+---------------+------------------------------------------------------------+%n");
         System.out.format(leftAlignFreeCashFormat, "FREE CASH", wallet.getFreeCash() + " pln");
         System.out.format("+---------------------------------+%n");
     }
@@ -230,7 +230,7 @@ public class TextInterface {
         drawMainMenu();
     }
 
-    private void addRemoveMoneyAmount() {
+    private void creditDebitFreeCash() {
         System.out.println("Your current balance is: " + wallet.getFreeCash() + " pln");
 
         int choose = 0;
@@ -241,11 +241,13 @@ public class TextInterface {
                         "To debit your balance press 2");
                 choose = input.nextInt();
                 if (choose == 1) {
-                    System.out.println("Type amount: ");
-                    double amount = validatePrice();
-//                    wallet.se
+                    double amount = validateAmount();
+                    wallet.creditBaseCash(BigDecimal.valueOf(amount));
+                    drawMainMenu();
                 } else if (choose == 2) {
-                    System.out.println("Type amount: ");
+                    double amount = validateAmount();
+                    wallet.debitBaseCash(BigDecimal.valueOf(amount));
+                    drawMainMenu();
                 } else {
                     System.out.println("Wrong number - try again");
                 }

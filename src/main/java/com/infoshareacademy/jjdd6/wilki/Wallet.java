@@ -90,12 +90,12 @@ public class Wallet implements Serializable {
         return getCurrentWorth().doubleValue() / getBaseCash().doubleValue() - 1.0000;
     }
 
-    public void increaseBaseCash(BigDecimal amount) {
+    public void creditBaseCash(BigDecimal amount) {
 
         setBaseCash(getBaseCash().add(amount));
     }
 
-    public void decreaseBaseCash(BigDecimal amount) {
+    public void debitBaseCash(BigDecimal amount) {
 
         setBaseCash(getBaseCash().subtract(amount));
 
