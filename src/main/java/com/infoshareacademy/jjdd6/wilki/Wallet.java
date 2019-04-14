@@ -90,12 +90,12 @@ public class Wallet implements Serializable {
         return getCurrentWorth().doubleValue() / getBaseCash().doubleValue() - 1.0000;
     }
 
-    public void creditBaseCash(BigDecimal amount) {
+    public void increaseBaseCash(BigDecimal amount) {
 
         setBaseCash(getBaseCash().add(amount));
     }
 
-    public void debitBaseCash(BigDecimal amount) {
+    public void reduceBaseCash(BigDecimal amount) {
 
         setBaseCash(getBaseCash().subtract(amount));
 
@@ -149,6 +149,7 @@ public class Wallet implements Serializable {
             }
             DownloadData.updateWalletData(this);
 
+
         } else {
             System.out.println("Not enough cash!");
         }
@@ -190,4 +191,3 @@ public class Wallet implements Serializable {
         return Objects.hash(shares, baseCash, cashFromProfits);
     }
 }
-

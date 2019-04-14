@@ -12,17 +12,15 @@ public class AppRunner {
 
     public void run() {
 
+        TextInterface textInterface = new TextInterface();
+        textInterface.clearScreen();
+
         String actualDate = AppProperties.getDateFormat().format(LocalDate.now());
 
         System.out.println("=====================");
         System.out.println("Today is: " + actualDate);
         System.out.println("=====================");
 
-        TextInterface textInterface = new TextInterface();
         textInterface.drawMainMenu();
     }
 }
-
-//    LoadData loadData = new LoadData();
-//    File folder = new File("./data");
-//    loadData.listFilesForFolder(folder);

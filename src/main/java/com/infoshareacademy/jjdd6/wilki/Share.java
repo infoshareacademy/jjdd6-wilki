@@ -40,11 +40,11 @@ public class Share implements Serializable {
     }
 
     public Double getRiskRewardRatio() {
-        if ((getTakeProfitPrice().subtract(getStopLossPrice())).doubleValue() <= 0) {
+        if ((getTakeProfitPrice().subtract(getStopLossPrice())).setScale(4, RoundingMode.HALF_UP).doubleValue() <= 0) {
             return 0.0;
         } else {
-            return (getAvgBuyPrice().doubleValue() - getStopLossPrice().doubleValue())
-                    / (getTakeProfitPrice().doubleValue() - getStopLossPrice().doubleValue());
+            return (getAvgBuyPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() - getStopLossPrice().setScale(4, RoundingMode.HALF_UP).doubleValue())
+                    / (getTakeProfitPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() - getStopLossPrice().setScale(4, RoundingMode.HALF_UP).doubleValue());
         }
     }
 
@@ -55,7 +55,7 @@ public class Share implements Serializable {
 
     public Double getTargetPE() {
 
-        return getTakeProfitPrice().doubleValue() / (getCurrentPE() / getCurrentPrice().doubleValue());
+        return getTakeProfitPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() / (getCurrentPE() / getCurrentPrice().setScale(4, RoundingMode.HALF_UP).doubleValue());
     }
 
     public Double getCurrentPE() {
@@ -65,21 +65,21 @@ public class Share implements Serializable {
 
     public void setTakeProfitPrice(BigDecimal takeProfitPrice) {
 
-        this.takeProfitPrice = takeProfitPrice;
+        this.takeProfitPrice = takeProfitPrice.setScale(4, RoundingMode.HALF_UP);
     }
 
     public void setStopLossPrice(BigDecimal stopLossPrice) {
 
-        this.stopLossPrice = stopLossPrice;
+        this.stopLossPrice = stopLossPrice.setScale(4, RoundingMode.HALF_UP);
     }
 
     public void pullExternalData() {
         List<DataFromFile> data = new LoadData()
                 .loadToList(getTicker().toLowerCase() + ".csv");
         this.volume = data.get(0).getVolume();
-        this.currentPrice = data.get(0).getClosingPrice();
-        this.highestPrice = data.get(0).getHighestPrice();
-        this.lowestPrice = data.get(0).getLowestPrice();
+        this.currentPrice = data.get(0).getClosingPrice().setScale(4, RoundingMode.HALF_UP);
+        this.highestPrice = data.get(0).getHighestPrice().setScale(4, RoundingMode.HALF_UP);
+        this.lowestPrice = data.get(0).getLowestPrice().setScale(4, RoundingMode.HALF_UP);
         this.dataTime = data.get(0).getTime();
         this.dataDate = data.get(0).getDate();
         this.currentPE = new LoadData()
@@ -105,53 +105,53 @@ public class Share implements Serializable {
 
     public BigDecimal getTakeProfitPrice() {
 
-        return takeProfitPrice;
+        return takeProfitPrice.setScale(4, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getTakeProfitValue() {
 
-        return getTakeProfitPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount()));
+        return getTakeProfitPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(4, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getStopLossPrice() {
 
-        return stopLossPrice;
+        return stopLossPrice.setScale(4, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getStopLossValue() {
 
-        return getStopLossPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount()));
+        return getStopLossPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(4, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getBaseValue() {
 
-        return getAvgBuyPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount()));
+        return getAvgBuyPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getCurrentValue() {
 
-        return getCurrentPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount()));
+        return getCurrentPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getCurrentPrice() {
 
-        return currentPrice;
+        return currentPrice.setScale(4, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getAvgBuyPrice() {
         try {
-            return BigDecimal.valueOf(this.transactionLinkedList.stream()
-                    .mapToDouble((o) -> o.getPrice().doubleValue() * o.getAmount().doubleValue())
-                    .sum())
-                    .divide(BigDecimal.valueOf(getSharesTotalAmount()), RoundingMode.HALF_UP);
+            return this.transactionLinkedList.stream()
+                    .map(o -> o.getPrice().setScale(4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(o.getAmount())).setScale(4, RoundingMode.HALF_UP))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .divide(BigDecimal.valueOf(getSharesTotalAmount()), RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }
     }
 
     public void buy(Integer amount, double price) {
-        this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price)));
-        this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price)));
+        this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
+        this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
     }
 
     public BigDecimal sell(int amount, double price) {
