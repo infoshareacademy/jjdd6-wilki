@@ -148,8 +148,6 @@ public class Wallet implements Serializable {
                 this.getShares().add(result);
             }
             DownloadData.updateWalletData(this);
-
-
         } else {
             System.out.println("Not enough cash!");
         }
