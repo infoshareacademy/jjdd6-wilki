@@ -12,9 +12,9 @@ public class TextInterface {
     private void drawMenu() {
         String menu = "+------------------------------------------------------------------------+" +
                 "\n| [1] Show wallet" +
-                "\n| [2] Add new share / Increase share amount" +
-                "\n| [3] Delete share / Reduce share amount" +
-                "\n| [4] Change parameters of your share: set stop-loss and take-profit price" +
+                "\n| [2] Buy shares" +
+                "\n| [3] Sell shares" +
+                "\n| [4] Set stop-loss and take-profit price" +
                 "\n| [5] Increase or reduce amount of your free cash" +
                 "\n| [6] Save to XML and exit" +
                 "\n+------------------------------------------------------------------------+";
@@ -176,7 +176,9 @@ public class TextInterface {
                 System.out.println("Input valid price");
                 isPriceInvalid = true;
             }
-
+            if (price < 0.01) {
+                System.out.println("Price must be greater than 0\n");
+            }
         } while (price < 0.01 || isPriceInvalid);
         return price;
     }
@@ -196,6 +198,9 @@ public class TextInterface {
             } catch (InputMismatchException e) {
                 System.out.println("Input valid amount");
                 isAmountInvalid = true;
+            }
+            if (amount < 1) {
+                System.out.println("Amount must be greater than 0\n");
             }
 
         } while (amount < 1 || isAmountInvalid);

@@ -4,3 +4,4 @@ out/
 .idea/
 logs/
 wallet.xml
+dependency-reduced-pom.xml
