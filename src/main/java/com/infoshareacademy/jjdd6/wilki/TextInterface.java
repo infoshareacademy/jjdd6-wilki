@@ -50,10 +50,12 @@ public class TextInterface {
                     drawMainMenu();
                 } else if (choose == 6) {
                     clearScreen();
+                    if (wallet.getShares().size() > 0) {
                     WalletToXML walletToXML = new WalletToXML();
                     walletToXML.saveToXml(wallet);
+                    }
                     System.out.println("Goodbye.");
-                    break;
+                    System.exit(0);
                 } else {
                     drawMenu();
                     System.out.println("Try again");
