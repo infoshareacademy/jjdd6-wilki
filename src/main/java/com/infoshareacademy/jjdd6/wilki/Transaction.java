@@ -51,7 +51,6 @@ public class Transaction implements Serializable {
         return transactionFee;
     }
 
-
     public Integer getAmount() {
 
         return amount;

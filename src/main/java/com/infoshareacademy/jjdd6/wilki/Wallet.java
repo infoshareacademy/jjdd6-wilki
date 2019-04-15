@@ -70,7 +70,9 @@ public class Wallet implements Serializable {
 
         return getCashFromProfits().add(this.shares.stream()
                 .map(Share::getTotalProfit)
-                .reduce(BigDecimal.ZERO, BigDecimal::add).add(getBaseCash()).subtract(getBaseWorth()));
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .add(getBaseCash())
+                .subtract(getBaseWorth()));
     }
 
     public BigDecimal getBaseCash() {
@@ -93,7 +95,7 @@ public class Wallet implements Serializable {
         setBaseCash(getBaseCash().add(amount));
     }
 
-    public void decreaseBaseCash(BigDecimal amount) {
+    public void reduceBaseCash(BigDecimal amount) {
 
         setBaseCash(getBaseCash().subtract(amount));
 
@@ -146,7 +148,6 @@ public class Wallet implements Serializable {
                 this.getShares().add(result);
             }
             DownloadData.updateWalletData(this);
-
         } else {
             System.out.println("Not enough cash!");
         }
@@ -188,4 +189,3 @@ public class Wallet implements Serializable {
         return Objects.hash(shares, baseCash, cashFromProfits);
     }
 }
-

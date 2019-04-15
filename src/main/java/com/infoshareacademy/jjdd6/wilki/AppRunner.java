@@ -12,9 +12,8 @@ public class AppRunner {
 
     public void run() {
 
-        LoadData loadData = new LoadData();
-        File folder = new File("./data");
-//        loadData.listFilesForFolder(folder);
+        TextInterface textInterface = new TextInterface();
+        textInterface.clearScreen();
 
         String actualDate = AppProperties.getDateFormat().format(LocalDate.now());
 
@@ -22,7 +21,6 @@ public class AppRunner {
         System.out.println("Today is: " + actualDate);
         System.out.println("=====================");
 
-        TextInterface textInterface = new TextInterface();
         textInterface.drawMainMenu();
     }
 }
