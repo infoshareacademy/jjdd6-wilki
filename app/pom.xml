@@ -5,14 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.infoshareacademy.jjdd6</groupId>
-    <artifactId>jjdd6-wilki</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>app</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <modules>
-        <module>app</module>
-        <module>web</module>
-    </modules>
+
+    <parent>
+        <groupId>com.infoshareacademy.jjdd6</groupId>
+        <artifactId>jjdd6-wilki</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <build>
         <plugins>
