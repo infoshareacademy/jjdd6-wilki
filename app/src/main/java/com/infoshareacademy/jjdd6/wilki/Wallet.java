@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -72,7 +73,7 @@ public class Wallet implements Serializable {
                 .map(Share::getTotalProfit)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(getBaseCash())
-                .subtract(getBaseWorth()));
+                .subtract(getBaseWorth())).setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public BigDecimal getBaseCash() {

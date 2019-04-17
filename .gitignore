@@ -4,3 +4,5 @@ out/
 .idea/
 logs/
 wallet.xml
+dependency-reduced-pom.xml
+jjdd6-wilki-1.0-SNAPSHOT.jar
