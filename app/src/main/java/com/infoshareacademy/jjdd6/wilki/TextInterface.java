@@ -51,8 +51,8 @@ public class TextInterface {
                 } else if (choose == 6) {
                     clearScreen();
                     if (wallet.getShares().size() > 0) {
-                    WalletToXML walletToXML = new WalletToXML();
-                    walletToXML.saveToXml(wallet);
+                        WalletToXML walletToXML = new WalletToXML();
+                        walletToXML.saveToXml(wallet);
                     }
                     System.out.println("Goodbye.");
                     System.exit(0);
@@ -158,6 +158,8 @@ public class TextInterface {
         } else {
             wallet.buyShare(ticker.toUpperCase(), amount, price);
             clearScreen();
+            System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+
         }
     }
 
@@ -239,6 +241,7 @@ public class TextInterface {
         if (!(wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount)) {
             wallet.sellShare(ticker.toUpperCase(), amount, price);
             clearScreen();
+            System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
         } else {
             clearScreen();
             System.out.println("You trying to sell " + amount + " shares, but you have " + wallet.scanWalletForShare(ticker).getSharesTotalAmount());

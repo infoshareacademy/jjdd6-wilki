@@ -1,6 +1,8 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,6 +17,9 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Share implements Serializable {
+
+    private static Logger logger = LoggerFactory.getLogger(Share.class);
+
 
     private String ticker;
     private String fullCompanyName;
@@ -74,21 +79,43 @@ public class Share implements Serializable {
     }
 
     public void pullExternalData() {
-        List<DataFromFile> data = new LoadData()
-                .loadToList(getTicker().toLowerCase() + ".csv");
-        this.volume = data.get(0).getVolume();
-        this.currentPrice = data.get(0).getClosingPrice().setScale(4, RoundingMode.HALF_UP);
-        this.highestPrice = data.get(0).getHighestPrice().setScale(4, RoundingMode.HALF_UP);
-        this.lowestPrice = data.get(0).getLowestPrice().setScale(4, RoundingMode.HALF_UP);
-        this.dataTime = data.get(0).getTime();
-        this.dataDate = data.get(0).getDate();
-        this.currentPE = new LoadData()
-                .loadToList(getTicker().toLowerCase() + "_pe.csv")
-                .get(0)
-                .getClosingPrice()
-                .doubleValue();
+
+        try {
+            List<DataFromFile> data = new LoadData()
+                    .loadToList(getTicker().toLowerCase() + ".csv");
+            this.volume = data.get(0).getVolume();
+            this.currentPrice = data.get(0).getClosingPrice().setScale(4, RoundingMode.HALF_UP);
+            this.highestPrice = data.get(0).getHighestPrice().setScale(4, RoundingMode.HALF_UP);
+            this.lowestPrice = data.get(0).getLowestPrice().setScale(4, RoundingMode.HALF_UP);
+            this.dataTime = data.get(0).getTime();
+            this.dataDate = data.get(0).getDate();
+
+        } catch (Exception e) {
+
+            logger.error(this.getTicker().toLowerCase() + ".csv not found (possible connection problems)");
+            this.volume = 0L;
+            this.currentPrice = BigDecimal.ZERO;
+            this.highestPrice = BigDecimal.ZERO;
+            this.lowestPrice = BigDecimal.ZERO;
+            this.dataTime = LocalTime.MIDNIGHT;
+            this.dataDate = LocalDate.MIN;
+        }
+
+        this.delay = calculateDelay(this.dataTime);
+
+        try {
+            this.currentPE = new LoadData()
+                    .loadToList(getTicker().toLowerCase() + "_pe.csv")
+                    .get(0)
+                    .getClosingPrice()
+                    .doubleValue();
+        } catch (Exception e) {
+            logger.error(this.getTicker().toLowerCase() + "_pe.csv not found (possible connection problems)");
+            this.currentPE = 0.0;
+        }
+
         this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
-        this.delay = calculateDelay(data.get(0).getTime());
+
     }
 
     public String getFullCompanyName() {
@@ -248,21 +275,30 @@ public class Share implements Serializable {
         return sb.toString();
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Share share = (Share) o;
-        return ticker.equals(share.ticker) &&
+        return delay == share.delay &&
+                Objects.equals(ticker, share.ticker) &&
                 Objects.equals(fullCompanyName, share.fullCompanyName) &&
+                Objects.equals(currentPrice, share.currentPrice) &&
                 Objects.equals(takeProfitPrice, share.takeProfitPrice) &&
                 Objects.equals(stopLossPrice, share.stopLossPrice) &&
+                Objects.equals(currentPE, share.currentPE) &&
+                Objects.equals(volume, share.volume) &&
                 Objects.equals(transactionLinkedList, share.transactionLinkedList) &&
-                Objects.equals(transactionHistory, share.transactionHistory);
+                Objects.equals(transactionHistory, share.transactionHistory) &&
+                Objects.equals(highestPrice, share.highestPrice) &&
+                Objects.equals(lowestPrice, share.lowestPrice) &&
+                Objects.equals(dataDate, share.dataDate) &&
+                Objects.equals(dataTime, share.dataTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticker, fullCompanyName, takeProfitPrice, stopLossPrice, transactionLinkedList, transactionHistory);
+        return Objects.hash(ticker, fullCompanyName, currentPrice, takeProfitPrice, stopLossPrice, currentPE, volume, transactionLinkedList, transactionHistory, highestPrice, lowestPrice, dataDate, dataTime, delay);
     }
 }
