@@ -14,8 +14,10 @@ public class HelloServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         resp.getWriter().println("Hello from empty wallet!");
 
+        Share share = new Share();
+
+        resp.getWriter().println("My empty share is " + share);
     }
 }

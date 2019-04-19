@@ -51,8 +51,8 @@ public class TextInterface {
                 } else if (choose == 6) {
                     clearScreen();
                     if (wallet.getShares().size() > 0) {
-                    WalletToXML walletToXML = new WalletToXML();
-                    walletToXML.saveToXml(wallet);
+                        WalletToXML walletToXML = new WalletToXML();
+                        walletToXML.saveToXml(wallet);
                     }
                     System.out.println("Goodbye.");
                     System.exit(0);
@@ -244,7 +244,8 @@ public class TextInterface {
         double price = validatePrice();
         System.out.println();
         wallet.sellShare(ticker.toUpperCase(), amount, price);
-
+        clearScreen();
+        System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
         System.out.println();
     }
 
