@@ -231,18 +231,20 @@ public class TextInterface {
         Share share = wallet.scanWalletForShare(ticker);
         System.out.println(share.getFullCompanyName() + " [" + share.getTicker() + "] available amount: " + share.getSharesTotalAmount() + "   avg buy price: " + share.getAvgBuyPrice());
         System.out.println();
+
         amount = validateAmount();
+        if (amount > share.getSharesTotalAmount()) {
+            do {
+                System.out.println("You trying to sell " + amount + " shares, but you have " + wallet.scanWalletForShare(ticker).getSharesTotalAmount());
+                amount = validateAmount();
+            } while (amount > share.getSharesTotalAmount());
+        }
+
         System.out.println();
         double price = validatePrice();
         System.out.println();
+        wallet.sellShare(ticker.toUpperCase(), amount, price);
 
-        if (!(wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount)) {
-            wallet.sellShare(ticker.toUpperCase(), amount, price);
-            clearScreen();
-        } else {
-            clearScreen();
-            System.out.println("You trying to sell " + amount + " shares, but you have " + wallet.scanWalletForShare(ticker).getSharesTotalAmount());
-        }
         System.out.println();
     }
 
@@ -269,10 +271,11 @@ public class TextInterface {
         } while (!wallet.checkIfShareIsPresent(ticker));
         Share share = wallet.scanWalletForShare(ticker);
 
-        System.out.println("Stop-loss");
+
+        System.out.println("Stop-loss. Actual price -> " + share.getStopLossPrice() + " pln");
         double stopLossPrice = validatePrice();
         share.setStopLossPrice(BigDecimal.valueOf(stopLossPrice));
-        System.out.println("Take-profit");
+        System.out.println("Take-profit. Actual price -> " + share.getTakeProfitPrice() + " pln");
         double takeProfitPrice = validatePrice();
         share.setTakeProfitPrice(BigDecimal.valueOf(takeProfitPrice));
         clearScreen();
