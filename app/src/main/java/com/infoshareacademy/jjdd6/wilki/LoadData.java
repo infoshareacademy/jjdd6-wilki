@@ -78,7 +78,7 @@ public class LoadData {
     public String loadAndScanTickers(String ticker) {
 
         LoadData loadData = new LoadData();
-        List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
+        List<String[]> dataLoaded = loadData.read("/home/pewu/IdeaProjects/jjdd6-wilki/data/tickers.csv");
         Map<String, String> tickersMap = dataLoaded.stream()
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);

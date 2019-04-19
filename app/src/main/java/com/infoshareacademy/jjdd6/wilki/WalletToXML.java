@@ -12,7 +12,7 @@ import java.io.*;
 public class WalletToXML {
 
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
-    private static final String SERIALIZED_FILE_NAME = "wallet.xml";
+    public static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
     public void saveToXml(Wallet wallet) {
         XmlMapper xmlMapper = new XmlMapper();
@@ -29,9 +29,9 @@ public class WalletToXML {
     }
 
 
-    public Wallet loadFromXml() {
+    public Wallet loadFromXml(String filename) {
         try {
-            File file = new File(SERIALIZED_FILE_NAME);
+            File file = new File(filename);
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.registerModule(new JavaTimeModule());
             xmlMapper.registerModule(new JSR310Module());
