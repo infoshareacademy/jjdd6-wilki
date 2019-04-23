@@ -14,6 +14,7 @@ public class WalletToXML {
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
+
     public void saveToXml(Wallet wallet) {
         XmlMapper xmlMapper = new XmlMapper();
 
@@ -31,13 +32,15 @@ public class WalletToXML {
 
     public Wallet loadFromXml() {
         try {
-            File file = new File(SERIALIZED_FILE_NAME);
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            InputStream is = classloader.getResourceAsStream(SERIALIZED_FILE_NAME);
+
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.registerModule(new JavaTimeModule());
             xmlMapper.registerModule(new JSR310Module());
             xmlMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
-            String xml = inputStreamToString(new FileInputStream(file));
+            String xml = inputStreamToString(is);
             return xmlMapper.readValue(xml, Wallet.class);
         } catch (Exception e) {
             logger.error("Wallet import from XML failed");
