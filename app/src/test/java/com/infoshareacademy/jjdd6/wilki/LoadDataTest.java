@@ -2,23 +2,46 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoadDataTest {
 
     @Test
-    void listFilesForFolder() {
+    void checkIfloadAndScanTickersReturnsFullNameForCorrectTicker() {
+        //given
+        String correctTicker = "KGH";
+
+        //when
+        String result = new LoadData().loadAndScanTickers(correctTicker);
+
+        //then
+        assertThat(result).isEqualTo("KGHM POLSKA MIEDŹ SA");
+
     }
 
     @Test
-    void loadToList() {
+    void checkIfvalidateTickerReturnsTrueForCorrectTicker() {
+        //given
+        String correctTicker = "KGH";
+
+        //when
+        Boolean result = new LoadData().validateTicker(correctTicker);
+
+        //then
+        assertThat(result).isTrue();
     }
 
     @Test
-    void loadAndScanTickers() {
+    void checkIfvalidateTickerReturnsFalseWhenTickerIsInvalid() {
+        //given
+        String falseTicker = "KGA";
+
+        //when
+        Boolean result = new LoadData().validateTicker(falseTicker);
+
+        //then
+        assertThat(result).isFalse();
     }
 
-    @Test
-    void validateTicker() {
-    }
 }
