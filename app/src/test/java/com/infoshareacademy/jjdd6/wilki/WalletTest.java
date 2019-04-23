@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -136,10 +137,12 @@ class WalletTest {
         //given
 
         //when
-        double result = wallet.getROE();
+        BigDecimal result = wallet.getROE();
+//        DecimalFormat df = new DecimalFormat("0.00");
+//        String result = df.format(resultROE);
 
         //then
-        assertThat(result).isEqualTo(-6.27);
+        assertThat(result).isEqualTo(BigDecimal.valueOf(-0.06));
 
     }
 

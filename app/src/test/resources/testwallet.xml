@@ -100,6 +100,6 @@
     <currentWorth>999373.25</currentWorth>
     <stopLossWorth>8900.0000</stopLossWorth>
     <takeProfitWorth>14100.0000</takeProfitWorth>
-    <roe>-6.267500000000092E-4</roe>
+    <roe>-0.06</roe>
     <totalBuyFees>46.80000000</totalBuyFees>
 </Wallet>

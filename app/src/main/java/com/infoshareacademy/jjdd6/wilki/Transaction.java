@@ -33,16 +33,21 @@ public class Transaction implements Serializable {
         }
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = BigDecimal.ZERO;
     }
 
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
 
         this.date = LocalDate.now();
+        if (amount > 0) {
+            this.type = BUY;
+        } else {
+            this.type = SELL;
+        }
         this.amount = amount;
         this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(amount).multiply(price).multiply(transactionFee);
+        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
 

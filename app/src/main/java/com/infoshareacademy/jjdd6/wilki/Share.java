@@ -152,12 +152,12 @@ public class Share implements Serializable {
 
     public BigDecimal getBaseValue() {
 
-        return getAvgBuyPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_EVEN);
+        return getAvgBuyPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getCurrentValue() {
 
-        return getCurrentPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_EVEN);
+        return getCurrentPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getCurrentPrice() {

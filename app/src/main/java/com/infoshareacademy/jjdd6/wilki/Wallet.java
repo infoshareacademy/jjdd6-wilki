@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -49,7 +50,8 @@ public class Wallet implements Serializable {
 
         return this.shares.stream()
                 .map(Share::getStopLossValue)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getTakeProfitWorth() {
@@ -73,12 +75,12 @@ public class Wallet implements Serializable {
                 .map(Share::getTotalProfit)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(getBaseCash())
-                .subtract(getBaseWorth())).setScale(2, RoundingMode.HALF_EVEN);
+                .subtract(getBaseWorth())).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getBaseCash() {
 
-        return baseCash;
+        return baseCash.setScale(2,RoundingMode.HALF_UP);
     }
 
     public void setBaseCash(BigDecimal baseCash) {
@@ -86,9 +88,9 @@ public class Wallet implements Serializable {
         this.baseCash = baseCash;
     }
 
-    public Double getROE() {
+    public BigDecimal getROE() {
 
-        return getCurrentWorth().doubleValue() / getBaseCash().doubleValue() - 1.0000;
+        return (getCurrentWorth().divide(getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
     }
 
     public void increaseBaseCash(BigDecimal amount) {
@@ -138,7 +140,7 @@ public class Wallet implements Serializable {
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = scanWalletForShare(ticker.toUpperCase());
-        scanWalletForShare(ticker.toUpperCase()).buy(amount, price);
+        result.buy(amount, price);
 
         if (this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
