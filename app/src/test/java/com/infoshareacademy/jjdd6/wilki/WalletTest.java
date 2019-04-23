@@ -1,15 +1,13 @@
 package com.infoshareacademy.jjdd6.wilki;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class WalletTest {
 
@@ -22,27 +20,75 @@ class WalletTest {
 
 
     @Test
-    void getShares() {
+    void checkIfgetSharesReturnsCorrectListOfShares() {
+        //given
+
+        //when
+        List<Share> result = wallet.getShares();
+
+        //then
+        assertThat(result.size()).isEqualTo(2);
+
     }
 
     @Test
-    void getBaseWorth() {
+    void checkIfgetBaseWorthReturnsCorrectAmount() {
+        //given
+
+        //when
+        BigDecimal result = wallet.getBaseWorth();
+
+        //then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(12450.00).setScale(2, RoundingMode.HALF_UP));
+
     }
 
     @Test
-    void getCurrentWorth() {
+    void checkIfgetCurrentWorthReturnsCorrectAmount() {
+        //given
+
+        //when
+        BigDecimal result = wallet.getCurrentWorth();
+
+        //then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(999373.25).setScale(2, RoundingMode.HALF_UP));
+
     }
 
     @Test
-    void getSharesCurrentWorth() {
+    void checkIfgetSharesCurrentWorthReturnCorrectAmount() {
+        //given
+
+        //when
+        BigDecimal result = wallet.getSharesCurrentWorth();
+
+        //then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(10923.25).setScale(2, RoundingMode.HALF_UP));
+
     }
 
     @Test
-    void getStopLossWorth() {
+    void checkIfgetStopLossWorthReturnsCorrectAmount() {
+        //given
+
+        //when
+        BigDecimal result = wallet.getStopLossWorth();
+
+        //then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(8900.00).setScale(2, RoundingMode.HALF_UP));
+
     }
 
     @Test
-    void getTakeProfitWorth() {
+    void checkIfgetTakeProfitWorthReturnsCorrectAmount() {
+        //given
+
+        //when
+        BigDecimal result = wallet.getTakeProfitWorth();
+
+        //then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(14100.00).setScale(2, RoundingMode.HALF_UP));
+
     }
 
     @Test
@@ -59,7 +105,15 @@ class WalletTest {
 
 
     @Test
-    void getROE() {
+    void checkIfgetROEreturnsCorrectNumber() {
+        //given
+
+        //when
+       double result = wallet.getROE();
+
+        //then
+        assertThat(result).isEqualTo(-6.267500000000092E-4);
+
     }
 
     @Test
@@ -109,6 +163,7 @@ class WalletTest {
         Share result = wallet.scanWalletForShare("peo");
 
         //then
+        assertThat(result).isNotNull();
         assertThat(result.getSharesTotalAmount()).isEqualTo(0);
     }
 
