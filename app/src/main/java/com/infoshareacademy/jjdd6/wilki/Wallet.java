@@ -2,12 +2,14 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.ejb.Stateless;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.LinkedList;
 import java.util.Objects;
 
+@Stateless
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wallet implements Serializable {
 

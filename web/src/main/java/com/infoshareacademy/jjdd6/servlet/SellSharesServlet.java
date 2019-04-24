@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.validation.TickerValidator;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 
 import javax.inject.Inject;
@@ -11,10 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/share/buy")
-public class BuySharesServlet extends HttpServlet {
+public class SellSharesServlet extends HttpServlet {
 
     @Inject
     Wallet wallet;
+
+    @Inject
+    private TickerValidator  tickerValidator;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,6 +30,9 @@ public class BuySharesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
+
+        tickerValidator.isTickerValid(req.getParameter("ticker"));
 
         String ticker = req.getParameter("ticker");
         String amount = req.getParameter("amount");
@@ -43,7 +50,7 @@ public class BuySharesServlet extends HttpServlet {
         int amountInteger = Integer.parseInt(amount);
         double priceDouble = Double.parseDouble(price);
 
-        wallet.buyShare(ticker, amountInteger, priceDouble);
+        wallet.sellShare(ticker, amountInteger, priceDouble);
 
     }
 }
