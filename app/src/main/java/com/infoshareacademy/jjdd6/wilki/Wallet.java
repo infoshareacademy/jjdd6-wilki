@@ -30,20 +30,22 @@ public class Wallet implements Serializable {
 
         return this.shares.stream()
                 .map(Share::getBaseValue)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
+                .setScale(2,RoundingMode.HALF_UP);
 
     }
 
     public BigDecimal getCurrentWorth() {
 
-        return this.getSharesCurrentWorth().add(getFreeCash());
+        return this.getSharesCurrentWorth().add(getFreeCash()).setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getSharesCurrentWorth() {
 
         return this.shares.stream()
                 .map(Share::getCurrentValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getStopLossWorth() {
@@ -58,15 +60,16 @@ public class Wallet implements Serializable {
 
         return this.shares.stream()
                 .map(Share::getTakeProfitValue)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
+                .setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getCashFromProfits() {
-        return cashFromProfits;
+        return cashFromProfits.setScale(2,RoundingMode.HALF_UP);
     }
 
     public void addToCashFromProfits(BigDecimal profit) {
-        this.cashFromProfits = this.cashFromProfits.add(profit);
+        this.cashFromProfits = this.cashFromProfits.add(profit).setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getFreeCash() {
@@ -85,7 +88,7 @@ public class Wallet implements Serializable {
 
     public void setBaseCash(BigDecimal baseCash) {
 
-        this.baseCash = baseCash;
+        this.baseCash = baseCash.setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getROE() {
@@ -108,7 +111,8 @@ public class Wallet implements Serializable {
 
         return this.shares.stream()
                 .map(Share::getFeeAmount)
-                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e));
+                .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
+                .setScale(2,RoundingMode.HALF_UP);
     }
 
     public Share scanWalletForShare(String ticker) {

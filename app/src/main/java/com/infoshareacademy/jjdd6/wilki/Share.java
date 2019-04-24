@@ -137,7 +137,7 @@ public class Share implements Serializable {
 
     public BigDecimal getTakeProfitValue() {
 
-        return getTakeProfitPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(4, RoundingMode.HALF_UP);
+        return getTakeProfitPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getStopLossPrice() {
@@ -147,7 +147,7 @@ public class Share implements Serializable {
 
     public BigDecimal getStopLossValue() {
 
-        return getStopLossPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(4, RoundingMode.HALF_UP);
+        return getStopLossPrice().multiply(BigDecimal.valueOf(getSharesTotalAmount())).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getBaseValue() {
@@ -209,8 +209,8 @@ public class Share implements Serializable {
             this.transactionLinkedList.remove(0);
         }
 
-        this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price), profit));
-        return profit;
+        this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), profit));
+        return profit.setScale(2,RoundingMode.HALF_UP);
     }
 
     public BigDecimal getTotalProfit() {
@@ -218,9 +218,10 @@ public class Share implements Serializable {
         try {
             return transactionHistory.stream()
                     .map(Transaction::getProfit)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    .reduce(BigDecimal.ZERO, BigDecimal::add)
+                    .setScale(2,RoundingMode.HALF_UP);
         } catch (NullPointerException e) {
-            return BigDecimal.ZERO;
+            return BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP);
         }
     }
 
@@ -235,7 +236,8 @@ public class Share implements Serializable {
 
         return transactionHistory.stream()
                 .map(Transaction::getTransactionFeeValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2,RoundingMode.HALF_UP);
     }
 
     public int calculateDelay(LocalTime time) {
