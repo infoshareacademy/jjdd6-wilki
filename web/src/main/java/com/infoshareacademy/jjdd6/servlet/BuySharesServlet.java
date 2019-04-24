@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/buy-shares")
+@WebServlet("/share/buy")
 public class BuySharesServlet extends HttpServlet {
 
     @Override
