@@ -1,10 +1,15 @@
 package com.infoshareacademy.jjdd6.wilki;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,23 +22,60 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "SHARES")
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
 
-
+    @Id
+    @Column(name = "ticker")
     private String ticker;
+
+    @Column(name = "full_company_name")
+    @NotNull
     private String fullCompanyName;
+
+    @Column(name = "current_price")
+    @NotNull
     private BigDecimal currentPrice;
+
+    @Column(name = "take_profit_price")
+    @NotNull
     private BigDecimal takeProfitPrice = BigDecimal.valueOf(0);
+
+    @Column
+    @NotNull
     private BigDecimal stopLossPrice = BigDecimal.valueOf(0);
+
+    @Column(name = "current_PE")
+    @NotNull
     private Double currentPE;
+
+    @Column(name = "volume")
+    @NotNull
     private Long volume;
+
+    @Column(name = "transaction_list")
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
+
+    @Column(name = "transaction_history")
     private List<Transaction> transactionHistory = new ArrayList<>();
+
+    @Column(name = "highest_price")
+    @NotNull
     private BigDecimal highestPrice;
+
+    @Column(name = "lowest_price")
+    @NotNull
     private BigDecimal lowestPrice;
+
+    @Column(name = "data_date")
+    @NotNull
     private LocalDate dataDate;
+
+    @Column(name = "data_time")
+    @NotNull
     private LocalTime dataTime;
     private int delay;
 
