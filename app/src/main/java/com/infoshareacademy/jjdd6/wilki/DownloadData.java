@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.wilki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -23,9 +24,11 @@ public class DownloadData {
     }
 
     private static void download(String filename, String url) {
-        try (
+        String path = new File(Thread.currentThread().getContextClassLoader().getResource("tickers.csv").getPath()).getAbsolutePath() + filename;
+
+        try {
                 BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream());
-                FileOutputStream fileOS = new FileOutputStream("./data/" + filename)) {
+                FileOutputStream fileOS = new FileOutputStream(path);
             byte data[] = new byte[1024];
             int byteContent;
             while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {

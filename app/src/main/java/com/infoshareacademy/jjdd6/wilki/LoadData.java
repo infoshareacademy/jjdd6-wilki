@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,27 +33,9 @@ public class LoadData {
         return allData;
     }
 
-    public List<File> listFilesForFolder(File folder) {
-        folder = new File("./data");
-        File[] arrayOfFiles = folder.listFiles();
-
-        if (arrayOfFiles != null) {
-            for (File listOfFile : arrayOfFiles) {
-                if (listOfFile.isFile()) {
-                    System.out.println(listOfFile.getName());
-                } else if (listOfFile.isDirectory()) {
-                    System.out.println("Directory " + listOfFile.getName());
-                }
-            }
-        } else {
-            System.out.println("There are no files in given directory");
-        }
-        return List.of(arrayOfFiles);
-    }
-
     public List<DataFromFile> loadToList(String filename) {
 
-        String path = "./data/" + filename;
+        String path = Thread.currentThread().getContextClassLoader().getResource("current_data/" + filename).getPath();
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
         return dataLoaded.stream()
@@ -78,7 +61,7 @@ public class LoadData {
     public String loadAndScanTickers(String ticker) {
 
         LoadData loadData = new LoadData();
-        List<String[]> dataLoaded = loadData.read("./data/tickers.csv");
+        List<String[]> dataLoaded = loadData.read(Thread.currentThread().getContextClassLoader().getResource("tickers.csv").getPath());
         Map<String, String> tickersMap = dataLoaded.stream()
                 .collect(Collectors.toMap(l -> l[0], l -> l[1]));
         return tickersMap.get(ticker);

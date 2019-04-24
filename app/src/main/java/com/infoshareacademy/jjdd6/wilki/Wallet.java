@@ -7,10 +7,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wallet implements Serializable {
@@ -18,7 +15,7 @@ public class Wallet implements Serializable {
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
-    private List<Transaction> walletHistory = Arrays.asList();
+    private List<Transaction> walletHistory = new ArrayList<>();
 
     public Wallet() {
 
@@ -133,6 +130,12 @@ public class Wallet implements Serializable {
     }
 
     public void sellShare(String ticker, int amount, double price) {
+        Share result = sellShareCommon(ticker, amount, price);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+
+    }
+
+    private Share sellShareCommon(String ticker, int amount, double price) {
         Share result = this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
@@ -140,46 +143,27 @@ public class Wallet implements Serializable {
 
         BigDecimal profit = result.sell(amount, price);
         this.addToCashFromProfits(profit);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
         for (int i = 0; i < getShares().size(); i++) {
             if (getShares().get(i).getSharesTotalAmount() == 0) {
                 getShares().remove(i);
             }
         }
+        return result;
     }
 
     public void sellShare(String ticker, int amount, double price, LocalDate date) {
-        Share result = this.getShares().stream()
-                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
-                .findFirst()
-                .get();
+        Share result = sellShareCommon(ticker, amount, price);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
-        BigDecimal profit = result.sell(amount, price);
-        this.addToCashFromProfits(profit);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
-
-        for (int i = 0; i < getShares().size(); i++) {
-            if (getShares().get(i).getSharesTotalAmount() == 0) {
-                getShares().remove(i);
-            }
-        }
     }
 
     public void buyShare(String ticker, int amount, double price) {
-        Share result = scanWalletForShare(ticker.toUpperCase());
-        result.buy(amount, price);
-
-        if (this.getShares().stream()
-                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
-                .count() == 0) {
-            this.getShares().add(result);
-        }
-        DownloadData.updateWalletData(this);
+        Share result = buyShareCommon(ticker, amount, price);
         walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
-    public void buyShare(String ticker, int amount, double price, LocalDate date) {
+    private Share buyShareCommon(String ticker, int amount, double price) {
         Share result = scanWalletForShare(ticker.toUpperCase());
         result.buy(amount, price);
 
@@ -189,6 +173,11 @@ public class Wallet implements Serializable {
             this.getShares().add(result);
         }
         DownloadData.updateWalletData(this);
+        return result;
+    }
+
+    public void buyShare(String ticker, int amount, double price, LocalDate date) {
+        Share result = buyShareCommon(ticker, amount, price);
         walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
