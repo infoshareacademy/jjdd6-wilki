@@ -19,6 +19,9 @@ public class Transaction implements Serializable {
     private LocalDate date;
     private BigDecimal transactionFeeValue;
     private TransactionType type;
+    private String ticker;
+    private String fullCompanyName;
+
 
     public Transaction() {
     }
@@ -40,6 +43,36 @@ public class Transaction implements Serializable {
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
 
         this.date = LocalDate.now();
+        if (amount > 0) {
+            this.type = BUY;
+        } else {
+            this.type = SELL;
+        }
+        this.amount = amount;
+        this.price = price;
+        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
+        this.profit = profit;
+    }
+
+    public Transaction(LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
+
+        this.date = date;
+        if (amount > 0) {
+            this.type = BUY;
+        } else {
+            this.type = SELL;
+        }
+        this.amount = amount;
+        this.price = price;
+        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
+        this.profit = profit;
+    }
+
+    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
+
+        this.ticker = ticker;
+        this.fullCompanyName = fullCompanyName;
+        this.date = date;
         if (amount > 0) {
             this.type = BUY;
         } else {

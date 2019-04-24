@@ -6,7 +6,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -15,6 +18,7 @@ public class Wallet implements Serializable {
     private LinkedList<Share> shares = new LinkedList<>();
     private BigDecimal baseCash = BigDecimal.ZERO;
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
+    private List<Transaction> walletHistory = Arrays.asList();
 
     public Wallet() {
 
@@ -31,13 +35,13 @@ public class Wallet implements Serializable {
         return this.shares.stream()
                 .map(Share::getBaseValue)
                 .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
 
     }
 
     public BigDecimal getCurrentWorth() {
 
-        return this.getSharesCurrentWorth().add(getFreeCash()).setScale(2,RoundingMode.HALF_UP);
+        return this.getSharesCurrentWorth().add(getFreeCash()).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getSharesCurrentWorth() {
@@ -45,7 +49,7 @@ public class Wallet implements Serializable {
         return this.shares.stream()
                 .map(Share::getCurrentValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getStopLossWorth() {
@@ -61,15 +65,15 @@ public class Wallet implements Serializable {
         return this.shares.stream()
                 .map(Share::getTakeProfitValue)
                 .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getCashFromProfits() {
-        return cashFromProfits.setScale(2,RoundingMode.HALF_UP);
+        return cashFromProfits.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void addToCashFromProfits(BigDecimal profit) {
-        this.cashFromProfits = this.cashFromProfits.add(profit).setScale(2,RoundingMode.HALF_UP);
+        this.cashFromProfits = this.cashFromProfits.add(profit).setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getFreeCash() {
@@ -83,12 +87,12 @@ public class Wallet implements Serializable {
 
     public BigDecimal getBaseCash() {
 
-        return baseCash.setScale(2,RoundingMode.HALF_UP);
+        return baseCash.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setBaseCash(BigDecimal baseCash) {
 
-        this.baseCash = baseCash.setScale(2,RoundingMode.HALF_UP);
+        this.baseCash = baseCash.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getROE() {
@@ -112,7 +116,7 @@ public class Wallet implements Serializable {
         return this.shares.stream()
                 .map(Share::getFeeAmount)
                 .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public Share scanWalletForShare(String ticker) {
@@ -129,11 +133,31 @@ public class Wallet implements Serializable {
     }
 
     public void sellShare(String ticker, int amount, double price) {
-        this.addToCashFromProfits(this.getShares().stream()
+        Share result = this.getShares().stream()
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .findFirst()
-                .get()
-                .sell(amount, price));
+                .get();
+
+        BigDecimal profit = result.sell(amount, price);
+        this.addToCashFromProfits(profit);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+
+        for (int i = 0; i < getShares().size(); i++) {
+            if (getShares().get(i).getSharesTotalAmount() == 0) {
+                getShares().remove(i);
+            }
+        }
+    }
+
+    public void sellShare(String ticker, int amount, double price, LocalDate date) {
+        Share result = this.getShares().stream()
+                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
+                .findFirst()
+                .get();
+
+        BigDecimal profit = result.sell(amount, price);
+        this.addToCashFromProfits(profit);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
         for (int i = 0; i < getShares().size(); i++) {
             if (getShares().get(i).getSharesTotalAmount() == 0) {
@@ -152,6 +176,20 @@ public class Wallet implements Serializable {
             this.getShares().add(result);
         }
         DownloadData.updateWalletData(this);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+    }
+
+    public void buyShare(String ticker, int amount, double price, LocalDate date) {
+        Share result = scanWalletForShare(ticker.toUpperCase());
+        result.buy(amount, price);
+
+        if (this.getShares().stream()
+                .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
+                .count() == 0) {
+            this.getShares().add(result);
+        }
+        DownloadData.updateWalletData(this);
+        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
     public void setShares(LinkedList<Share> shares) {
@@ -164,6 +202,14 @@ public class Wallet implements Serializable {
 
     public boolean checkIfEnoughCash(int amount, double price) {
         return amount * price <= getFreeCash().doubleValue();
+    }
+
+    public List<Transaction> getWalletHistory() {
+        return walletHistory;
+    }
+
+    public void setWalletHistory(List<Transaction> walletHistory) {
+        this.walletHistory = walletHistory;
     }
 
     @Override

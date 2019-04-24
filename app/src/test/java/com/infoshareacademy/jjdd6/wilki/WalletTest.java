@@ -15,7 +15,8 @@ class WalletTest {
 
     @BeforeEach
     void loadWallet() {
-        wallet = new WalletToXML().loadFromXml("/home/pewu/IdeaProjects/jjdd6-wilki/app/src/test/resources/testwallet.xml");
+        System.out.println(Thread.currentThread().getContextClassLoader().getResource("testwallet.xml"));
+        wallet = new WalletToXML().loadFromXml(Thread.currentThread().getContextClassLoader().getResource("testwallet.xml").toString());
     }
 
 
