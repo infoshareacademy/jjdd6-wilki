@@ -14,6 +14,7 @@ public class AppProperties {
     private static final String DATE_FORMAT = "dateFormat";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
+    private static final String CONFIG_PROPERTIES_PATH = Thread.currentThread().getContextClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath();
 
     private static DateTimeFormatter dateTimeFormatter;
 
@@ -22,7 +23,7 @@ public class AppProperties {
         Properties properties = new Properties();
 
         try {
-            properties.load(new FileInputStream(CONFIG_PROPERTIES_FILENAME));
+            properties.load(new FileInputStream(CONFIG_PROPERTIES_PATH));
             String dateFormat = properties.getProperty(DATE_FORMAT);
             dateTimeFormatter = DateTimeFormatter.ofPattern(dateFormat);
             logger.info("Configuration file loaded properly.");
