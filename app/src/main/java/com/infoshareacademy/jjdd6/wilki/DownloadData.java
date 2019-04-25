@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.wilki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -10,6 +11,7 @@ import java.net.URL;
 public class DownloadData {
 
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
+    public static final String DEFAULT_DOWNLOAD_LOCATION = "/tmp/";
 
 
     public static void getCurrentCSV(String ticker) {
@@ -23,9 +25,11 @@ public class DownloadData {
     }
 
     private static void download(String filename, String url) {
-        try (
+        String path = DEFAULT_DOWNLOAD_LOCATION + filename;
+
+        try {
                 BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream());
-                FileOutputStream fileOS = new FileOutputStream("./data/" + filename)) {
+                FileOutputStream fileOS = new FileOutputStream(path);
             byte data[] = new byte[1024];
             int byteContent;
             while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {

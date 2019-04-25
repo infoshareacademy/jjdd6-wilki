@@ -14,7 +14,6 @@ public class WalletToXML {
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-
     public void saveToXml(Wallet wallet) {
         XmlMapper xmlMapper = new XmlMapper();
 
@@ -30,10 +29,10 @@ public class WalletToXML {
     }
 
 
-    public Wallet loadFromXml() {
+    public Wallet loadFromXml(String filename) {
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            InputStream is = classloader.getResourceAsStream(SERIALIZED_FILE_NAME);
+            InputStream is = classloader.getResourceAsStream(filename);
 
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.registerModule(new JavaTimeModule());
