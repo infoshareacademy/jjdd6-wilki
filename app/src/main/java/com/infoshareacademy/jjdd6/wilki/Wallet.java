@@ -2,6 +2,8 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,11 +11,27 @@ import java.util.LinkedList;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "WALLET")
 public class Wallet implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "share")
+    @NotNull
     private LinkedList<Share> shares = new LinkedList<>();
+
+    @Column(name = "base_cash")
+    @NotNull
     private BigDecimal baseCash = BigDecimal.ZERO;
+
+    @Column(name = "cash_from_profits")
+    @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
+
 
     public Wallet() {
 
@@ -154,6 +172,14 @@ public class Wallet implements Serializable {
 
     public void setCashFromProfits(BigDecimal cashFromProfits) {
         this.cashFromProfits = cashFromProfits;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean checkIfEnoughCash(int amount, double price) {

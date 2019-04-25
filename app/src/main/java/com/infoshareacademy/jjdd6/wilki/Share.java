@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,7 +20,7 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "SHARES")
+@Table(name = "SHARE")
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
@@ -56,7 +53,8 @@ public class Share implements Serializable {
     @NotNull
     private Long volume;
 
-    @Column(name = "transaction_list")
+    @Column(name = "transaction_id")
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
 
     @Column(name = "transaction_history")

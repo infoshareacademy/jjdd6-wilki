@@ -2,6 +2,8 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,15 +12,43 @@ import java.util.Objects;
 import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "TRANSACTION")
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "amount")
+    @NotNull
     private Integer amount;
+
+    @Column(name = "price")
+    @NotNull
     private BigDecimal price;
+
+    @Column(name = "profit")
+    @NotNull
     private BigDecimal profit;
+
+    @Column(name = "date")
+    @NotNull
     private LocalDate date;
+
+    @Column(name = "transaction_fee_value")
+    @NotNull
     private BigDecimal transactionFeeValue;
+
+    @Column(name = "transaction_type")
+    @NotNull
     private TransactionType type;
+
+    @ManyToOne
+    @JoinColumn(name = "share_id")
+    private Share share;
 
     public Transaction() {
     }
@@ -108,6 +138,21 @@ public class Transaction implements Serializable {
         this.type = type;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Share getShare() {
+        return share;
+    }
+
+    public void setShare(Share share) {
+        this.share = share;
+    }
 
     @Override
     public String toString() {
