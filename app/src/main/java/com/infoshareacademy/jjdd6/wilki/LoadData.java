@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.RequestScoped;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class LoadData {
 
     private static Logger logger = LoggerFactory.getLogger(LoadData.class);

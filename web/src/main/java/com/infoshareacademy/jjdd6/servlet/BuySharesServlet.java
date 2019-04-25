@@ -1,6 +1,8 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.validation.Validator;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -15,6 +17,9 @@ public class BuySharesServlet extends HttpServlet {
 
     @Inject
     Wallet wallet;
+
+    @Inject
+    private Validator validator;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,13 +37,9 @@ public class BuySharesServlet extends HttpServlet {
         String price = req.getParameter("price");
         String date = req.getParameter("date");
 
-        if (ticker == null || ticker.isEmpty()
-                || amount == null || amount.isEmpty()
-                || price == null || price.isEmpty()
-                || date == null || date.isEmpty()) {
-            resp.getWriter().write("All parameters are obligatory!");
-            return;
-        }
+        validator.isTickerValid(ticker);
+        validator.isNotEmptyAndIsNumeric(amount);
+        validator.isNotEmptyAndIsNumeric(price);
 
         int amountInteger = Integer.parseInt(amount);
         double priceDouble = Double.parseDouble(price);
