@@ -15,7 +15,7 @@ class ShareTest {
 
     @BeforeEach
     void loadWallet() {
-        wallet = new WalletToXML().loadFromXml("/home/pewu/IdeaProjects/jjdd6-wilki/app/src/test/resources/testwallet.xml");
+        wallet = new WalletToXML().loadFromXml("testwallet.xml");
     }
 
     @Test
