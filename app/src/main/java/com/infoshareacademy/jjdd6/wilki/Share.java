@@ -210,7 +210,7 @@ public class Share implements Serializable {
         }
 
         this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), profit));
-        return profit.setScale(2,RoundingMode.HALF_UP);
+        return profit.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getTotalProfit() {
@@ -219,9 +219,10 @@ public class Share implements Serializable {
             return transactionHistory.stream()
                     .map(Transaction::getProfit)
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
-                    .setScale(2,RoundingMode.HALF_UP);
+                    .setScale(2, RoundingMode.HALF_UP);
         } catch (NullPointerException e) {
-            return BigDecimal.ZERO.setScale(2,RoundingMode.HALF_UP);
+            return BigDecimal.ZERO
+                    .setScale(2, RoundingMode.HALF_UP);
         }
     }
 
@@ -237,7 +238,7 @@ public class Share implements Serializable {
         return transactionHistory.stream()
                 .map(Transaction::getTransactionFeeValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public int calculateDelay(LocalTime time) {
