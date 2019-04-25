@@ -30,10 +30,10 @@ public class WalletToXML {
     }
 
 
-    public Wallet loadFromXml() {
+    public Wallet loadFromXml(String filename) {
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            InputStream is = classloader.getResourceAsStream(SERIALIZED_FILE_NAME);
+            InputStream is = classloader.getResourceAsStream(filename);
 
             XmlMapper xmlMapper = new XmlMapper();
             xmlMapper.registerModule(new JavaTimeModule());
