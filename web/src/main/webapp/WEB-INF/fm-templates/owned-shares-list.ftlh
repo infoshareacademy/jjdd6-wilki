@@ -18,7 +18,7 @@
             <div class="value">${share.baseValue} PLN</div>
             <div class="current-price">${share.currentPrice} PLN</div>
             <div class="current-value">${share.currentValue} PLN</div>
-            <div class="return">Mleko 3.2%</div>
+            <div class="return">${share.currentReturn} %</div>
             <div class="sl-price">${share.stopLossPrice} PLN</div>
             <div class="tp-price">${share.takeProfitPrice} PLN</div>
 

@@ -110,7 +110,7 @@ public class TextInterface {
                     wallet.getShares().get(i).getBaseValue() + " pln",
                     wallet.getShares().get(i).getCurrentPrice() + " pln",
                     wallet.getShares().get(i).getCurrentValue() + " pln",
-                    df.format(((wallet.getShares().get(i).getCurrentValue().doubleValue() / (wallet.getShares().get(i).getBaseValue()).doubleValue()) - 1) * 100) + " %",
+                    wallet.getShares().get(i).getCurrentReturn() + " %",
                     wallet.getShares().get(i).getStopLossPrice() + " pln",
                     wallet.getShares().get(i).getTakeProfitPrice() + " pln");
         }
