@@ -158,6 +158,8 @@ public class TextInterface {
         } else {
             wallet.buyShare(ticker.toUpperCase(), amount, price);
             clearScreen();
+            System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+
         }
     }
 
@@ -243,9 +245,15 @@ public class TextInterface {
         System.out.println();
         double price = validatePrice();
         System.out.println();
-        wallet.sellShare(ticker.toUpperCase(), amount, price);
-        clearScreen();
-        System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+
+        if (!(wallet.scanWalletForShare(ticker).getSharesTotalAmount() < amount)) {
+            wallet.sellShare(ticker.toUpperCase(), amount, price);
+            clearScreen();
+            System.out.println("SELL: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
+        } else {
+            clearScreen();
+            System.out.println("You trying to sell " + amount + " shares, but you have " + wallet.scanWalletForShare(ticker).getSharesTotalAmount());
+        }
         System.out.println();
     }
 
