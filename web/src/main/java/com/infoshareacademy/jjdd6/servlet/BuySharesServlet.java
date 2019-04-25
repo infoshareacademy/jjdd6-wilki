@@ -2,7 +2,6 @@ package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.validation.Validator;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -35,7 +34,6 @@ public class BuySharesServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
         String amount = req.getParameter("amount");
         String price = req.getParameter("price");
-        String date = req.getParameter("date");
 
         validator.isTickerValid(ticker);
         validator.isNotEmptyAndIsNumeric(amount);
@@ -43,6 +41,8 @@ public class BuySharesServlet extends HttpServlet {
 
         int amountInteger = Integer.parseInt(amount);
         double priceDouble = Double.parseDouble(price);
+
+        validator.isEnoughCash(amountInteger*priceDouble);
 
         wallet.buyShare(ticker, amountInteger, priceDouble);
 
