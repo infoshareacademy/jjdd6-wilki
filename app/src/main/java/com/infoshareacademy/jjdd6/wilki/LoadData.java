@@ -35,7 +35,7 @@ public class LoadData {
 
     public List<DataFromFile> loadToList(String filename) {
 
-        String path = Thread.currentThread().getContextClassLoader().getResource("current_data/" + filename).getPath();
+        String path = DownloadData.DEFAULT_DOWNLOAD_LOCATION + filename;
         LoadData loadData = new LoadData();
         List<String[]> dataLoaded = loadData.read(path);
         return dataLoaded.stream()
@@ -75,7 +75,6 @@ public class LoadData {
         } catch (Exception e) {
         }
         logger.error("Ticker " + ticker.toUpperCase() + " not valid");
-        System.out.println("Ticker '" + ticker.toUpperCase() + "' not found. Try again.");
         return false;
     }
 }

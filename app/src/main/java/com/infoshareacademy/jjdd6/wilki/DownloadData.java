@@ -11,6 +11,7 @@ import java.net.URL;
 public class DownloadData {
 
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
+    public static final String DEFAULT_DOWNLOAD_LOCATION = "/tmp/";
 
 
     public static void getCurrentCSV(String ticker) {
@@ -24,7 +25,7 @@ public class DownloadData {
     }
 
     private static void download(String filename, String url) {
-        String path = new File(Thread.currentThread().getContextClassLoader().getResource("tickers.csv").getPath()).getAbsolutePath() + filename;
+        String path = DEFAULT_DOWNLOAD_LOCATION + filename;
 
         try {
                 BufferedInputStream inputStream = new BufferedInputStream(new URL(url).openStream());
