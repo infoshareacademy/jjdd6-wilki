@@ -1,5 +1,7 @@
 package com.infoshareacademy.jjdd6.validation;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,9 +27,14 @@ public class Validator {
 //                && findAll().contains(tickerToUppercase));
     }
 
-    public boolean isNotEmptyAndIsNumeric(String text) {
+    public boolean isNotEmptyIsNumeric(String text) {
         return (isNumeric(text)
                 && isEmpty(text));
+    }
+
+    public boolean isPositiveNumber(String text) {
+        double number = Double.parseDouble(text);
+        return number >= 0;
     }
 
     // TODO: 25.04.19 Uncomment comment content and replace "amountFromDatabase"

@@ -36,14 +36,16 @@ public class SellSharesServlet extends HttpServlet {
         String price = req.getParameter("price");
 
         validator.isTickerValid(ticker);
-        validator.isNotEmptyAndIsNumeric(amount);
+        validator.isNotEmptyIsNumeric(amount);
         validator.isEnoughShares(amount);
-        validator.isNotEmptyAndIsNumeric(price);
+        validator.isNotEmptyIsNumeric(price);
+        validator.isPositiveNumber(amount);
+        validator.isPositiveNumber(price);
 
         int amountInteger = Integer.parseInt(amount);
         double priceDouble = Double.parseDouble(price);
 
-        wallet.sellShare(ticker, amountInteger, priceDouble);
+//        wallet.sellShare(ticker, amountInteger, priceDouble);
 
     }
 }

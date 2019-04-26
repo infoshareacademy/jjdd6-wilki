@@ -10,7 +10,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
-@Stateless
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wallet implements Serializable {
 

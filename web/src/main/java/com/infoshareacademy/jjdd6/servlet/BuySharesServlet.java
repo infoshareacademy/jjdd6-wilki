@@ -15,9 +15,6 @@ import java.io.IOException;
 public class BuySharesServlet extends HttpServlet {
 
     @Inject
-    Wallet wallet;
-
-    @Inject
     private Validator validator;
 
     @Override
@@ -36,15 +33,17 @@ public class BuySharesServlet extends HttpServlet {
         String price = req.getParameter("price");
 
         validator.isTickerValid(ticker);
-        validator.isNotEmptyAndIsNumeric(amount);
-        validator.isNotEmptyAndIsNumeric(price);
+        validator.isNotEmptyIsNumeric(amount);
+        validator.isNotEmptyIsNumeric(price);
+        validator.isPositiveNumber(amount);
+        validator.isPositiveNumber(price);
 
         int amountInteger = Integer.parseInt(amount);
         double priceDouble = Double.parseDouble(price);
 
         validator.isEnoughCash(amountInteger*priceDouble);
 
-        wallet.buyShare(ticker, amountInteger, priceDouble);
+//        wallet.buyShare(ticker, amountInteger, priceDouble);
 
     }
 }
