@@ -49,14 +49,14 @@ body{
 #upper_menu{
     float: right;
     width: 1400px;
-    height: 180px;
+    height: 150px;
 }
 .upper_menu_info{
     float: left;
     margin-left: 4%;
     width: 20%;
     height: 100%;
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: white;
 }
 #content{ 
@@ -103,21 +103,21 @@ body{
     width: 10%;
 }
 #table_header div{
-    height: 90px;
+    height: 70px;
     background-color: #72737D;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     float: left;
     font-size: 20px;
     text-align: center;
-    line-height: 90px;
+    line-height: 70px;
     color: white;
 }
 #table_content div{
-    height: 90px;
+    height: 50px;
     float: left;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 18px;
     text-align: center;
     border-bottom: 2px solid #0D0F3A;
-    line-height: 90px;
+    line-height: 50px;
 }

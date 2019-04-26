@@ -112,7 +112,7 @@ public class TextInterface {
                     wallet.getShares().get(i).getCurrentValue() + " pln",
                     wallet.getShares().get(i).getCurrentReturn() + " %",
                     wallet.getShares().get(i).getStopLossPrice() + " pln",
-                    wallet.getShares().get(i).getTakeProfitPrice() + " pln");
+                    wallet.getROE());
         }
         BigDecimal totalBaseValue = wallet.getBaseWorth();
         BigDecimal totalCurrentValue = wallet.getSharesCurrentWorth();

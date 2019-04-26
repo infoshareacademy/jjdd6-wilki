@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,11 @@ public class ShowWalletServlet extends HttpServlet {
 
         List<Share> shares = wallet.getShares();
 
+        Double roe = wallet.getROE().doubleValue();
+
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);
+        model.put("roe", roe);
 
         Template template = templateProvider.getTemplate(getServletContext(), "show-owned-shares.ftlh");
 
