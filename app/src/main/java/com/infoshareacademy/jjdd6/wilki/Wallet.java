@@ -20,8 +20,10 @@ public class Wallet implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "share")
-    @NotNull
+    @ManyToMany
+    @JoinTable(name = "WALLET_TO_SHARE",
+    joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
     private LinkedList<Share> shares = new LinkedList<>();
 
     @Column(name = "base_cash")

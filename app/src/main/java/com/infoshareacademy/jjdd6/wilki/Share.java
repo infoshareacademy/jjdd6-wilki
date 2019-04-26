@@ -26,6 +26,11 @@ public class Share implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(Share.class);
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @NotNull
     @Column(name = "ticker")
     private String ticker;
 
@@ -53,8 +58,7 @@ public class Share implements Serializable {
     @NotNull
     private Long volume;
 
-    @Column(name = "transaction_id")
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
     private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
 
     @Column(name = "transaction_history")
@@ -75,6 +79,9 @@ public class Share implements Serializable {
     @Column(name = "data_time")
     @NotNull
     private LocalTime dataTime;
+
+    @ManyToMany(mappedBy = "shares")
+    private List<Wallet> wallets;
     private int delay;
 
     public Share() {
@@ -293,6 +300,82 @@ public class Share implements Serializable {
 
     public void setTransactionHistory(List<Transaction> transactionHistory) {
         this.transactionHistory = transactionHistory;
+    }
+
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
+    }
+
+    public void setFullCompanyName(String fullCompanyName) {
+        this.fullCompanyName = fullCompanyName;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public void setCurrentPE(Double currentPE) {
+        this.currentPE = currentPE;
+    }
+
+    public void setVolume(Long volume) {
+        this.volume = volume;
+    }
+
+    public BigDecimal getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(BigDecimal highestPrice) {
+        this.highestPrice = highestPrice;
+    }
+
+    public BigDecimal getLowestPrice() {
+        return lowestPrice;
+    }
+
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public LocalDate getDataDate() {
+        return dataDate;
+    }
+
+    public void setDataDate(LocalDate dataDate) {
+        this.dataDate = dataDate;
+    }
+
+    public LocalTime getDataTime() {
+        return dataTime;
+    }
+
+    public void setDataTime(LocalTime dataTime) {
+        this.dataTime = dataTime;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
     }
 
     @Override
