@@ -13,14 +13,14 @@
     <#list shares>
         <#items as share>
             <div class="ticker">${share.ticker}</div>
-            <div class="amount">${share.sharesTotalAmount}</div>
-            <div class="avg-buy-price">${share.avgBuyPrice} PLN</div>
-            <div class="value">${share.baseValue} PLN</div>
-            <div class="current-price">${share.currentPrice} PLN</div>
-            <div class="current-value">${share.currentValue} PLN</div>
-            <div class="return">${share.currentReturn} %</div>
-            <div class="sl-price">${share.stopLossPrice} PLN</div>
-            <div class="tp-price">${share.takeProfitPrice} PLN</div>
+            <div class="amount">${share.sharesTotalAmount?string["0"]}</div>
+            <div class="avg-buy-price">${share.avgBuyPrice?string["0.0000"]} PLN</div>
+            <div class="value">${share.baseValue?string["0.00"]} PLN</div>
+            <div class="current-price">${share.currentPrice?string["0.0000"]} PLN</div>
+            <div class="current-value">${share.currentValue?string["0.00"]} PLN</div>
+            <div class="return">${share.currentReturn?string["0.00"]} %</div>
+            <div class="sl-price">${share.stopLossPrice?string["0.0000"]} PLN</div>
+            <div class="tp-price">${share.takeProfitPrice?string["0.0000"]} PLN</div>
 
 
         </#items>
