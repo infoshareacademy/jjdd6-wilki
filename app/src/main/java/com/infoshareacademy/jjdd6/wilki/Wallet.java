@@ -2,6 +2,8 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -10,12 +12,30 @@ import java.time.LocalDate;
 import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "WALLET")
 public class Wallet implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToMany
+    @JoinTable(name = "WALLET_TO_SHARE",
+    joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
     private LinkedList<Share> shares = new LinkedList<>();
+
+    @Column(name = "base_cash")
+    @NotNull
     private BigDecimal baseCash = BigDecimal.ZERO;
+
+    @Column(name = "cash_from_profits")
+    @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
     private List<Transaction> walletHistory = new ArrayList<>();
+
 
     public Wallet() {
 
@@ -187,6 +207,14 @@ public class Wallet implements Serializable {
 
     public void setCashFromProfits(BigDecimal cashFromProfits) {
         this.cashFromProfits = cashFromProfits;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean checkIfEnoughCash(int amount, double price) {
