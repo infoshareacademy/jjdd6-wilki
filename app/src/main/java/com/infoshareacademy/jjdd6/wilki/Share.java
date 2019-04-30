@@ -59,9 +59,10 @@ public class Share implements Serializable {
     private Long volume;
 
     @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
-    private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
+    private List<Transaction> transactionLinkedList = new LinkedList<>();
 
     @Column(name = "transaction_history")
+    @OneToMany(mappedBy = "share",fetch = FetchType.LAZY)
     private List<Transaction> transactionHistory = new ArrayList<>();
 
     @Column(name = "highest_price")
@@ -293,7 +294,7 @@ public class Share implements Serializable {
         return (int) Duration.between(time, LocalTime.now()).toMinutes();
     }
 
-    public LinkedList<Transaction> getTransactionLinkedList() {
+    public List<Transaction> getTransactionLinkedList() {
         return transactionLinkedList;
     }
 

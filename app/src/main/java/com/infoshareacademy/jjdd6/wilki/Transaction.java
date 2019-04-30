@@ -45,6 +45,7 @@ public class Transaction implements Serializable {
     @Column(name = "transaction_type")
     @NotNull
     private TransactionType type;
+
     private String ticker;
     private String fullCompanyName;
 
@@ -52,6 +53,10 @@ public class Transaction implements Serializable {
     @ManyToOne
     @JoinColumn(name = "share_id")
     private Share share;
+
+    @ManyToOne
+    @JoinColumn(name = "wallet_id")
+    private Wallet wallet;
 
     public Transaction() {
     }

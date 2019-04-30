@@ -25,7 +25,7 @@ public class Wallet implements Serializable {
     @JoinTable(name = "WALLET_TO_SHARE",
     joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
-    private LinkedList<Share> shares = new LinkedList<>();
+    private List<Share> shares = new LinkedList<>();
 
     @Column(name = "base_cash")
     @NotNull
@@ -34,6 +34,9 @@ public class Wallet implements Serializable {
     @Column(name = "cash_from_profits")
     @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
+
+    @Column(name = "wallet_history")
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<Transaction> walletHistory = new ArrayList<>();
 
 
@@ -41,7 +44,7 @@ public class Wallet implements Serializable {
 
     }
 
-    public LinkedList<Share> getShares() {
+    public List<Share> getShares() {
 
         return shares;
     }
