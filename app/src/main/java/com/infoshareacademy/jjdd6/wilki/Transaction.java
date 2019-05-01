@@ -200,7 +200,8 @@ public class Transaction implements Serializable {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Transaction{");
-        sb.append("amount=").append(amount);
+        sb.append("id=").append(id);
+        sb.append(", amount=").append(amount);
         sb.append(", price=").append(price);
         sb.append(", profit=").append(profit);
         sb.append(", date=").append(date);

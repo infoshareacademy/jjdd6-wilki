@@ -1,6 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.ShareDao;
+import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -17,11 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.LinkedList;
 import java.util.List;
 
 
-@WebServlet("/wallet")
+@WebServlet(urlPatterns = "/wallet-op")
 @Transactional
 public class WalletServlet extends HttpServlet {
 
@@ -33,10 +33,14 @@ public class WalletServlet extends HttpServlet {
     @Inject
     private WalletDao walletDao;
 
-    public void init(ServletConfig config) throws ServletException {
+    @Inject
+    private TransactionDao transactionDao;
+
+   public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
         Wallet wallet = new Wallet();
+        wallet.setBaseCash(BigDecimal.valueOf(10000));
         walletDao.save(wallet);
 
         Share share1 = new Share("kgh");
@@ -85,9 +89,7 @@ public class WalletServlet extends HttpServlet {
             Long shareid = Long.valueOf(shareIdStr);
 
             Share share = shareDao.findById(shareid);
-            List<Share> shares = new LinkedList<>();
-            shares.add(share);
-            existingWallet.setShares(shares);
+            existingWallet.getShares().add(share);
             walletDao.update(existingWallet);
             LOG.info("Wallet object updated: {}", existingWallet);
         }
@@ -116,7 +118,6 @@ public class WalletServlet extends HttpServlet {
         LOG.info("Removing wallett with id = {}", id);
 
         walletDao.delete(id);
-
 
         findAll(req, resp);
     }

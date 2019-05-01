@@ -35,27 +35,21 @@ public class Share implements Serializable {
     private String ticker;
 
     @Column(name = "full_company_name")
-    @NotNull
     private String fullCompanyName;
 
     @Column(name = "current_price")
-    @NotNull
     private BigDecimal currentPrice;
 
     @Column(name = "take_profit_price")
-    @NotNull
     private BigDecimal takeProfitPrice = BigDecimal.valueOf(0);
 
-    @Column
-    @NotNull
+    @Column(name = "stop_loss_price")
     private BigDecimal stopLossPrice = BigDecimal.valueOf(0);
 
     @Column(name = "current_PE")
-    @NotNull
     private Double currentPE;
 
     @Column(name = "volume")
-    @NotNull
     private Long volume;
 
     @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
@@ -66,23 +60,20 @@ public class Share implements Serializable {
     private List<Transaction> transactionHistory = new ArrayList<>();
 
     @Column(name = "highest_price")
-    @NotNull
     private BigDecimal highestPrice;
 
     @Column(name = "lowest_price")
-    @NotNull
     private BigDecimal lowestPrice;
 
     @Column(name = "data_date")
-    @NotNull
     private LocalDate dataDate;
 
     @Column(name = "data_time")
-    @NotNull
     private LocalTime dataTime;
 
     @ManyToMany(mappedBy = "shares")
     private List<Wallet> wallets;
+
     private int delay;
 
     public Share() {
@@ -92,6 +83,7 @@ public class Share implements Serializable {
 
         this.ticker = ticker;
     }
+
 
     public Double getRiskRewardRatio() {
         if ((getTakeProfitPrice().subtract(getStopLossPrice())).setScale(4, RoundingMode.HALF_UP).doubleValue() <= 0) {
@@ -385,6 +377,7 @@ public class Share implements Serializable {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Share{");
+        sb.append("id='").append(id).append('\'');
         sb.append("ticker='").append(ticker).append('\'');
         sb.append(", fullCompanyName='").append(fullCompanyName).append('\'');
         sb.append(", currentPrice=").append(currentPrice);

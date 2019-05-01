@@ -40,4 +40,10 @@ public class ShareDao {
 
         return query.getResultList();
     }
+
+    public List<Share> findByTicker(String ticker) {
+        final Query query = entityManager.createQuery("SELECT s FROM Share s WHERE s.ticker = :ticker");
+        query.setParameter("ticker", ticker);
+        return query.getResultList();
+    }
 }

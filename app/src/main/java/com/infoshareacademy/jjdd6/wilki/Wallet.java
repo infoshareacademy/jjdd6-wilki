@@ -242,6 +242,7 @@ public class Wallet implements Serializable {
     @Override
     public String toString() {
         return "Wallet{" +
+                "id=" + id +
                 "shares=" + shares +
                 ", baseCash=" + baseCash +
                 ", cashFromProfits=" + cashFromProfits +
