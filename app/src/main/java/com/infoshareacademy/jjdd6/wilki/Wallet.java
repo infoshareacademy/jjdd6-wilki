@@ -44,6 +44,13 @@ public class Wallet implements Serializable {
 
     }
 
+    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits, List<Transaction> walletHistory) {
+        this.shares = shares;
+        this.baseCash = baseCash;
+        this.cashFromProfits = cashFromProfits;
+        this.walletHistory = walletHistory;
+    }
+
     public List<Share> getShares() {
 
         return shares;

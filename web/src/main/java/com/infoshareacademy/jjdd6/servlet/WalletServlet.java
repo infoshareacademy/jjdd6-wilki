@@ -17,9 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,13 +36,9 @@ public class WalletServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        // Test data
-
-        // Wallets
         Wallet wallet = new Wallet();
         walletDao.save(wallet);
 
-        // Shares
         Share share1 = new Share("kgh");
         shareDao.save(share1);
 
@@ -88,10 +81,10 @@ public class WalletServlet extends HttpServlet {
             BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
             existingWallet.setBaseCash(baseCash);
 
-            String cidStr = req.getParameter("cid"); // computer id
-            Long cid = Long.valueOf(cidStr);
+            String shareIdStr = req.getParameter("shareid");
+            Long shareid = Long.valueOf(shareIdStr);
 
-            Share share = shareDao.findById(cid); // != null
+            Share share = shareDao.findById(shareid);
             List<Share> shares = new LinkedList<>();
             shares.add(share);
             existingWallet.setShares(shares);
@@ -99,34 +92,32 @@ public class WalletServlet extends HttpServlet {
             LOG.info("Wallet object updated: {}", existingWallet);
         }
 
-        // Return all persisted objects
         findAll(req, resp);
     }
 
     private void addWallet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final Wallet w = new Wallet();
+        final Wallet wallet = new Wallet();
         String bcashstr = req.getParameter("baseCash");
         Long baseCashL = Long.valueOf(bcashstr);
         BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-        w.setBaseCash(baseCash);
+        wallet.setBaseCash(baseCash);
 
+        walletDao.save(wallet);
+        LOG.info("Saved a new wallet object: {}", wallet);
 
-        walletDao.save(w);
-        LOG.info("Saved a new wallet object: {}", w);
-
-        // Return all persisted objects
         findAll(req, resp);
     }
 
     private void deleteWallet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         final Long id = Long.parseLong(req.getParameter("id"));
         LOG.info("Removing wallett with id = {}", id);
 
         walletDao.delete(id);
 
-        // Return all persisted objects
+
         findAll(req, resp);
     }
 
@@ -134,8 +125,8 @@ public class WalletServlet extends HttpServlet {
     private void findAll(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<Wallet> result = walletDao.findAll();
         LOG.info("Found {} objects", result.size());
-        for (Wallet w : result) {
-            resp.getWriter().write(w.toString() + "\n");
+        for (Wallet wallet : result) {
+            resp.getWriter().write(wallet.toString() + "\n");
         }
     }
 
