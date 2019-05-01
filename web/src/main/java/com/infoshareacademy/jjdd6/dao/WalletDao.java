@@ -5,6 +5,8 @@ import com.infoshareacademy.jjdd6.wilki.Wallet;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.List;
 
 
 @Stateless
@@ -31,6 +33,12 @@ public class WalletDao {
 
     public Wallet findById(Long id) {
         return entityManager.find(Wallet.class, id);
+    }
+
+    public List<Wallet> findAll() {
+        final Query query = entityManager.createQuery("SELECT w FROM Wallet w");
+
+        return query.getResultList();
     }
 }
 

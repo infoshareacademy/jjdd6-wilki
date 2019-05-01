@@ -204,7 +204,7 @@ public class Wallet implements Serializable {
         walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
-    public void setShares(LinkedList<Share> shares) {
+    public void setShares(List<Share> shares) {
         this.shares = shares;
     }
 
