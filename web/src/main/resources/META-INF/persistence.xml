@@ -7,6 +7,11 @@
     <persistence-unit name="walletPU" transaction-type="JTA">
         <jta-data-source>java:ds/walletds</jta-data-source>
 
+        <class>com.infoshareacademy.jjdd6.wilki.Share</class>
+        <class>com.infoshareacademy.jjdd6.wilki.Transaction</class>
+        <class>com.infoshareacademy.jjdd6.wilki.User</class>
+        <class>com.infoshareacademy.jjdd6.wilki.Wallet</class>
+
         <properties>
             <!-- Hibernate settings -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
