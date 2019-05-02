@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/transaction")
@@ -37,12 +37,8 @@ public class TransactionServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
-            return;
-        }
+        final String action = getString(req, resp);
+        if (action == null) return;
 
         if (action.equals("findAll")) {
             findAll(req, resp);
@@ -57,41 +53,72 @@ public class TransactionServlet extends HttpServlet {
         }
     }
 
+    private String getString(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        final String action = req.getParameter("action");
+        LOG.info("Requested action: {}", action);
+        if (action == null || action.isEmpty()) {
+            resp.getWriter().write("Empty action parameter.");
+        }
+        return action;
+    }
+
     private void updateTransaction(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        final Long id = Long.parseLong(req.getParameter("id"));
-        LOG.info("Updating Transaction with id = {}", id);
+        try {
+            final Long id = Long.parseLong(req.getParameter("id"));
+            LOG.info("Updating Transaction with id = {}", id);
 
-        final Transaction existingTransaction = transactionDao.findById(id);
-        if (existingTransaction == null) {
-            LOG.info("No Transaction found for id = {}, nothing to be updated", id);
-        } else {
+            final Transaction existingTransaction = transactionDao.findById(id);
+            if (existingTransaction == null) {
+                LOG.info("No Transaction found for id = {}, nothing to be updated", id);
+                return;
+            }
             String amountStr = req.getParameter("amount");
-            Integer amount = Integer.parseInt(amountStr);
-            existingTransaction.setAmount(amount);
+            try {
+                Integer amount = Integer.parseInt(amountStr);
+                existingTransaction.setAmount(amount);
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Amount should be an integer");
+            }
 
             String priceStr = req.getParameter("price");
-            Long price = Long.parseLong(priceStr);
-            existingTransaction.setPrice(BigDecimal.valueOf(price));
+            try {
+                Double price = Double.parseDouble(priceStr);
+                existingTransaction.setPrice(BigDecimal.valueOf(price));
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Price should be a number");
+            }
 
             String profitStr = req.getParameter("profit");
-            Long profit = Long.parseLong(profitStr);
-            existingTransaction.setProfit(BigDecimal.valueOf(profit));
-
+            try {
+                Double profit = Double.parseDouble(profitStr);
+                existingTransaction.setProfit(BigDecimal.valueOf(profit));
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Profit should be a number");
+            }
             String dateStr = req.getParameter("date");
-            LocalDate date = LocalDate.parse(dateStr);
-            existingTransaction.setDate(date);
+            try {
+                LocalDate date = LocalDate.parse(dateStr);
+                existingTransaction.setDate(date);
+            } catch (DateTimeException e) {
+                resp.getWriter().println("Date should be: yyyy-mm-dd");
+            }
 
             String feeValueStr = req.getParameter("fee-value");
-            Long feeValue = Long.parseLong(feeValueStr);
-            existingTransaction.setTransactionFeeValue(BigDecimal.valueOf(feeValue));
-
+            try {
+                Double feeValue = Double.parseDouble(feeValueStr);
+                existingTransaction.setTransactionFeeValue(BigDecimal.valueOf(feeValue));
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Fee value should be a number");
+            }
             String transactionType = req.getParameter("type");
             TransactionType type = TransactionType.valueOf(transactionType);
             existingTransaction.setType(type);
 
             transactionDao.update(existingTransaction);
             LOG.info("Transaction object updated: {}", existingTransaction);
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Transaction id should be an integer");
         }
 
         findAll(req, resp);
@@ -102,25 +129,40 @@ public class TransactionServlet extends HttpServlet {
 
         final Transaction transaction = new Transaction();
         String amountStr = req.getParameter("amount");
-        Integer amount = Integer.parseInt(amountStr);
-        transaction.setAmount(amount);
-
+        try {
+            Integer amount = Integer.parseInt(amountStr);
+            transaction.setAmount(amount);
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Amount should be a whole number");
+        }
         String priceStr = req.getParameter("amount");
-        Long price = Long.parseLong(priceStr);
-        transaction.setPrice(BigDecimal.valueOf(price));
-
+        try {
+            Double price = Double.parseDouble(priceStr);
+            transaction.setPrice(BigDecimal.valueOf(price));
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Price should have a number value");
+        }
         String profitStr = req.getParameter("profit");
-        Long profit = Long.parseLong(profitStr);
-        transaction.setProfit(BigDecimal.valueOf(profit));
-
+        try {
+            Double profit = Double.parseDouble(profitStr);
+            transaction.setProfit(BigDecimal.valueOf(profit));
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Profit should have a number value");
+        }
         String dateStr = req.getParameter("date");
-        LocalDate date = LocalDate.parse(dateStr);
-        transaction.setDate(date);
-
+        try {
+            LocalDate date = LocalDate.parse(dateStr);
+            transaction.setDate(date);
+        } catch (DateTimeException e) {
+            resp.getWriter().println("Date should be yyyy-mm-dd");
+        }
         String feeValStr = req.getParameter("fee-value");
-        Long feeValue = Long.parseLong(feeValStr);
-        transaction.setTransactionFeeValue(BigDecimal.valueOf(feeValue));
-
+        try {
+            Double feeValue = Double.parseDouble(feeValStr);
+            transaction.setTransactionFeeValue(BigDecimal.valueOf(feeValue));
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Fee value should have a number value");
+        }
         String transactionTypeStr = req.getParameter("type");
         TransactionType type = TransactionType.valueOf(transactionTypeStr);
         transaction.setType(type);
@@ -134,9 +176,12 @@ public class TransactionServlet extends HttpServlet {
     private void deleteTransaction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         final Long id = Long.parseLong(req.getParameter("id"));
-        LOG.info("Removing Transaction with id = {}", id);
-        transactionDao.delete(id);
-
+        if (transactionDao.findById(id) != null) {
+            LOG.info("Removing Transaction with id = {}", id);
+            transactionDao.delete(id);
+        } else {
+            resp.getWriter().println("There is no transaction with id = " + id);
+        }
         findAll(req, resp);
     }
 

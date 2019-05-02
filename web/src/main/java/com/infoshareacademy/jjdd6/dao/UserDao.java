@@ -35,8 +35,7 @@ public class UserDao {
     }
 
     public List<User> findAll() {
-        final Query query = entityManager.createQuery("SELECT u FROM User u");
-
+        final Query query = entityManager.createNamedQuery("User.findAll");
         return query.getResultList();
     }
 }

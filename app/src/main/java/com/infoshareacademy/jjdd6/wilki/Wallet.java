@@ -14,6 +14,10 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "WALLET")
+@NamedQueries({@NamedQuery(
+        name = "Wallet.findAll",
+        query = "SELECT w FROM Wallet w"
+)})
 public class Wallet implements Serializable {
 
     @Id
@@ -23,8 +27,8 @@ public class Wallet implements Serializable {
 
     @ManyToMany
     @JoinTable(name = "WALLET_TO_SHARE",
-    joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
     private List<Share> shares = new LinkedList<>();
 
     @Column(name = "base_cash")

@@ -36,8 +36,7 @@ public class WalletDao {
     }
 
     public List<Wallet> findAll() {
-        final Query query = entityManager.createQuery("SELECT w FROM Wallet w");
-
+        final Query query = entityManager.createNamedQuery("Wallet.findAll");
         return query.getResultList();
     }
 }

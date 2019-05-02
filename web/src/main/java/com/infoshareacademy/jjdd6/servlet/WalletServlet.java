@@ -36,7 +36,7 @@ public class WalletServlet extends HttpServlet {
     @Inject
     private TransactionDao transactionDao;
 
-   public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
         Wallet wallet = new Wallet();
@@ -51,12 +51,8 @@ public class WalletServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
-            return;
-        }
+        final String action = getString(req, resp);
+        if (action == null) return;
 
         if (action.equals("findAll")) {
             findAll(req, resp);
@@ -71,30 +67,55 @@ public class WalletServlet extends HttpServlet {
         }
     }
 
+    private String getString(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        final String action = req.getParameter("action");
+        LOG.info("Requested action: {}", action);
+        if (action == null || action.isEmpty()) {
+            resp.getWriter().write("Empty action parameter.");
+        }
+        return action;
+    }
+
     private void updateWallet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        final Long id = Long.parseLong(req.getParameter("id"));
-        LOG.info("Updating wallet with id = {}", id);
+        try {
+            final Long id = Long.parseLong(req.getParameter("id"));
+            LOG.info("Updating wallet with id = {}", id);
 
-        final Wallet existingWallet = walletDao.findById(id);
-        if (existingWallet == null) {
-            LOG.info("No wallet found for id = {}, nothing to be updated", id);
-        } else {
+            final Wallet existingWallet = walletDao.findById(id);
+            if (existingWallet == null) {
+                LOG.info("No wallet found for id = {}, nothing to be updated", id);
+                return;
+            }
             String bcashstr = req.getParameter("baseCash");
-            Long baseCashL = Long.valueOf(bcashstr);
-            BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-            existingWallet.setBaseCash(baseCash);
+            try {
+                Double baseCashL = Double.valueOf(bcashstr);
+                BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
+                existingWallet.setBaseCash(baseCash);
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Base cash should be a number");
+            }
 
             String shareIdStr = req.getParameter("shareid");
-            Long shareid = Long.valueOf(shareIdStr);
-
-            Share share = shareDao.findById(shareid);
-            existingWallet.getShares().add(share);
+            try {
+                Long shareid = Long.valueOf(shareIdStr);
+                Share share = shareDao.findById(shareid);
+                if (share != null) {
+                    existingWallet.getShares().add(share);
+                } else {
+                    resp.getWriter().println("There is no share with such id");
+                }
+            } catch (NumberFormatException e) {
+                resp.getWriter().println("Share id should be a whole number");
+            }
             walletDao.update(existingWallet);
             LOG.info("Wallet object updated: {}", existingWallet);
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Wallet id should be a whole number");
         }
 
         findAll(req, resp);
+
     }
 
     private void addWallet(HttpServletRequest req, HttpServletResponse resp)
@@ -102,9 +123,13 @@ public class WalletServlet extends HttpServlet {
 
         final Wallet wallet = new Wallet();
         String bcashstr = req.getParameter("baseCash");
-        Long baseCashL = Long.valueOf(bcashstr);
-        BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-        wallet.setBaseCash(baseCash);
+        try {
+            Double baseCashL = Double.valueOf(bcashstr);
+            BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
+            wallet.setBaseCash(baseCash);
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Base cash should be a number");
+        }
 
         walletDao.save(wallet);
         LOG.info("Saved a new wallet object: {}", wallet);
@@ -114,10 +139,18 @@ public class WalletServlet extends HttpServlet {
 
     private void deleteWallet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        final Long id = Long.parseLong(req.getParameter("id"));
-        LOG.info("Removing wallett with id = {}", id);
+        try {
+            final Long id = Long.parseLong(req.getParameter("id"));
 
-        walletDao.delete(id);
+            if (walletDao.findById(id) != null) {
+                LOG.info("Removing wallet with id = {}", id);
+                walletDao.delete(id);
+            } else {
+                resp.getWriter().println("There is no wallet with id = " + id);
+            }
+        } catch (NumberFormatException e) {
+            resp.getWriter().println("Wallet id should be a number");
+        }
 
         findAll(req, resp);
     }

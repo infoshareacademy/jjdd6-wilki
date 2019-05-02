@@ -35,7 +35,7 @@ public class TransactionDao {
     }
 
     public List<Transaction> findAll() {
-        final Query query = entityManager.createQuery("SELECT t FROM Transaction t");
+        final Query query = entityManager.createNamedQuery("Transaction.findAll");
 
         return query.getResultList();
     }

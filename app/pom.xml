@@ -151,7 +151,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>8.0.1-b5</version>
+            <version>8.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

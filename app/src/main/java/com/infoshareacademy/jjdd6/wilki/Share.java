@@ -21,6 +21,12 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "SHARE")
+@NamedQueries({@NamedQuery(
+        name = "Share.findAll",
+        query = "SELECT s FROM Share s"
+),
+        @NamedQuery(name = "Share.findByTicker",
+        query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);

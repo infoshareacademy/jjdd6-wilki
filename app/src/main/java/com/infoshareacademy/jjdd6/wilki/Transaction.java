@@ -14,6 +14,10 @@ import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "TRANSACTION")
+@NamedQueries({@NamedQuery(
+        name = "Transaction.findAll",
+        query = "SELECT t FROM Transaction t"
+)})
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
 

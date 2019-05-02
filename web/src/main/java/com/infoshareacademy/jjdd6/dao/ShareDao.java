@@ -36,13 +36,12 @@ public class ShareDao {
     }
 
     public List<Share> findAll() {
-        final Query query = entityManager.createQuery("SELECT s FROM Share s");
-
+        final Query query = entityManager.createNamedQuery("Share.findAll");
         return query.getResultList();
     }
 
     public List<Share> findByTicker(String ticker) {
-        final Query query = entityManager.createQuery("SELECT s FROM Share s WHERE s.ticker = :ticker");
+        final Query query = entityManager.createNamedQuery("Share.findByTicker");
         query.setParameter("ticker", ticker);
         return query.getResultList();
     }
