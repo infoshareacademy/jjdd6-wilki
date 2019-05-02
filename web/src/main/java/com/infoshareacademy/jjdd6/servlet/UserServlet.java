@@ -4,6 +4,7 @@ import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +32,13 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = getString(req, resp);
-        if (action == null) return;
+        final String action = getAction(req, resp);
+        if (action == null) {
+            return;
+        }
 
         if (action.equals("findAll")) {
-            findAll(req, resp);
+            findAllUsers(req, resp);
         } else if (action.equals("add")) {
             addUser(req, resp);
         } else if (action.equals("delete")) {
@@ -47,7 +50,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private String getString(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
         LOG.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
@@ -59,38 +62,39 @@ public class UserServlet extends HttpServlet {
     private void updateUser(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        try {
-            final Long id = Long.parseLong(req.getParameter("id"));
-            LOG.info("Updating user with id = {}", id);
+        String idStr = req.getParameter("id");
+        if (!NumberUtils.isDigits(idStr)) {
+            resp.getWriter().println("User id should be an integer");
+            return;
+        }
+        final Long id = Long.parseLong(idStr);
+        LOG.info("Updating user with id = {}", id);
 
-            final User existingUser = userDao.findById(id);
-            if (existingUser == null) {
-                LOG.info("No User found for id = {}, nothing to be updated", id);
-                return;
-            }
-
-            existingUser.setEmail(req.getParameter("email"));
-
-            String walletIdStr = req.getParameter("wallet-id");
-            try {
-                Long walletId = Long.parseLong(walletIdStr);
-                Wallet wallet = walletDao.findById(walletId);
-                if (wallet == null) {
-                    LOG.info("No wallet found for id = {}, nothing to be updated", id);
-                } else {
-                    existingUser.setWallet(wallet);
-                }
-            } catch (NumberFormatException e) {
-                resp.getWriter().println("Wallet id should be an integer");
-            }
-
-            userDao.update(existingUser);
-            LOG.info("User updated: {}", existingUser);
-        } catch (NumberFormatException e) {
-            resp.getWriter().println("User id should be a whole number");
+        final User existingUser = userDao.findById(id);
+        if (existingUser == null) {
+            LOG.info("No User found for id = {}, nothing to be updated", id);
+            return;
         }
 
-        findAll(req, resp);
+        existingUser.setEmail(req.getParameter("email"));
+
+        String walletIdStr = req.getParameter("wallet-id");
+        if (!NumberUtils.isDigits(walletIdStr)) {
+            resp.getWriter().println("Wallet id should be an integer");
+            return;
+        }
+        Long walletId = Long.parseLong(walletIdStr);
+        Wallet wallet = walletDao.findById(walletId);
+        if (wallet == null) {
+            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+        } else {
+            existingUser.setWallet(wallet);
+        }
+
+        userDao.update(existingUser);
+        LOG.info("User updated: {}", existingUser);
+
+        findAllUsers(req, resp);
     }
 
     private void addUser(HttpServletRequest req, HttpServletResponse resp)
@@ -99,41 +103,42 @@ public class UserServlet extends HttpServlet {
         final User user = new User();
         user.setEmail(req.getParameter("email"));
         String walletIdStr = req.getParameter("wallet-id");
-        try {
-            Long walletId = Long.parseLong(walletIdStr);
-            Wallet wallet = walletDao.findById(walletId);
-            if (wallet != null) {
-                user.setWallet(wallet);
-            } else {
-                resp.getWriter().println("There is no wallet with such id");
-            }
-        } catch (NumberFormatException e) {
+        if (!NumberUtils.isDigits(walletIdStr)) {
             resp.getWriter().println("Wallet id should be an integer");
+            return;
+        }
+        Long walletId = Long.parseLong(walletIdStr);
+        Wallet wallet = walletDao.findById(walletId);
+        if (wallet != null) {
+            user.setWallet(wallet);
+        } else {
+            resp.getWriter().println("There is no wallet with such id");
         }
 
         userDao.save(user);
         LOG.info("Saved a new User object: {}", user);
 
-        findAll(req, resp);
+        findAllUsers(req, resp);
     }
 
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        try {
-            final Long id = Long.parseLong(req.getParameter("id"));
-            if (userDao.findById(id) != null) {
-                LOG.info("Removing User with id = {}", id);
-                userDao.delete(id);
-            } else {
-                resp.getWriter().println("There is no user with id = " + id);
-            }
-        } catch (NumberFormatException e) {
+        String idStr = req.getParameter("id");
+        if (!NumberUtils.isDigits(idStr)) {
             resp.getWriter().println("User id should be an integer");
+            return;
+        }
+        final Long id = Long.parseLong(req.getParameter("id"));
+        if (userDao.findById(id) != null) {
+            LOG.info("Removing User with id = {}", id);
+            userDao.delete(id);
+        } else {
+            resp.getWriter().println("There is no user with id = " + id);
         }
 
-        findAll(req, resp);
+        findAllUsers(req, resp);
     }
 
-    private void findAll(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void findAllUsers(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<User> result = userDao.findAll();
         LOG.info("Found {} objects", result.size());
         for (User user : result) {

@@ -5,6 +5,7 @@ import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,11 +52,13 @@ public class WalletServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = getString(req, resp);
-        if (action == null) return;
+        final String action = getAction(req, resp);
+        if (action == null) {
+            return;
+        }
 
         if (action.equals("findAll")) {
-            findAll(req, resp);
+            findAllWallets(req, resp);
         } else if (action.equals("add")) {
             addWallet(req, resp);
         } else if (action.equals("delete")) {
@@ -67,7 +70,7 @@ public class WalletServlet extends HttpServlet {
         }
     }
 
-    private String getString(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
         LOG.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
@@ -78,85 +81,88 @@ public class WalletServlet extends HttpServlet {
 
     private void updateWallet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        try {
-            final Long id = Long.parseLong(req.getParameter("id"));
-            LOG.info("Updating wallet with id = {}", id);
 
-            final Wallet existingWallet = walletDao.findById(id);
-            if (existingWallet == null) {
-                LOG.info("No wallet found for id = {}, nothing to be updated", id);
-                return;
-            }
-            String bcashstr = req.getParameter("baseCash");
-            try {
-                Double baseCashL = Double.valueOf(bcashstr);
-                BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-                existingWallet.setBaseCash(baseCash);
-            } catch (NumberFormatException e) {
-                resp.getWriter().println("Base cash should be a number");
-            }
-
-            String shareIdStr = req.getParameter("shareid");
-            try {
-                Long shareid = Long.valueOf(shareIdStr);
-                Share share = shareDao.findById(shareid);
-                if (share != null) {
-                    existingWallet.getShares().add(share);
-                } else {
-                    resp.getWriter().println("There is no share with such id");
-                }
-            } catch (NumberFormatException e) {
-                resp.getWriter().println("Share id should be a whole number");
-            }
-            walletDao.update(existingWallet);
-            LOG.info("Wallet object updated: {}", existingWallet);
-        } catch (NumberFormatException e) {
-            resp.getWriter().println("Wallet id should be a whole number");
+        String idStr = req.getParameter("id");
+        if (!NumberUtils.isDigits(idStr)) {
+            resp.getWriter().println("Wallet id should be an integer");
+            return;
         }
+        final Long id = Long.parseLong(req.getParameter("id"));
+        LOG.info("Updating wallet with id = {}", id);
 
-        findAll(req, resp);
+        final Wallet existingWallet = walletDao.findById(id);
+        if (existingWallet == null) {
+            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+            return;
+        }
+        String bcashstr = req.getParameter("baseCash");
+        if (!NumberUtils.isParsable(bcashstr)) {
+            resp.getWriter().println("Base cash should be a number");
+        } else {
+            Double baseCashL = Double.valueOf(bcashstr);
+            BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
+            existingWallet.setBaseCash(baseCash);
+        }
+        String shareIdStr = req.getParameter("shareid");
+        if (!NumberUtils.isDigits(shareIdStr)) {
+            resp.getWriter().println("Share id should be an integer");
+            return;
+        }
+        Long shareid = Long.valueOf(shareIdStr);
+        Share share = shareDao.findById(shareid);
+        if (share != null) {
+            existingWallet.getShares().add(share);
+        } else {
+            resp.getWriter().println("There is no share with such id");
+        }
+        walletDao.update(existingWallet);
+        LOG.info("Wallet object updated: {}", existingWallet);
 
+
+        findAllWallets(req, resp);
     }
+
 
     private void addWallet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         final Wallet wallet = new Wallet();
         String bcashstr = req.getParameter("baseCash");
-        try {
-            Double baseCashL = Double.valueOf(bcashstr);
-            BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-            wallet.setBaseCash(baseCash);
-        } catch (NumberFormatException e) {
+        if (!NumberUtils.isParsable(bcashstr)) {
             resp.getWriter().println("Base cash should be a number");
+            return;
         }
+        Double baseCashL = Double.valueOf(bcashstr);
+        BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
+        wallet.setBaseCash(baseCash);
 
         walletDao.save(wallet);
         LOG.info("Saved a new wallet object: {}", wallet);
 
-        findAll(req, resp);
+        findAllWallets(req, resp);
     }
 
     private void deleteWallet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        try {
-            final Long id = Long.parseLong(req.getParameter("id"));
+        String idStr = req.getParameter("id");
+        if (!NumberUtils.isDigits(idStr)) {
+            resp.getWriter().println("Wallet id should be an integer");
+            return;
+        }
+        Long id = Long.parseLong(idStr);
 
-            if (walletDao.findById(id) != null) {
-                LOG.info("Removing wallet with id = {}", id);
-                walletDao.delete(id);
-            } else {
-                resp.getWriter().println("There is no wallet with id = " + id);
-            }
-        } catch (NumberFormatException e) {
-            resp.getWriter().println("Wallet id should be a number");
+        if (walletDao.findById(id) != null) {
+            LOG.info("Removing wallet with id = {}", id);
+            walletDao.delete(id);
+        } else {
+            resp.getWriter().println("There is no wallet with id = " + id);
         }
 
-        findAll(req, resp);
+        findAllWallets(req, resp);
     }
 
 
-    private void findAll(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void findAllWallets(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<Wallet> result = walletDao.findAll();
         LOG.info("Found {} objects", result.size());
         for (Wallet wallet : result) {

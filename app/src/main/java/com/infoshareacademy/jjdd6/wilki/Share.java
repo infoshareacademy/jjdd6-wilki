@@ -21,12 +21,12 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "SHARE")
-@NamedQueries({@NamedQuery(
-        name = "Share.findAll",
-        query = "SELECT s FROM Share s"
-),
-        @NamedQuery(name = "Share.findByTicker",
-        query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
+@NamedQueries(
+        {@NamedQuery(
+                     name = "Share.findAll",
+                     query = "SELECT s FROM Share s"),
+        @NamedQuery( name = "Share.findByTicker",
+                     query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
@@ -62,7 +62,7 @@ public class Share implements Serializable {
     private List<Transaction> transactionLinkedList = new LinkedList<>();
 
     @Column(name = "transaction_history")
-    @OneToMany(mappedBy = "share",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
     private List<Transaction> transactionHistory = new ArrayList<>();
 
     @Column(name = "highest_price")
