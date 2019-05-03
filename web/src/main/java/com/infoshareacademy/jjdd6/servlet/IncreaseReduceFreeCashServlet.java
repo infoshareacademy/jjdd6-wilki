@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @WebServlet(urlPatterns = "/increase-reduce-free-cash")
 public class IncreaseReduceFreeCashServlet extends HttpServlet {
 
-    private Logger LOG = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
+    private Logger logger = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
 
     @Inject
     WalletDao walletDao;
@@ -42,7 +42,7 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
+        logger.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
             resp.getWriter().write("Empty action parameter.");
         }
@@ -58,11 +58,11 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             return;
         }
         final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        LOG.info("Updating wallet with id = {}", id);
+        logger.info("Updating wallet with id = {}", id);
 
         final Wallet existingWallet = walletDao.findById(id);
         if (existingWallet == null) {
-            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+            logger.info("No wallet found for id = {}, nothing to be updated", id);
             return;
         }
         String cash = req.getParameter("cash");
@@ -75,7 +75,7 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
         }
 
         walletDao.update(existingWallet);
-        LOG.info("Wallet object updated: {}", existingWallet);
+        logger.info("Wallet object updated: {}", existingWallet);
 
         resp.getWriter().println("Free cash increased by: " + cash);
     }
@@ -89,11 +89,11 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             return;
         }
         final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        LOG.info("Updating wallet with id = {}", id);
+        logger.info("Updating wallet with id = {}", id);
 
         final Wallet existingWallet = walletDao.findById(id);
         if (existingWallet == null) {
-            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+            logger.info("No wallet found for id = {}, nothing to be updated", id);
             return;
         }
         String cash = req.getParameter("cash");
@@ -106,7 +106,7 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
         }
 
         walletDao.update(existingWallet);
-        LOG.info("Wallet object updated: {}", existingWallet);
+        logger.info("Wallet object updated: {}", existingWallet);
 
         resp.getWriter().println("Free cash reduced by: " + cash);
     }

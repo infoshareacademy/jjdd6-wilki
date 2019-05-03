@@ -3,7 +3,7 @@ package com.infoshareacademy.jjdd6.servlet;
 import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
-import com.infoshareacademy.jjdd6.validation.Validator;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class BuySharesServlet extends HttpServlet {
     TransactionDao transactionDao;
 
     @Inject
-    private Validator validator;
+    private Validators validators;
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -74,7 +74,6 @@ public class BuySharesServlet extends HttpServlet {
             return;
         }
 
-
         String ticker = req.getParameter("ticker");
 
         String amountStr = req.getParameter("amount");
@@ -82,15 +81,15 @@ public class BuySharesServlet extends HttpServlet {
             resp.getWriter().println("Amount should be a whole number");
             return;
         }
-        Integer amount = Integer.parseInt(amountStr);
+        int amount = Integer.parseInt(amountStr);
 
         String priceStr = req.getParameter("price");
         if (!NumberUtils.isParsable(priceStr)) {
             resp.getWriter().println("Price should have a numerical value");
             return;
         }
-        Double price = Double.parseDouble(priceStr);
-        existingWallet.buyShare(ticker, amount,price);
+        double price = Double.parseDouble(priceStr);
+        existingWallet.buyShare(ticker, amount, price);
 
         walletDao.update(existingWallet);
         logger.info("Wallet object updated: {}", existingWallet);

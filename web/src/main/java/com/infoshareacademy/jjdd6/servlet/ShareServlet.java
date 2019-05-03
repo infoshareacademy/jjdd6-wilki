@@ -25,7 +25,7 @@ import java.util.List;
 @WebServlet(urlPatterns = "/share")
 @Transactional
 public class ShareServlet extends HttpServlet {
-    private Logger LOG = LoggerFactory.getLogger(ShareServlet.class);
+    private Logger logger = LoggerFactory.getLogger(ShareServlet.class);
 
     @Inject
     private ShareDao shareDao;
@@ -59,7 +59,7 @@ public class ShareServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
+        logger.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
             resp.getWriter().write("Empty action parameter.");
         }
@@ -74,11 +74,11 @@ public class ShareServlet extends HttpServlet {
             return;
         }
         final Long id = Long.parseLong(idStr);
-        LOG.info("Updating share with id = {}", id);
+        logger.info("Updating share with id = {}", id);
 
         final Share existingShare = shareDao.findById(id);
         if (existingShare == null) {
-            LOG.info("No share found for id = {}, nothing to be updated", id);
+            logger.info("No share found for id = {}, nothing to be updated", id);
             return;
         }
 
@@ -173,14 +173,14 @@ public class ShareServlet extends HttpServlet {
         Long transactionId = Long.parseLong(transactionIdStr);
         Transaction transaction = transactionDao.findById(transactionId);
         if (transaction == null) {
-            LOG.info("No transaction found for id = {}, nothing to be added to the list", id);
+            logger.info("No transaction found for id = {}, nothing to be added to the list", id);
         } else {
             existingShare.getTransactionLinkedList().add(transaction);
             existingShare.getTransactionHistory().add(transaction);
         }
 
         shareDao.update(existingShare);
-        LOG.info("Share object updated: {}", existingShare);
+        logger.info("Share object updated: {}", existingShare);
 
         findAllShares(req, resp);
     }
@@ -192,7 +192,7 @@ public class ShareServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
         share.setTicker(ticker);
         shareDao.save(share);
-        LOG.info("Saved a new Share object: {}", share);
+        logger.info("Saved a new Share object: {}", share);
 
         findAllShares(req, resp);
     }
@@ -206,7 +206,7 @@ public class ShareServlet extends HttpServlet {
         }
         final Long id = Long.parseLong(idString);
         if (shareDao.findById(id) != null) {
-            LOG.info("Removing Share with id = {}", id);
+            logger.info("Removing Share with id = {}", id);
             shareDao.delete(id);
         } else {
             resp.getWriter().println("There is no share with id = " + id);
@@ -217,7 +217,7 @@ public class ShareServlet extends HttpServlet {
 
     private void findAllShares(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<Share> result = shareDao.findAll();
-        LOG.info("Found {} objects", result.size());
+        logger.info("Found {} objects", result.size());
         for (Share share : result) {
             resp.getWriter().write(share.toString() + "\n");
         }

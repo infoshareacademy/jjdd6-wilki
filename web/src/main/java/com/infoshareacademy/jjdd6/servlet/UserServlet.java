@@ -2,6 +2,7 @@ package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -22,12 +23,15 @@ import java.util.List;
 @Transactional
 public class UserServlet extends HttpServlet {
 
-    private Logger LOG = LoggerFactory.getLogger(UserServlet.class);
+    private Logger logger = LoggerFactory.getLogger(UserServlet.class);
     @Inject
     UserDao userDao;
 
     @Inject
     WalletDao walletDao;
+
+    @Inject
+    Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -53,7 +57,7 @@ public class UserServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
+        logger.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
             resp.getWriter().write("Empty action parameter.");
         }
@@ -64,20 +68,25 @@ public class UserServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("id");
-        if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("User id should be an integer");
+        if (!validators.isIdCorrect(idStr)) {
+            resp.getWriter().println("User id should be an integer greater than 0");
             return;
         }
         final Long id = Long.parseLong(idStr);
-        LOG.info("Updating user with id = {}", id);
+        logger.info("Updating user with id = {}", id);
 
         final User existingUser = userDao.findById(id);
         if (existingUser == null) {
-            LOG.info("No User found for id = {}, nothing to be updated", id);
+            logger.info("No User found for id = {}, nothing to be updated", id);
             return;
         }
 
-        existingUser.setEmail(req.getParameter("email"));
+        String email = req.getParameter("email");
+        if (!validators.isEmailCorrect(email)) {
+            logger.info("Incorrect email = {} " + email);
+            return;
+        }
+        existingUser.setEmail(email);
 
         String walletIdStr = req.getParameter("wallet-id");
         if (!NumberUtils.isDigits(walletIdStr)) {
@@ -87,13 +96,13 @@ public class UserServlet extends HttpServlet {
         Long walletId = Long.parseLong(walletIdStr);
         Wallet wallet = walletDao.findById(walletId);
         if (wallet == null) {
-            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+            logger.info("No wallet found for id = {}, nothing to be updated", id);
         } else {
             existingUser.setWallet(wallet);
         }
 
         userDao.update(existingUser);
-        LOG.info("User updated: {}", existingUser);
+        logger.info("User updated: {}", existingUser);
 
         findAllUsers(req, resp);
     }
@@ -104,14 +113,14 @@ public class UserServlet extends HttpServlet {
         final Wallet wallet = new Wallet();
         wallet.setBaseCash(BigDecimal.valueOf(0.00));
         walletDao.save(wallet);
-        LOG.info("Saved a new wallet object: {}", wallet);
+        logger.info("Saved a new wallet object: {}", wallet);
 
         final User user = new User();
         user.setEmail(req.getParameter("email"));
         user.setWallet(wallet);
 
         userDao.save(user);
-        LOG.info("Saved a new User object: {}", user);
+        logger.info("Saved a new User object: {}", user);
 
         findAllUsers(req, resp);
     }
@@ -124,7 +133,7 @@ public class UserServlet extends HttpServlet {
         }
         final Long id = Long.parseLong(req.getParameter("id"));
         if (userDao.findById(id) != null) {
-            LOG.info("Removing User with id = {}", id);
+            logger.info("Removing User with id = {}", id);
             userDao.delete(id);
         } else {
             resp.getWriter().println("There is no user with id = " + id);
@@ -135,7 +144,7 @@ public class UserServlet extends HttpServlet {
 
     private void findAllUsers(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<User> result = userDao.findAll();
-        LOG.info("Found {} objects", result.size());
+        logger.info("Found {} objects", result.size());
         for (User user : result) {
             resp.getWriter().write(user.toString() + "\n");
         }

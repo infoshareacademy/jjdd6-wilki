@@ -1,6 +1,7 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
@@ -16,6 +17,7 @@ public class User {
     private Long id;
 
     @Column(name = "email")
+    @NotNull
     private String email;
 
     @OneToOne

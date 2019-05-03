@@ -34,6 +34,10 @@ public class UserDao {
         return entityManager.find(User.class, id);
     }
 
+    public User findByEmail(String email) {
+        return entityManager.find(User.class, email);
+    }
+
     public List<User> findAll() {
         final Query query = entityManager.createNamedQuery("User.findAll");
         return query.getResultList();

@@ -24,7 +24,7 @@ import java.util.List;
 @Transactional
 public class WalletServlet extends HttpServlet {
 
-    private Logger LOG = LoggerFactory.getLogger(WalletServlet.class);
+    private Logger logger = LoggerFactory.getLogger(WalletServlet.class);
 
     @Inject
     private ShareDao shareDao;
@@ -58,7 +58,7 @@ public class WalletServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
+        logger.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
             resp.getWriter().write("Empty action parameter.");
         }
@@ -74,11 +74,11 @@ public class WalletServlet extends HttpServlet {
             return;
         }
         final Long id = Long.parseLong(req.getParameter("id"));
-        LOG.info("Updating wallet with id = {}", id);
+        logger.info("Updating wallet with id = {}", id);
 
         final Wallet existingWallet = walletDao.findById(id);
         if (existingWallet == null) {
-            LOG.info("No wallet found for id = {}, nothing to be updated", id);
+            logger.info("No wallet found for id = {}, nothing to be updated", id);
             return;
         }
         String bcashstr = req.getParameter("baseCash");
@@ -102,7 +102,7 @@ public class WalletServlet extends HttpServlet {
             resp.getWriter().println("There is no share with such id");
         }
         walletDao.update(existingWallet);
-        LOG.info("Wallet object updated: {}", existingWallet);
+        logger.info("Wallet object updated: {}", existingWallet);
 
         findAllWallets(req, resp);
     }
@@ -114,7 +114,7 @@ public class WalletServlet extends HttpServlet {
         wallet.setBaseCash(BigDecimal.valueOf(0.00));
 
         walletDao.save(wallet);
-        LOG.info("Saved a new wallet object: {}", wallet);
+        logger.info("Saved a new wallet object: {}", wallet);
 
         findAllWallets(req, resp);
     }
@@ -129,7 +129,7 @@ public class WalletServlet extends HttpServlet {
         Long id = Long.parseLong(idStr);
 
         if (walletDao.findById(id) != null) {
-            LOG.info("Removing wallet with id = {}", id);
+            logger.info("Removing wallet with id = {}", id);
             walletDao.delete(id);
         } else {
             resp.getWriter().println("There is no wallet with id = " + id);
@@ -141,7 +141,7 @@ public class WalletServlet extends HttpServlet {
 
     private void findAllWallets(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<Wallet> result = walletDao.findAll();
-        LOG.info("Found {} objects", result.size());
+        logger.info("Found {} objects", result.size());
         for (Wallet wallet : result) {
             resp.getWriter().write(wallet.toString() + "\n");
         }
