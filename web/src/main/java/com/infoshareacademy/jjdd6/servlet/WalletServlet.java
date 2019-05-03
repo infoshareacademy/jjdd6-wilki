@@ -24,7 +24,7 @@ import java.util.List;
 @Transactional
 public class WalletServlet extends HttpServlet {
 
-    private Logger logger = LoggerFactory.getLogger(WalletServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(WalletServlet.class);
 
     @Inject
     private ShareDao shareDao;

@@ -25,7 +25,7 @@ import java.util.List;
 @WebServlet(urlPatterns = "/share")
 @Transactional
 public class ShareServlet extends HttpServlet {
-    private Logger logger = LoggerFactory.getLogger(ShareServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(ShareServlet.class);
 
     @Inject
     private ShareDao shareDao;

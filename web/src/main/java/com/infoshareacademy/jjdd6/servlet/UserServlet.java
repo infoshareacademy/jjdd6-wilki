@@ -5,7 +5,6 @@ import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +22,8 @@ import java.util.List;
 @Transactional
 public class UserServlet extends HttpServlet {
 
-    private Logger logger = LoggerFactory.getLogger(UserServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(UserServlet.class);
+
     @Inject
     UserDao userDao;
 
@@ -68,38 +68,48 @@ public class UserServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("id");
-        if (!validators.isIdCorrect(idStr)) {
+
+        if (validators.isIdIncorrect(idStr)) {
             resp.getWriter().println("User id should be an integer greater than 0");
+            logger.info("Incorrect user id = {}", idStr);
             return;
         }
+
+        if (validators.isIdNotPresent(idStr)) {
+            resp.getWriter().println("No User found");
+            logger.info("No User found for id = {}, nothing to be updated", idStr);
+            return;
+        }
+
         final Long id = Long.parseLong(idStr);
         logger.info("Updating user with id = {}", id);
 
         final User existingUser = userDao.findById(id);
-        if (existingUser == null) {
-            logger.info("No User found for id = {}, nothing to be updated", id);
-            return;
-        }
 
         String email = req.getParameter("email");
-        if (!validators.isEmailCorrect(email)) {
+        if (validators.isEmailIncorrect(email)) {
             logger.info("Incorrect email = {} " + email);
             return;
         }
         existingUser.setEmail(email);
 
-        String walletIdStr = req.getParameter("wallet-id");
-        if (!NumberUtils.isDigits(walletIdStr)) {
-            resp.getWriter().println("Wallet id should be an integer");
+        String walletIdStr = req.getParameter("wallet_id");
+
+        if (validators.isIdIncorrect(walletIdStr)) {
+            resp.getWriter().println("Wallet id should be an integer greater than 0");
+            logger.info("Incorrect wallet id = {}", idStr);
             return;
         }
+
+        if (!validators.isWalletPresent(walletIdStr)) {
+            resp.getWriter().println("No wallet found");
+            logger.info("No wallet found for id = {}, nothing to be updated", idStr);
+            return;
+        }
+
         Long walletId = Long.parseLong(walletIdStr);
         Wallet wallet = walletDao.findById(walletId);
-        if (wallet == null) {
-            logger.info("No wallet found for id = {}, nothing to be updated", id);
-        } else {
-            existingUser.setWallet(wallet);
-        }
+        existingUser.setWallet(wallet);
 
         userDao.update(existingUser);
         logger.info("User updated: {}", existingUser);
@@ -116,7 +126,19 @@ public class UserServlet extends HttpServlet {
         logger.info("Saved a new wallet object: {}", wallet);
 
         final User user = new User();
-        user.setEmail(req.getParameter("email"));
+        String email = req.getParameter("email");
+
+        if (validators.isEmailIncorrect(email)) {
+            logger.info("Incorrect email = {} " + email);
+            return;
+        }
+
+        if (validators.isEmailPresent(email)) {
+            resp.getWriter().println("Email = {} already exist" + email);
+            logger.info("Email = {} already exist" + email);
+            return;
+        }
+        user.setEmail(email);
         user.setWallet(wallet);
 
         userDao.save(user);
@@ -126,18 +148,24 @@ public class UserServlet extends HttpServlet {
     }
 
     private void deleteUser(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         String idStr = req.getParameter("id");
-        if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("User id should be an integer");
+
+        if (validators.isIdIncorrect(idStr)) {
+            resp.getWriter().println("User id should be an integer greater than 0");
+            logger.info("Incorrect user id = {}", idStr);
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("id"));
-        if (userDao.findById(id) != null) {
-            logger.info("Removing User with id = {}", id);
-            userDao.delete(id);
-        } else {
-            resp.getWriter().println("There is no user with id = " + id);
+
+        if (validators.isIdNotPresent(idStr)) {
+            resp.getWriter().println("No User found");
+            logger.info("No User found for id = {}, nothing to be updated", idStr);
+            return;
         }
+
+        final Long id = Long.parseLong(req.getParameter("id"));
+        userDao.delete(id);
+        logger.info("Removing User with id = {}", id);
 
         findAllUsers(req, resp);
     }

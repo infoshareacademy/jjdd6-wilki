@@ -25,14 +25,6 @@ public class SetSlAndTpPrice extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String ticker = req.getParameter("ticker");
-        String stopLoss = req.getParameter("stopLoss");
-        String takeProfit = req.getParameter("takeProfit");
-
-        validators.isNotEmptyIsNumeric(stopLoss);
-        validators.isNotEmptyIsNumeric(takeProfit);
-        validators.isPositiveNumber(stopLoss);
-        validators.isPositiveNumber(takeProfit);
 
     }
 }

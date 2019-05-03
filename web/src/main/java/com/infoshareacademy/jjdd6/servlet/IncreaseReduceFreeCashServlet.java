@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @WebServlet(urlPatterns = "/increase-reduce-free-cash")
 public class IncreaseReduceFreeCashServlet extends HttpServlet {
 
-    private Logger logger = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
 
     @Inject
     WalletDao walletDao;
