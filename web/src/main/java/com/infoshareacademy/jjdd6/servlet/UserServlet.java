@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/user")
@@ -100,20 +101,14 @@ public class UserServlet extends HttpServlet {
     private void addUser(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+        final Wallet wallet = new Wallet();
+        wallet.setBaseCash(BigDecimal.valueOf(0.00));
+        walletDao.save(wallet);
+        LOG.info("Saved a new wallet object: {}", wallet);
+
         final User user = new User();
         user.setEmail(req.getParameter("email"));
-        String walletIdStr = req.getParameter("wallet-id");
-        if (!NumberUtils.isDigits(walletIdStr)) {
-            resp.getWriter().println("Wallet id should be an integer");
-            return;
-        }
-        Long walletId = Long.parseLong(walletIdStr);
-        Wallet wallet = walletDao.findById(walletId);
-        if (wallet != null) {
-            user.setWallet(wallet);
-        } else {
-            resp.getWriter().println("There is no wallet with such id");
-        }
+        user.setWallet(wallet);
 
         userDao.save(user);
         LOG.info("Saved a new User object: {}", user);
