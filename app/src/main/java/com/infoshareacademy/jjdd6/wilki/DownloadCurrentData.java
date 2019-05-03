@@ -22,7 +22,6 @@ public class DownloadCurrentData {
 
     private static Logger logger = LoggerFactory.getLogger(DownloadCurrentData.class);
 
-
     public List<DataFromFile> get(String ticker) throws MalformedURLException {
 
         logger.info("Downloading current " + ticker + " data...");
@@ -34,7 +33,6 @@ public class DownloadCurrentData {
         logger.info("Downloading current " + ticker + " data...");
         return parse(new URL("https://stooq.pl/q/l/?s=" + ticker.toLowerCase() + "_pe&f=sd2t2ohlc&h&e=csv"));
     }
-
 
     public List<DataFromFile> parse(URL file) {
         List<String[]> dataLoaded = ReadFromURL(file);
