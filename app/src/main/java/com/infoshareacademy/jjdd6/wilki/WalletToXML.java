@@ -22,7 +22,7 @@ public class WalletToXML {
         xmlMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         try {
-            xmlMapper.writeValue(new File(SERIALIZED_FILE_NAME), wallet);
+            xmlMapper.writeValue(new File(Thread.currentThread().getContextClassLoader().getResource("wallet.xml").getPath()), wallet);
         } catch (IOException e) {
             logger.error("Wallet export to XML failed");
         }

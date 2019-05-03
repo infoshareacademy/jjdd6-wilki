@@ -41,15 +41,12 @@ public class DownloadData {
     }
 
     public static void updateWalletData(Wallet wallet) {
-        System.out.println("Updating wallet...");
-
         wallet.getShares().stream()
                 .map(Share::getTicker)
                 .forEach(DownloadData::getCurrentCSV);
 
         wallet.getShares().stream()
                 .forEach(Share::pullExternalData);
-        System.out.println("Wallet data updated");
         logger.info("Wallet updated");
     }
 }

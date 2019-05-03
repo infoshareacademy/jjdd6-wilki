@@ -2,7 +2,8 @@ package com.infoshareacademy.jjdd6.wilki;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.ejb.Stateless;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,18 +12,50 @@ import java.time.LocalDate;
 import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "WALLET")
+@NamedQueries({@NamedQuery(
+        name = "Wallet.findAll",
+        query = "SELECT w FROM Wallet w"
+)})
 public class Wallet implements Serializable {
 
-    private LinkedList<Share> shares = new LinkedList<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToMany
+    @JoinTable(name = "WALLET_TO_SHARE",
+            joinColumns = @JoinColumn(name = "wallet_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "share_id", referencedColumnName = "id"))
+    private List<Share> shares = new LinkedList<>();
+
+    @Column(name = "base_cash")
+    @NotNull
     private BigDecimal baseCash = BigDecimal.ZERO;
+
+    @Column(name = "cash_from_profits")
+    @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
+
+    @Column(name = "wallet_history")
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<Transaction> walletHistory = new ArrayList<>();
+
 
     public Wallet() {
 
     }
 
-    public LinkedList<Share> getShares() {
+    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits, List<Transaction> walletHistory) {
+        this.shares = shares;
+        this.baseCash = baseCash;
+        this.cashFromProfits = cashFromProfits;
+        this.walletHistory = walletHistory;
+    }
+
+    public List<Share> getShares() {
 
         return shares;
     }
@@ -182,12 +215,20 @@ public class Wallet implements Serializable {
         walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
-    public void setShares(LinkedList<Share> shares) {
+    public void setShares(List<Share> shares) {
         this.shares = shares;
     }
 
     public void setCashFromProfits(BigDecimal cashFromProfits) {
         this.cashFromProfits = cashFromProfits;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public boolean checkIfEnoughCash(int amount, double price) {
@@ -205,6 +246,7 @@ public class Wallet implements Serializable {
     @Override
     public String toString() {
         return "Wallet{" +
+                "id=" + id +
                 "shares=" + shares +
                 ", baseCash=" + baseCash +
                 ", cashFromProfits=" + cashFromProfits +

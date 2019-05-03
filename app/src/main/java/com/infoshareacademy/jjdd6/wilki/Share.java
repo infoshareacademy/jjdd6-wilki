@@ -1,9 +1,12 @@
 package com.infoshareacademy.jjdd6.wilki;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,24 +19,67 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "SHARE")
+@NamedQueries(
+        {@NamedQuery(
+                     name = "Share.findAll",
+                     query = "SELECT s FROM Share s"),
+        @NamedQuery( name = "Share.findByTicker",
+                     query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
 
+    @NotNull
+    @Column(name = "ticker")
     private String ticker;
+
+    @Column(name = "full_company_name")
     private String fullCompanyName;
+
+    @Column(name = "current_price")
     private BigDecimal currentPrice;
+
+    @Column(name = "take_profit_price")
     private BigDecimal takeProfitPrice = BigDecimal.valueOf(0);
+
+    @Column(name = "stop_loss_price")
     private BigDecimal stopLossPrice = BigDecimal.valueOf(0);
+
+    @Column(name = "current_PE")
     private Double currentPE;
+
+    @Column(name = "volume")
     private Long volume;
-    private LinkedList<Transaction> transactionLinkedList = new LinkedList<>();
+
+    @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
+    private List<Transaction> transactionLinkedList = new LinkedList<>();
+
+    @Column(name = "transaction_history")
+    @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
     private List<Transaction> transactionHistory = new ArrayList<>();
+
+    @Column(name = "highest_price")
     private BigDecimal highestPrice;
+
+    @Column(name = "lowest_price")
     private BigDecimal lowestPrice;
+
+    @Column(name = "data_date")
     private LocalDate dataDate;
+
+    @Column(name = "data_time")
     private LocalTime dataTime;
+
+    @ManyToMany(mappedBy = "shares")
+    private List<Wallet> wallets;
+
     private int delay;
 
     public Share() {
@@ -43,6 +89,7 @@ public class Share implements Serializable {
 
         this.ticker = ticker;
     }
+
 
     public Double getRiskRewardRatio() {
         if ((getTakeProfitPrice().subtract(getStopLossPrice())).setScale(4, RoundingMode.HALF_UP).doubleValue() <= 0) {
@@ -245,7 +292,7 @@ public class Share implements Serializable {
         return (int) Duration.between(time, LocalTime.now()).toMinutes();
     }
 
-    public LinkedList<Transaction> getTransactionLinkedList() {
+    public List<Transaction> getTransactionLinkedList() {
         return transactionLinkedList;
     }
 
@@ -257,9 +304,86 @@ public class Share implements Serializable {
         this.transactionHistory = transactionHistory;
     }
 
+    public void setTicker(String ticker) {
+        this.ticker = ticker;
+    }
+
+    public void setFullCompanyName(String fullCompanyName) {
+        this.fullCompanyName = fullCompanyName;
+    }
+
+    public void setCurrentPrice(BigDecimal currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+
+    public void setCurrentPE(Double currentPE) {
+        this.currentPE = currentPE;
+    }
+
+    public void setVolume(Long volume) {
+        this.volume = volume;
+    }
+
+    public BigDecimal getHighestPrice() {
+        return highestPrice;
+    }
+
+    public void setHighestPrice(BigDecimal highestPrice) {
+        this.highestPrice = highestPrice;
+    }
+
+    public BigDecimal getLowestPrice() {
+        return lowestPrice;
+    }
+
+    public void setLowestPrice(BigDecimal lowestPrice) {
+        this.lowestPrice = lowestPrice;
+    }
+
+    public LocalDate getDataDate() {
+        return dataDate;
+    }
+
+    public void setDataDate(LocalDate dataDate) {
+        this.dataDate = dataDate;
+    }
+
+    public LocalTime getDataTime() {
+        return dataTime;
+    }
+
+    public void setDataTime(LocalTime dataTime) {
+        this.dataTime = dataTime;
+    }
+
+    public int getDelay() {
+        return delay;
+    }
+
+    public void setDelay(int delay) {
+        this.delay = delay;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Wallet> getWallets() {
+        return wallets;
+    }
+
+    public void setWallets(List<Wallet> wallets) {
+        this.wallets = wallets;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Share{");
+        sb.append("id='").append(id).append('\'');
         sb.append("ticker='").append(ticker).append('\'');
         sb.append(", fullCompanyName='").append(fullCompanyName).append('\'');
         sb.append(", currentPrice=").append(currentPrice);
