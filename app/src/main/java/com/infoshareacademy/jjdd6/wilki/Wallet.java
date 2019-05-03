@@ -128,7 +128,7 @@ public class Wallet implements Serializable {
 
     public BigDecimal getROE() {
 
-        return (getCurrentWorth().divide(getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
+        return (getCurrentWorth().divide(getBaseCash(), RoundingMode.HALF_UP)).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
     }
 
     public void increaseBaseCash(BigDecimal amount) {
@@ -206,7 +206,7 @@ public class Wallet implements Serializable {
                 .count() == 0) {
             this.getShares().add(result);
         }
-        DownloadData.updateWalletData(this);
+        DownloadCurrentData.updateWalletData(this);
         return result;
     }
 
