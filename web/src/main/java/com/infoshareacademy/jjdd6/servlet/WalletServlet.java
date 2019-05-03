@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,18 +34,6 @@ public class WalletServlet extends HttpServlet {
 
     @Inject
     private TransactionDao transactionDao;
-
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-
-        Wallet wallet = new Wallet();
-        wallet.setBaseCash(BigDecimal.valueOf(10000));
-        walletDao.save(wallet);
-
-        Share share1 = new Share("kgh");
-        shareDao.save(share1);
-
-    }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -118,23 +104,14 @@ public class WalletServlet extends HttpServlet {
         walletDao.update(existingWallet);
         LOG.info("Wallet object updated: {}", existingWallet);
 
-
         findAllWallets(req, resp);
     }
-
 
     private void addWallet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         final Wallet wallet = new Wallet();
-        String bcashstr = req.getParameter("baseCash");
-        if (!NumberUtils.isParsable(bcashstr)) {
-            resp.getWriter().println("Base cash should be a number");
-            return;
-        }
-        Double baseCashL = Double.valueOf(bcashstr);
-        BigDecimal baseCash = BigDecimal.valueOf(baseCashL);
-        wallet.setBaseCash(baseCash);
+        wallet.setBaseCash(BigDecimal.valueOf(0.00));
 
         walletDao.save(wallet);
         LOG.info("Saved a new wallet object: {}", wallet);

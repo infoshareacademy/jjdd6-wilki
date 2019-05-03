@@ -1,49 +1,102 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.ShareDao;
+import com.infoshareacademy.jjdd6.dao.TransactionDao;
+import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.validation.Validator;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/share/buy")
+@WebServlet("/share-buy")
 public class BuySharesServlet extends HttpServlet {
+
+    private Logger logger = LoggerFactory.getLogger(BuySharesServlet.class);
+
+    @Inject
+    WalletDao walletDao;
+
+    @Inject
+    ShareDao shareDao;
+
+    @Inject
+    TransactionDao transactionDao;
 
     @Inject
     private Validator validator;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
-//        wyświetlenie strony
-//         stan kasy - ile mamy
-//         lista tickerów z nazwami (z bazy - wczytane na wejściu)
+        final String action = getAction(req, resp);
+        if (action == null) {
+            return;
+        }
+
+        if (action.equals("buy")) {
+            buyShare(req, resp);
+        } else {
+            resp.getWriter().write("Unknown action.");
+        }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        final String action = req.getParameter("action");
+        logger.info("Requested action: {}", action);
+        if (action == null || action.isEmpty()) {
+            resp.getWriter().write("Empty action parameter.");
+        }
+        return action;
+    }
+
+    private void buyShare(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        String idStr = req.getParameter("wallet_id");
+        if (!NumberUtils.isDigits(idStr)) {
+            resp.getWriter().println("Wallet id should be an integer");
+            return;
+        }
+        final Long id = Long.parseLong(req.getParameter("wallet_id"));
+        logger.info("Updating wallet with id = {}", id);
+
+        final Wallet existingWallet = walletDao.findById(id);
+        if (existingWallet == null) {
+            logger.info("No wallet found for id = {}, nothing to be updated", id);
+            return;
+        }
+
 
         String ticker = req.getParameter("ticker");
-        String amount = req.getParameter("amount");
-        String price = req.getParameter("price");
 
-        validator.isTickerValid(ticker);
-        validator.isNotEmptyIsNumeric(amount);
-        validator.isNotEmptyIsNumeric(price);
-        validator.isPositiveNumber(amount);
-        validator.isPositiveNumber(price);
+        String amountStr = req.getParameter("amount");
+        if (!NumberUtils.isDigits(amountStr)) {
+            resp.getWriter().println("Amount should be a whole number");
+            return;
+        }
+        Integer amount = Integer.parseInt(amountStr);
 
-        int amountInteger = Integer.parseInt(amount);
-        double priceDouble = Double.parseDouble(price);
+        String priceStr = req.getParameter("price");
+        if (!NumberUtils.isParsable(priceStr)) {
+            resp.getWriter().println("Price should have a numerical value");
+            return;
+        }
+        Double price = Double.parseDouble(priceStr);
+        existingWallet.buyShare(ticker, amount,price);
 
-        validator.isEnoughCash(amountInteger*priceDouble);
+        walletDao.update(existingWallet);
+        logger.info("Wallet object updated: {}", existingWallet);
 
-//        wallet.buyShare(ticker, amountInteger, priceDouble);
-
+        resp.getWriter().println("Transaction success.");
     }
+
+
 }

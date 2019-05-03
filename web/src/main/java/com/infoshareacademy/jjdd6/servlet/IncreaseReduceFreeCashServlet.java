@@ -52,12 +52,12 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private void increaseFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("id");
+        String idStr = req.getParameter("wallet_id");
         if (!NumberUtils.isDigits(idStr)) {
             resp.getWriter().println("Wallet id should be an integer");
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("id"));
+        final Long id = Long.parseLong(req.getParameter("wallet_id"));
         LOG.info("Updating wallet with id = {}", id);
 
         final Wallet existingWallet = walletDao.findById(id);
@@ -83,12 +83,12 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private void reduceFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("id");
+        String idStr = req.getParameter("wallet_id");
         if (!NumberUtils.isDigits(idStr)) {
             resp.getWriter().println("Wallet id should be an integer");
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("id"));
+        final Long id = Long.parseLong(req.getParameter("wallet_id"));
         LOG.info("Updating wallet with id = {}", id);
 
         final Wallet existingWallet = walletDao.findById(id);
