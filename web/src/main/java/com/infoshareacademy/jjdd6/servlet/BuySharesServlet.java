@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.BuySharesDao;
 import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
@@ -14,9 +15,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 @WebServlet("/share-buy")
+@Transactional
 public class BuySharesServlet extends HttpServlet {
 
     private static Logger logger = LoggerFactory.getLogger(BuySharesServlet.class);
@@ -32,6 +35,9 @@ public class BuySharesServlet extends HttpServlet {
 
     @Inject
     private Validators validators;
+
+    @Inject
+    BuySharesDao buySharesDao;
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -89,9 +95,9 @@ public class BuySharesServlet extends HttpServlet {
             return;
         }
         double price = Double.parseDouble(priceStr);
-        existingWallet.buyShare(ticker, amount, price);
 
-        walletDao.update(existingWallet);
+        buySharesDao.buyShare(existingWallet, ticker, amount, price);
+
         logger.info("Wallet object updated: {}", existingWallet);
 
         resp.getWriter().println("Transaction success.");
