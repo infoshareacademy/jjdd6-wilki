@@ -128,8 +128,8 @@ public class Share implements Serializable {
     public void pullExternalData() {
 
         try {
-            List<DataFromFile> data = new LoadData()
-                    .loadToList(getTicker().toLowerCase() + ".csv");
+            List<DataFromFile> data = new DownloadCurrentData()
+                    .get(this.getTicker());
             this.volume = data.get(0).getVolume();
             this.currentPrice = data.get(0).getClosingPrice().setScale(4, RoundingMode.HALF_UP);
             this.highestPrice = data.get(0).getHighestPrice().setScale(4, RoundingMode.HALF_UP);
@@ -151,8 +151,8 @@ public class Share implements Serializable {
         this.delay = calculateDelay(this.dataTime);
 
         try {
-            this.currentPE = new LoadData()
-                    .loadToList(getTicker().toLowerCase() + "_pe.csv")
+            this.currentPE = new DownloadCurrentData()
+                    .getPE(this.getTicker())
                     .get(0)
                     .getClosingPrice()
                     .doubleValue();
@@ -161,7 +161,7 @@ public class Share implements Serializable {
             this.currentPE = 0.0;
         }
 
-        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
+        this.fullCompanyName = new DownloadCurrentData().loadAndScanTickers(getTicker());
 
     }
 

@@ -7,18 +7,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class LoadDataTest {
 
-//    @Test
-//    void checkIfloadAndScanTickersReturnsFullNameForCorrectTicker() {
-//        //given
-//        String correctTicker = "KGH";
-//
-//        //when
-//        String result = new LoadData().loadAndScanTickers(correctTicker);
-//
-//        //then
-//        assertThat(result).isEqualTo("KGHM POLSKA MIEDŹ SA");
-//
-//    }
+    @Test
+    void checkIfloadAndScanTickersReturnsFullNameForCorrectTicker() {
+        //given
+        String correctTicker = "KGH";
+
+        //when
+        String result = new DownloadCurrentData().loadAndScanTickers(correctTicker);
+
+        //then
+        assertThat(result).isEqualTo("KGHM POLSKA MIEDŹ SA");
+
+    }
 
     @Test
     void checkIfvalidateTickerReturnsTrueForCorrectTicker() {
@@ -26,7 +26,7 @@ class LoadDataTest {
         String correctTicker = "KGH";
 
         //when
-        Boolean result = new LoadData().validateTicker(correctTicker);
+        Boolean result = new DownloadCurrentData().validateTicker(correctTicker);
 
         //then
         assertThat(result).isTrue();
@@ -38,7 +38,7 @@ class LoadDataTest {
         String falseTicker = "KGA";
 
         //when
-        Boolean result = new LoadData().validateTicker(falseTicker);
+        Boolean result = new DownloadCurrentData().validateTicker(falseTicker);
 
         //then
         assertThat(result).isFalse();
