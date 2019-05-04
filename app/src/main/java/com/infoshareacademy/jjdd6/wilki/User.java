@@ -7,8 +7,9 @@ import javax.validation.constraints.NotNull;
 @Table(name = "USER")
 @NamedQueries({@NamedQuery(
         name = "User.findAll",
-        query = "SELECT u FROM User u"
-)})
+        query = "SELECT u FROM User u"),
+        @NamedQuery(name = "User.findUserByEmail",
+                query = "SELECT u FROM User u WHERE u.email = :email")})
 public class User {
 
     @Id

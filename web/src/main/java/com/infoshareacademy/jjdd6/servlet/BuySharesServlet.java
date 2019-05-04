@@ -19,7 +19,7 @@ import java.io.IOException;
 @WebServlet("/share-buy")
 public class BuySharesServlet extends HttpServlet {
 
-    private Logger logger = LoggerFactory.getLogger(BuySharesServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(BuySharesServlet.class);
 
     @Inject
     WalletDao walletDao;

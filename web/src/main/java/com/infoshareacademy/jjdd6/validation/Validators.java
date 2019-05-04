@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
 import static org.apache.commons.validator.GenericValidator.isEmail;
@@ -15,7 +17,10 @@ import static org.apache.commons.validator.GenericValidator.isEmail;
 @RequestScoped
 public class Validators {
 
-    private Logger logger = LoggerFactory.getLogger(UserServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(UserServlet.class);
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Inject
     UserDao userDao;
@@ -33,15 +38,15 @@ public class Validators {
     }
 
     public boolean isEmailPresent(String email) {
-        return userDao.findByEmail(email) != null;
+        return !userDao.findUserByEmail(email).isEmpty();
     }
 
     public boolean isIdNotPresent(String id) {
         return userDao.findById(Long.valueOf(id)) == null;
     }
 
-    public boolean isWalletPresent(String wallet_id) {
-        return walletDao.findById(Long.valueOf(wallet_id)) != null;
+    public boolean isWalletPresent(String walletId) {
+        return walletDao.findById(Long.valueOf(walletId)) != null;
     }
 
 }
