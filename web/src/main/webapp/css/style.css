@@ -1,6 +1,6 @@
 body{
     margin: 4%;
-    padding: 0px;
+    padding: 0;
     background-color: #0D0F3A;
 }
 #container{
@@ -32,12 +32,26 @@ body{
     opacity: 0.7;
     width: 80%;
 }
+#selected{
+    float: left;
+    margin-top: 5px;
+    padding: 10px;
+    font-size: 18px;
+    text-shadow: 0 0 1px white;
+    margin-left: 45px;
+    cursor: pointer;
+    font-weight: 500;
+    transition-duration: 0.15s;
+    opacity: 1;
+    width: 80%;
+    background-color: rgb(90, 91, 99)
+}
 .menu_option:hover{
     float: left;
     margin-top: 5px;
     padding: 10px;
     font-size: 18px;
-    text-shadow: 0px 0px 1px white;
+    text-shadow: 0 0 1px white;
     margin-left: 45px;
     cursor: pointer;
     font-weight: 500;
@@ -50,6 +64,8 @@ body{
     float: right;
     width: 1400px;
     height: 150px;
+    position: absolute;
+    margin-left: 294px;
 }
 .upper_menu_info{
     float: left;
@@ -58,13 +74,18 @@ body{
     height: 100%;
     border-radius: 5px;
     background-color: white;
+    line-height: 60px;
+    text-align: center;
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
-#content{ 
+#content{
     float: right;
-    width: 73%;
+    width: 1290px;
     height: 580px;
-    margin-top: 60px;
-    margin-right: 55px;
+    margin-top: 200px;
+    margin-left: 350px;
+    position: absolute;
 }
 .ticker{
     background-color: #c7c7c7;
@@ -120,4 +141,51 @@ body{
     text-align: center;
     border-bottom: 2px solid #0D0F3A;
     line-height: 50px;
+}
+#container form{
+    width: 1050px;
+    height: 200px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    font-size: 40px;
+    margin-top: 100px;
+    margin-left: 90px;
+}
+a:link {
+    text-decoration: none;
+    color: white;
+}
+
+a:visited {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    text-decoration: none;
+    color: white;
+}
+
+a:active {
+    text-decoration: none;
+    color: white;
+}
+.text-input{
+    width: 350px;
+    height: 60px;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+}
+.input_area{
+    float: left;
+
+}
+#buy{
+    margin: 90px auto;
+    width: 200px;
+    height: 50px;
+    font-size: 30px;
+    cursor: pointer;
 }

@@ -39,9 +39,13 @@ public class ShowWalletServlet extends HttpServlet {
 
         BigDecimal roe = walletDao.findById(1L).getROE();
 
+        BigDecimal freeCash = walletDao.findById(1L).getFreeCash();
+
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);
         model.put("roe", roe);
+        model.put("freeCash", freeCash);
+        model.put("content", 1);
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 
