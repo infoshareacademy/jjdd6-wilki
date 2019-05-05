@@ -68,13 +68,10 @@ public class DownloadCurrentData {
     }
 
     public String loadAndScanTickers(String ticker) {
-
-        DownloadCurrentData loadData = new DownloadCurrentData();
-        String file = Thread.currentThread().getContextClassLoader().getResource("tickers.csv").getPath();
-
         try {
-            logger.info("Loading tickers from " + file);
-            List<String[]> dataLoaded = loadData.ReadFromURL(Paths.get(file).toUri().toURL());
+            URL tickersURL = new URL("https://raw.githubusercontent.com/stockwallet/tickers/master/tickers.csv");
+            logger.info("Loading tickers from " + tickersURL);
+            List<String[]> dataLoaded = new DownloadCurrentData().ReadFromURL(tickersURL);
             Map<String, String> tickersMap = dataLoaded.stream()
                     .collect(Collectors.toMap(l -> l[0], l -> l[1]));
             return tickersMap.get(ticker);
