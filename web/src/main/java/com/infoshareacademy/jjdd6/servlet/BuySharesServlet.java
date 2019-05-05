@@ -99,13 +99,23 @@ public class BuySharesServlet extends HttpServlet {
         double price = Double.parseDouble(priceStr);
 
         existingWallet.buyShare(ticker, amount, price);
-        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionLinkedList().get(existingWallet.scanWalletForShare(ticker).getTransactionLinkedList().size()-1);
+        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
         Share share = existingWallet.scanWalletForShare(ticker);
         transaction.setShare(share);
         transaction.setWallet(existingWallet);
 
         transactionDao.save(transaction);
         shareDao.save(share);
+        walletDao.update(existingWallet);
+
+        existingWallet.sellShare(ticker, amount-10, price+20);
+        Transaction transaction2 = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
+        Share share2 = existingWallet.scanWalletForShare(ticker);
+        transaction2.setShare(share2);
+        transaction2.setWallet(existingWallet);
+
+        transactionDao.save(transaction2);
+        shareDao.update(share2);
         walletDao.update(existingWallet);
 
         logger.info("Wallet object updated: {}", existingWallet);
