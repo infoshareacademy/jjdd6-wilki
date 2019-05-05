@@ -215,7 +215,7 @@ public class Share implements Serializable {
     public BigDecimal getAvgBuyPrice() {
         try {
             return this.transactionLinkedList.stream()
-                    .map(o -> o.getPrice().setScale(4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(o.getAmount())).setScale(4, RoundingMode.HALF_UP))
+                    .map(o -> o.getPrice().setScale(4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(o.getAmountForCalc())).setScale(4, RoundingMode.HALF_UP))
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
                     .divide(BigDecimal.valueOf(getSharesTotalAmount()), RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {

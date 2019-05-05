@@ -41,20 +41,14 @@ public class Wallet implements Serializable {
     @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
 
-    @Column(name = "wallet_history")
-    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
-    private List<Transaction> walletHistory = new ArrayList<>();
-
-
     public Wallet() {
 
     }
 
-    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits, List<Transaction> walletHistory) {
+    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits) {
         this.shares = shares;
         this.baseCash = baseCash;
         this.cashFromProfits = cashFromProfits;
-        this.walletHistory = walletHistory;
     }
 
     public List<Share> getShares() {
@@ -170,7 +164,6 @@ public class Wallet implements Serializable {
 
     public void sellShare(String ticker, int amount, double price) {
         Share result = sellShareCommon(ticker, amount, price);
-//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
     }
 
@@ -193,13 +186,11 @@ public class Wallet implements Serializable {
 
     public void sellShare(String ticker, int amount, double price, LocalDate date) {
         Share result = sellShareCommon(ticker, amount, price);
-//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
     }
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = buyShareCommon(ticker, amount, price);
-//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
     private Share buyShareCommon(String ticker, int amount, double price) {
@@ -217,7 +208,6 @@ public class Wallet implements Serializable {
 
     public void buyShare(String ticker, int amount, double price, LocalDate date) {
         Share result = buyShareCommon(ticker, amount, price);
-//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
     public void setShares(List<Share> shares) {
@@ -238,14 +228,6 @@ public class Wallet implements Serializable {
 
     public boolean checkIfEnoughCash(int amount, double price) {
         return amount * price <= getFreeCash().doubleValue();
-    }
-
-    public List<Transaction> getWalletHistory() {
-        return walletHistory;
-    }
-
-    public void setWalletHistory(List<Transaction> walletHistory) {
-        this.walletHistory = walletHistory;
     }
 
     @Override
