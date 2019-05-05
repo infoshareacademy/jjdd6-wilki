@@ -5,6 +5,8 @@ import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.validation.Validators;
+import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.Transaction;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -96,7 +98,15 @@ public class BuySharesServlet extends HttpServlet {
         }
         double price = Double.parseDouble(priceStr);
 
-        buySharesDao.buyShare(existingWallet, ticker, amount, price);
+        existingWallet.buyShare(ticker, amount, price);
+        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionLinkedList().get(existingWallet.scanWalletForShare(ticker).getTransactionLinkedList().size()-1);
+        Share share = existingWallet.scanWalletForShare(ticker);
+        transaction.setShare(share);
+        transaction.setWallet(existingWallet);
+
+        transactionDao.save(transaction);
+        shareDao.save(share);
+        walletDao.update(existingWallet);
 
         logger.info("Wallet object updated: {}", existingWallet);
 

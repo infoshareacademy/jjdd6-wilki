@@ -51,7 +51,7 @@ public class Transaction implements Serializable {
     private TransactionType type;
 
     private String ticker;
-    private String fullCompanyName;
+//    private String fullCompanyName;
 
 
     @ManyToOne
@@ -107,21 +107,21 @@ public class Transaction implements Serializable {
         this.profit = profit;
     }
 
-    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
-
-        this.ticker = ticker;
-        this.fullCompanyName = fullCompanyName;
-        this.date = date;
-        if (amount > 0) {
-            this.type = BUY;
-        } else {
-            this.type = SELL;
-        }
-        this.amount = amount;
-        this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
-        this.profit = profit;
-    }
+//    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
+//
+//        this.ticker = ticker;
+//        this.fullCompanyName = fullCompanyName;
+//        this.date = date;
+//        if (amount > 0) {
+//            this.type = BUY;
+//        } else {
+//            this.type = SELL;
+//        }
+//        this.amount = amount;
+//        this.price = price;
+//        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
+//        this.profit = profit;
+//    }
 
     public BigDecimal getTransactionFee() {
 
@@ -199,6 +199,14 @@ public class Transaction implements Serializable {
 
     public void setShare(Share share) {
         this.share = share;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     @Override

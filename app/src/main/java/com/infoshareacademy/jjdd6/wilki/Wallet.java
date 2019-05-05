@@ -170,7 +170,7 @@ public class Wallet implements Serializable {
 
     public void sellShare(String ticker, int amount, double price) {
         Share result = sellShareCommon(ticker, amount, price);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
     }
 
@@ -193,13 +193,13 @@ public class Wallet implements Serializable {
 
     public void sellShare(String ticker, int amount, double price, LocalDate date) {
         Share result = sellShareCommon(ticker, amount, price);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, -amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
 
     }
 
     public void buyShare(String ticker, int amount, double price) {
         Share result = buyShareCommon(ticker, amount, price);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), LocalDate.now(), amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
     private Share buyShareCommon(String ticker, int amount, double price) {
@@ -217,7 +217,7 @@ public class Wallet implements Serializable {
 
     public void buyShare(String ticker, int amount, double price, LocalDate date) {
         Share result = buyShareCommon(ticker, amount, price);
-        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
+//        walletHistory.add(new Transaction(ticker, result.getFullCompanyName(), date, amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), BigDecimal.ZERO));
     }
 
     public void setShares(List<Share> shares) {
