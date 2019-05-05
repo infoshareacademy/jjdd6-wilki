@@ -88,12 +88,12 @@ public class BuySharesServlet extends HttpServlet {
         final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
         final Wallet existingWallet = walletDao.findById(walletId);
 
-//        if (validators.isEnoughCash(walletId, amount, price)) {
-//            resp.getWriter().println("You don't have enough money! Your current balance is: "
-//            + existingWallet.getFreeCash());
-//            logger.info("Not enough money to buy shares");
-//            return;
-//        }
+        if (validators.isEnoughCash(existingWallet, amount, price)) {
+            resp.getWriter().println("You don't have enough money! Your current balance is: "
+            + existingWallet.getFreeCash());
+            logger.info("Not enough money to buy shares");
+            return;
+        }
 
         existingWallet.buyShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
@@ -108,6 +108,6 @@ public class BuySharesServlet extends HttpServlet {
         logger.info("Wallet object updated: {}", existingWallet);
 
         resp.getWriter().println("Transaction success."
-                + "\nFree Cash: " + transactionDao.freeCash(walletId));
+        + "\nFree Cash: " + existingWallet.getFreeCash());
     }
 }

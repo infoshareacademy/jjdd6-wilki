@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Stateless
@@ -53,15 +52,4 @@ public class TransactionDao {
 //        return (Integer) query.getSingleResult();
 //
 //    }
-
-    public BigDecimal freeCash(Long walletId) {
-
-        BigDecimal baseCash = walletDao.findById(walletId).getBaseCash();
-
-        final Query query = entityManager.createNamedQuery("Transaction.totalTransactionValue");
-        query.setParameter("walletId", walletId);
-        BigDecimal totalValue = (BigDecimal) query.getSingleResult();
-
-        return baseCash.add(totalValue);
-    }
 }
