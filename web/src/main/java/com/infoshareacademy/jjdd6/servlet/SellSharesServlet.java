@@ -19,11 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 
-@WebServlet("/share-buy")
+@WebServlet("/share-sell")
 @Transactional
-public class BuySharesServlet extends HttpServlet {
+public class SellSharesServlet extends HttpServlet {
 
-    private static Logger logger = LoggerFactory.getLogger(BuySharesServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(SellSharesServlet.class);
 
     @Inject
     WalletDao walletDao;
@@ -45,9 +45,9 @@ public class BuySharesServlet extends HttpServlet {
             return;
         }
 
-        if (action.equals("buy")) {
-            buyShare(req, resp);
-        }else {
+        if (action.equals("sell")) {
+            sellShare(req, resp);
+        } else {
             resp.getWriter().write("Unknown action.");
         }
     }
@@ -61,7 +61,7 @@ public class BuySharesServlet extends HttpServlet {
         return action;
     }
 
-    private void buyShare(HttpServletRequest req, HttpServletResponse resp)
+    private void sellShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
@@ -94,14 +94,14 @@ public class BuySharesServlet extends HttpServlet {
         }
         double price = Double.parseDouble(priceStr);
 
-        existingWallet.buyShare(ticker, amount, price);
-        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
+        existingWallet.sellShare(ticker, amount, price);
+        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size() - 1);
         Share share = existingWallet.scanWalletForShare(ticker);
         transaction.setShare(share);
         transaction.setWallet(existingWallet);
 
         transactionDao.save(transaction);
-        shareDao.save(share);
+        shareDao.update(share);
         walletDao.update(existingWallet);
 
         logger.info("Wallet object updated: {}", existingWallet);
