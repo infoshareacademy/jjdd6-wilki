@@ -11,9 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+@Transactional
 @WebServlet(urlPatterns = "/increase-reduce-free-cash")
 public class IncreaseReduceFreeCashServlet extends HttpServlet {
 
@@ -72,6 +74,7 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             Double cashDouble = Double.valueOf(cash);
             BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
             existingWallet.increaseBaseCash(cashBigDecimal);
+            resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
         }
 
         walletDao.update(existingWallet);
@@ -103,6 +106,8 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             Double cashDouble = Double.valueOf(cash);
             BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
             existingWallet.reduceBaseCash(cashBigDecimal);
+            resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
+
         }
 
         walletDao.update(existingWallet);

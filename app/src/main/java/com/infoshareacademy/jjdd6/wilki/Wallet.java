@@ -41,20 +41,14 @@ public class Wallet implements Serializable {
     @NotNull
     private BigDecimal cashFromProfits = BigDecimal.ZERO;
 
-    @Column(name = "wallet_history")
-    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
-    private List<Transaction> walletHistory = new ArrayList<>();
-
-
     public Wallet() {
 
     }
 
-    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits, List<Transaction> walletHistory) {
+    public Wallet(List<Share> shares, @NotNull BigDecimal baseCash, @NotNull BigDecimal cashFromProfits) {
         this.shares = shares;
         this.baseCash = baseCash;
         this.cashFromProfits = cashFromProfits;
-        this.walletHistory = walletHistory;
     }
 
     public List<Share> getShares() {
@@ -234,14 +228,6 @@ public class Wallet implements Serializable {
 
     public boolean checkIfEnoughCash(int amount, double price) {
         return amount * price <= getFreeCash().doubleValue();
-    }
-
-    public List<Transaction> getWalletHistory() {
-        return walletHistory;
-    }
-
-    public void setWalletHistory(List<Transaction> walletHistory) {
-        this.walletHistory = walletHistory;
     }
 
     @Override
