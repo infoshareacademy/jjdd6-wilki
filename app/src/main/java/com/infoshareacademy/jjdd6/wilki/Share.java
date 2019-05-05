@@ -128,8 +128,8 @@ public class Share implements Serializable {
     public void pullExternalData() {
 
         try {
-            List<DataFromFile> data = new LoadData()
-                    .loadToList(getTicker().toLowerCase() + ".csv");
+            List<DataFromFile> data = new DownloadCurrentData()
+                    .get(this.getTicker());
             this.volume = data.get(0).getVolume();
             this.currentPrice = data.get(0).getClosingPrice().setScale(4, RoundingMode.HALF_UP);
             this.highestPrice = data.get(0).getHighestPrice().setScale(4, RoundingMode.HALF_UP);
@@ -151,8 +151,8 @@ public class Share implements Serializable {
         this.delay = calculateDelay(this.dataTime);
 
         try {
-            this.currentPE = new LoadData()
-                    .loadToList(getTicker().toLowerCase() + "_pe.csv")
+            this.currentPE = new DownloadCurrentData()
+                    .getPE(this.getTicker())
                     .get(0)
                     .getClosingPrice()
                     .doubleValue();
@@ -161,7 +161,7 @@ public class Share implements Serializable {
             this.currentPE = 0.0;
         }
 
-        this.fullCompanyName = new LoadData().loadAndScanTickers(getTicker());
+        this.fullCompanyName = new DownloadCurrentData().loadAndScanTickers(getTicker());
 
     }
 
@@ -224,8 +224,9 @@ public class Share implements Serializable {
     }
 
     public void buy(Integer amount, double price) {
-        this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
-        this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
+        Transaction transaction = new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP));
+        this.transactionLinkedList.add(transaction);
+        this.transactionHistory.add(transaction);
     }
 
     public BigDecimal sell(int amount, double price) {
@@ -233,11 +234,11 @@ public class Share implements Serializable {
         BigDecimal profit = BigDecimal.valueOf(0);
         int tempAmount = amount;
 
-        while (amount > this.transactionLinkedList.get(0).getAmount()) {
-            amount -= this.transactionLinkedList.get(0).getAmount();
+        while (amount > this.transactionLinkedList.get(0).getAmountForCalc()) {
+            amount -= this.transactionLinkedList.get(0).getAmountForCalc();
 
             profit = profit
-                    .add(BigDecimal.valueOf(this.transactionLinkedList.get(0).getAmount())
+                    .add(BigDecimal.valueOf(this.transactionLinkedList.get(0).getAmountForCalc())
                             .multiply((BigDecimal.valueOf(price)
                                     .subtract(this.transactionLinkedList.get(0).getPrice()))));
 
@@ -250,9 +251,9 @@ public class Share implements Serializable {
                                 .subtract(this.transactionLinkedList.get(0).getPrice()))));
 
         this.transactionLinkedList.get(0)
-                .setAmount(this.transactionLinkedList.get(0).getAmount() - amount);
+                .setAmountForCalc(this.transactionLinkedList.get(0).getAmountForCalc() - amount);
 
-        if (this.transactionLinkedList.get(0).getAmount() == 0) {
+        if (this.transactionLinkedList.get(0).getAmountForCalc() == 0) {
             this.transactionLinkedList.remove(0);
         }
 

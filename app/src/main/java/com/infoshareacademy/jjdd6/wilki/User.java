@@ -1,13 +1,15 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
 @NamedQueries({@NamedQuery(
         name = "User.findAll",
-        query = "SELECT u FROM User u"
-)})
+        query = "SELECT u FROM User u"),
+        @NamedQuery(name = "User.findUserByEmail",
+                query = "SELECT u FROM User u WHERE u.email = :email")})
 public class User {
 
     @Id
@@ -16,6 +18,7 @@ public class User {
     private Long id;
 
     @Column(name = "email")
+    @NotNull
     private String email;
 
     @OneToOne

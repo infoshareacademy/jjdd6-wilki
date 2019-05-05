@@ -143,9 +143,9 @@ public class TextInterface {
                 break;
             }
             System.out.println();
-        } while (!new LoadData().validateTicker(ticker));
+        } while (!new DownloadCurrentData().validateTicker(ticker));
 
-        System.out.println("Found! " + new LoadData().loadAndScanTickers(ticker.toUpperCase()));
+        System.out.println("Found! " + new DownloadCurrentData().loadAndScanTickers(ticker.toUpperCase()));
         System.out.println();
         amount = validateAmount();
         System.out.println();

@@ -14,7 +14,6 @@ public class WalletToXML {
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-
     public void saveToXml(Wallet wallet) {
         XmlMapper xmlMapper = new XmlMapper();
 

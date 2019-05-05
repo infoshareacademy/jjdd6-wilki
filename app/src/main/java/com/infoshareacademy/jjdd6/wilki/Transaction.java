@@ -30,6 +30,9 @@ public class Transaction implements Serializable {
     @NotNull
     private Integer amount;
 
+    @Column(name = "amount_for_calc")
+    private Integer amountForCalc;
+
     @Column(name = "price")
     @NotNull
     private BigDecimal price;
@@ -50,8 +53,8 @@ public class Transaction implements Serializable {
     @NotNull
     private TransactionType type;
 
-    private String ticker;
-    private String fullCompanyName;
+//    private String ticker;
+//    private String fullCompanyName;
 
 
     @ManyToOne
@@ -70,8 +73,10 @@ public class Transaction implements Serializable {
         this.date = LocalDate.now();
         if (amount > 0) {
             this.type = BUY;
+            this.amountForCalc = amount;
         } else {
             this.type = SELL;
+            this.amountForCalc = 0;
         }
         this.amount = amount;
         this.price = price;
@@ -84,8 +89,10 @@ public class Transaction implements Serializable {
         this.date = LocalDate.now();
         if (amount > 0) {
             this.type = BUY;
+            this.amountForCalc = amount;
         } else {
             this.type = SELL;
+            this.amountForCalc = 0;
         }
         this.amount = amount;
         this.price = price;
@@ -102,25 +109,35 @@ public class Transaction implements Serializable {
             this.type = SELL;
         }
         this.amount = amount;
+        this.amountForCalc = amount;
         this.price = price;
         this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
 
-    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
+//    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
+//
+//        this.ticker = ticker;
+//        this.fullCompanyName = fullCompanyName;
+//        this.date = date;
+//        if (amount > 0) {
+//            this.type = BUY;
+//        } else {
+//            this.type = SELL;
+//        }
+//        this.amount = amount;
+//        this.price = price;
+//        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
+//        this.profit = profit;
+//    }
 
-        this.ticker = ticker;
-        this.fullCompanyName = fullCompanyName;
-        this.date = date;
-        if (amount > 0) {
-            this.type = BUY;
-        } else {
-            this.type = SELL;
-        }
-        this.amount = amount;
-        this.price = price;
-        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
-        this.profit = profit;
+
+    public Integer getAmountForCalc() {
+        return amountForCalc;
+    }
+
+    public void setAmountForCalc(Integer amountForCalc) {
+        this.amountForCalc = amountForCalc;
     }
 
     public BigDecimal getTransactionFee() {
@@ -199,6 +216,14 @@ public class Transaction implements Serializable {
 
     public void setShare(Share share) {
         this.share = share;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
     @Override
