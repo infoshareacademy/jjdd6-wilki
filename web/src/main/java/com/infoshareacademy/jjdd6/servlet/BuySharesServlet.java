@@ -7,7 +7,6 @@ import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Transaction;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,59 +39,63 @@ public class BuySharesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = getAction(req, resp);
-        if (action == null) {
-            return;
-        }
+        buyShare(req, resp);
 
-        if (action.equals("buy")) {
-            buyShare(req, resp);
-        }else {
-            resp.getWriter().write("Unknown action.");
-        }
-    }
-
-    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
-        }
-        return action;
     }
 
     private void buyShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("Wallet id should be an integer");
+        if (validators.isIntegerGreaterThanZero(idStr)) {
+            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", idStr);
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        logger.info("Updating wallet with id = {}", id);
 
-        final Wallet existingWallet = walletDao.findById(id);
-        if (existingWallet == null) {
-            logger.info("No wallet found for id = {}, nothing to be updated", id);
+        if (validators.isWalletNotPresent(idStr)) {
+            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
             return;
         }
+
+
 
         String ticker = req.getParameter("ticker");
 
-        String amountStr = req.getParameter("amount");
-        if (!NumberUtils.isDigits(amountStr)) {
-            resp.getWriter().println("Amount should be a whole number");
+        if (validators.isTickerNotValid(ticker)) {
+            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
+            logger.info("Ticker = {} is not valid.", ticker);
             return;
         }
-        int amount = Integer.parseInt(amountStr);
+
+        String amountStr = req.getParameter("amount");
+
+        if (validators.isIntegerGreaterThanZero(amountStr)) {
+            resp.getWriter().println("Amount should be an integer greater than 0");
+            logger.info("Incorrect amount = {}", amountStr);
+            return;
+        }
 
         String priceStr = req.getParameter("price");
-        if (!NumberUtils.isParsable(priceStr)) {
-            resp.getWriter().println("Price should have a numerical value");
+
+        if (validators.isDoubleGreaterThanZero(priceStr)) {
+            resp.getWriter().println("Price should be a number greater than 0");
+            logger.info("Incorrect price = {}", amountStr);
             return;
         }
+
+        int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
+        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(walletId);
+
+        if (validators.isEnoughCash(walletId, amount, price)) {
+            resp.getWriter().println("You don't have enough money! Your current balance is: "
+            + transactionDao.freeCash(walletId));
+            logger.info("Not enough money to buy shares");
+            return;
+        }
 
         existingWallet.buyShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
@@ -106,6 +109,6 @@ public class BuySharesServlet extends HttpServlet {
 
         logger.info("Wallet object updated: {}", existingWallet);
 
-        resp.getWriter().println("Transaction success.");
+        resp.getWriter().println("Transaction success." + transactionDao.freeCash(walletId));
     }
 }

@@ -40,25 +40,8 @@ public class SellSharesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = getAction(req, resp);
-        if (action == null) {
-            return;
-        }
-
-        if (action.equals("sell")) {
             sellShare(req, resp);
-        } else {
-            resp.getWriter().write("Unknown action.");
-        }
-    }
 
-    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
-        }
-        return action;
     }
 
     private void sellShare(HttpServletRequest req, HttpServletResponse resp)
@@ -89,7 +72,7 @@ public class SellSharesServlet extends HttpServlet {
 
         String priceStr = req.getParameter("price");
         if (!NumberUtils.isParsable(priceStr)) {
-            resp.getWriter().println("Price should have a numerical value");
+            resp.getWriter().println("Price should have a numerical freeCash");
             return;
         }
         double price = Double.parseDouble(priceStr);

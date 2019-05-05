@@ -16,8 +16,10 @@ import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 @Table(name = "TRANSACTION")
 @NamedQueries({@NamedQuery(
         name = "Transaction.findAll",
-        query = "SELECT t FROM Transaction t"
-)})
+        query = "SELECT t FROM Transaction t"),
+        @NamedQuery(
+                name = "Transaction.totalTransactionValue",
+                query = "SELECT SUM(transactionTotalValue) FROM Transaction WHERE wallet.id = :walletId")})
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
@@ -53,10 +55,6 @@ public class Transaction implements Serializable {
     @NotNull
     private TransactionType type;
 
-//    private String ticker;
-//    private String fullCompanyName;
-
-
     @ManyToOne
     @JoinColumn(name = "share_id")
     private Share share;
@@ -65,11 +63,15 @@ public class Transaction implements Serializable {
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
+    @Column(name = "transaction_total_value")
+    private BigDecimal transactionTotalValue;
+
     public Transaction() {
     }
 
     public Transaction(Integer amount, BigDecimal price) {
 
+        BigDecimal temp = BigDecimal.valueOf(-1);
         this.date = LocalDate.now();
         if (amount > 0) {
             this.type = BUY;
@@ -77,15 +79,20 @@ public class Transaction implements Serializable {
         } else {
             this.type = SELL;
             this.amountForCalc = 0;
+            temp = BigDecimal.valueOf(1);
         }
         this.amount = amount;
         this.price = price;
         this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = BigDecimal.ZERO;
+        this.transactionTotalValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).subtract(transactionFeeValue)
+                .multiply(temp);
+
     }
 
     public Transaction(Integer amount, BigDecimal price, BigDecimal profit) {
 
+        BigDecimal temp = BigDecimal.valueOf(-1);
         this.date = LocalDate.now();
         if (amount > 0) {
             this.type = BUY;
@@ -93,44 +100,33 @@ public class Transaction implements Serializable {
         } else {
             this.type = SELL;
             this.amountForCalc = 0;
+            temp = BigDecimal.valueOf(1);
         }
         this.amount = amount;
         this.price = price;
         this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = profit;
-    }
+        this.transactionTotalValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).subtract(transactionFeeValue)
+                .multiply(temp);    }
 
     public Transaction(LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
 
+        BigDecimal temp = BigDecimal.valueOf(-1);
         this.date = date;
         if (amount > 0) {
             this.type = BUY;
         } else {
             this.type = SELL;
+            temp = BigDecimal.valueOf(1);
+
         }
         this.amount = amount;
         this.amountForCalc = amount;
         this.price = price;
         this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = profit;
-    }
-
-//    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
-//
-//        this.ticker = ticker;
-//        this.fullCompanyName = fullCompanyName;
-//        this.date = date;
-//        if (amount > 0) {
-//            this.type = BUY;
-//        } else {
-//            this.type = SELL;
-//        }
-//        this.amount = amount;
-//        this.price = price;
-//        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
-//        this.profit = profit;
-//    }
-
+        this.transactionTotalValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).subtract(transactionFeeValue)
+                .multiply(temp);    }
 
     public Integer getAmountForCalc() {
         return amountForCalc;
