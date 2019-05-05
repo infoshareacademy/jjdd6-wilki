@@ -67,7 +67,7 @@ public class TransactionServlet extends HttpServlet {
             throws IOException {
         String idStr = req.getParameter("id");
         if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("Transaction id should bean integer");
+            resp.getWriter().println("Transaction id should be an integer");
             return;
         }
         final Long id = Long.parseLong(idStr);

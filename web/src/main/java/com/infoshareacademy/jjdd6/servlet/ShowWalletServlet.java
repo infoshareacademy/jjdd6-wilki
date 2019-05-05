@@ -1,5 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.ShareDao;
+import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -13,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -20,10 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet("/wallet")
+@Transactional
 public class ShowWalletServlet extends HttpServlet {
 
-    @EJB
-    private WalletInitializer walletInitializer;
+    @Inject
+    ShareDao shareDao;
+
+    @Inject
+    WalletDao walletDao;
 
     @Inject
     TemplateProvider templateProvider;
@@ -31,17 +38,15 @@ public class ShowWalletServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        Wallet wallet = walletInitializer.init();
+        List<Share> shares = shareDao.findAll();
 
-        List<Share> shares = wallet.getShares();
-
-        Double roe = wallet.getROE().doubleValue();
+        BigDecimal roe = walletDao.findById(1L).getROE();
 
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);
         model.put("roe", roe);
 
-        Template template = templateProvider.getTemplate(getServletContext(), "show-owned-shares.ftlh");
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 
         try {
             template.process(model, resp.getWriter());

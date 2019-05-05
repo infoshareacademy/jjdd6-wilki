@@ -127,8 +127,12 @@ public class Wallet implements Serializable {
     }
 
     public BigDecimal getROE() {
+        try {
+            return (getCurrentWorth().divide(getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
+        } catch (ArithmeticException e) {
+            return BigDecimal.ZERO;
+        }
 
-        return (getCurrentWorth().divide(getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
     }
 
     public void increaseBaseCash(BigDecimal amount) {

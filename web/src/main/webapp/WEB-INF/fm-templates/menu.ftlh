@@ -24,7 +24,7 @@
     </div>
     <div id="upper_menu">
         <div class="upper_menu_info">profit</div>
-        <div class="upper_menu_info">ROE </br> ${roe}</div>
+        <div class="upper_menu_info">ROE </br> ${roe} %</div>
         <div class="upper_menu_info">najwięjszy profit jakiejś akcji (aktualnej) </div>
         <div class="upper_menu_info">największa strata aktualnej akcji </div>
     </div>
