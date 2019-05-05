@@ -89,6 +89,6 @@ public class SellSharesServlet extends HttpServlet {
 
         logger.info("Wallet object updated: {}", existingWallet);
 
-        resp.getWriter().println("Transaction success.");
+        resp.getWriter().println("Transaction success." + transactionDao.freeCash(id));
     }
 }

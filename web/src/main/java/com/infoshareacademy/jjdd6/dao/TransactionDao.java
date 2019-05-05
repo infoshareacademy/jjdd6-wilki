@@ -46,12 +46,14 @@ public class TransactionDao {
     }
 
     public BigDecimal freeCash(Long walletId) {
-        final Query query = entityManager.createNamedQuery("Transaction.totalTransactionValue");
-        query.setParameter("walletId", walletId);
 
         BigDecimal baseCash = walletDao.findById(walletId).getBaseCash();
+
+        final Query query = entityManager.createNamedQuery("Transaction.totalTransactionValue");
+        query.setParameter("walletId", walletId);
         BigDecimal totalValue = (BigDecimal) query.getSingleResult();
 
         return baseCash.add(totalValue);
+
     }
 }
