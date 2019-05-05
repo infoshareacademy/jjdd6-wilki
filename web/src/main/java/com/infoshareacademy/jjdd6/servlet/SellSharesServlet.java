@@ -37,28 +37,8 @@ public class SellSharesServlet extends HttpServlet {
     @Inject
     private Validators validators;
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        final String action = getAction(req, resp);
-        if (action == null) {
-            return;
-        }
-
-        if (action.equals("sell")) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
             sellShare(req, resp);
-        } else {
-            resp.getWriter().write("Unknown action.");
-        }
-    }
-
-    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
-        }
-        return action;
     }
 
     private void sellShare(HttpServletRequest req, HttpServletResponse resp)
