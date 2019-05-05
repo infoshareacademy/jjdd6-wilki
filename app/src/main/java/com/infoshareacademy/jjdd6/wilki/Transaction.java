@@ -19,7 +19,10 @@ import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
         query = "SELECT t FROM Transaction t"),
         @NamedQuery(
                 name = "Transaction.totalTransactionValue",
-                query = "SELECT SUM(transactionTotalValue) FROM Transaction WHERE wallet.id = :walletId")})
+                query = "SELECT SUM(transactionTotalValue) FROM Transaction WHERE wallet.id = :walletId"),
+        @NamedQuery(
+                name = "Transaction.ShareSum",
+                query = "SELECT SUM(amount) FROM Transaction WHERE wallet.id = :walletId AND share.id = :shareId")})
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
 

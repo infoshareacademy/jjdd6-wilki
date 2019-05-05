@@ -45,6 +45,15 @@ public class TransactionDao {
         return query.getResultList();
     }
 
+//    public Integer shareSum(Long walletId, Share share) {
+//
+//        final Query query = entityManager.createNamedQuery("Transaction.ShareSum");
+//        query.setParameter("walletId", walletId);
+//        query.setParameter("shareId", share.getId());
+//        return (Integer) query.getSingleResult();
+//
+//    }
+
     public BigDecimal freeCash(Long walletId) {
 
         BigDecimal baseCash = walletDao.findById(walletId).getBaseCash();
@@ -54,6 +63,5 @@ public class TransactionDao {
         BigDecimal totalValue = (BigDecimal) query.getSingleResult();
 
         return baseCash.add(totalValue);
-
     }
 }

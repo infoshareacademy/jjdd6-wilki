@@ -74,7 +74,6 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             Double cashDouble = Double.valueOf(cash);
             BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
             existingWallet.increaseBaseCash(cashBigDecimal);
-            resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
         }
 
         walletDao.update(existingWallet);
