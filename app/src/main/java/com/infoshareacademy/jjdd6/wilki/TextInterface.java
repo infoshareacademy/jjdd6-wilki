@@ -101,18 +101,18 @@ public class TextInterface {
         System.out.format("| TICKER | AMOUNT | AVG BUY PRICE |     VALUE     | CURRENT PRICE | CURRENT VALUE |   RETURN   | STOP-LOSS PRICE | TAKE-PROFIT PRICE |%n");
         System.out.format("+--------+--------+---------------+---------------+---------------+---------------+------------+-----------------+-------------------+%n");
 
-        for (int i = 0; i < wallet.getShares().size(); i++) {
+        for (int i = 0; i < wallet.walletToDisplay(wallet).size(); i++) {
             DecimalFormat df = new DecimalFormat("0.00");
             System.out.format(leftAlignFormat,
-                    wallet.getShares().get(i).getTicker(),
-                    wallet.getShares().get(i).getSharesTotalAmount(),
-                    wallet.getShares().get(i).getAvgBuyPrice() + " pln",
-                    wallet.getShares().get(i).getBaseValue() + " pln",
-                    wallet.getShares().get(i).getCurrentPrice() + " pln",
-                    wallet.getShares().get(i).getCurrentValue() + " pln",
-                    df.format(((wallet.getShares().get(i).getCurrentValue().doubleValue() / (wallet.getShares().get(i).getBaseValue()).doubleValue()) - 1) * 100) + " %",
-                    wallet.getShares().get(i).getStopLossPrice() + " pln",
-                    wallet.getShares().get(i).getTakeProfitPrice() + " pln");
+                    wallet.walletToDisplay(wallet).get(i).getTicker(),
+                    wallet.walletToDisplay(wallet).get(i).getSharesTotalAmount(),
+                    wallet.walletToDisplay(wallet).get(i).getAvgBuyPrice() + " pln",
+                    wallet.walletToDisplay(wallet).get(i).getBaseValue() + " pln",
+                    wallet.walletToDisplay(wallet).get(i).getCurrentPrice() + " pln",
+                    wallet.walletToDisplay(wallet).get(i).getCurrentValue() + " pln",
+                    df.format(((wallet.walletToDisplay(wallet).get(i).getCurrentValue().doubleValue() / (wallet.walletToDisplay(wallet).get(i).getBaseValue()).doubleValue()) - 1) * 100) + " %",
+                    wallet.walletToDisplay(wallet).get(i).getStopLossPrice() + " pln",
+                    wallet.walletToDisplay(wallet).get(i).getTakeProfitPrice() + " pln");
         }
         BigDecimal totalBaseValue = wallet.getBaseWorth();
         BigDecimal totalCurrentValue = wallet.getSharesCurrentWorth();

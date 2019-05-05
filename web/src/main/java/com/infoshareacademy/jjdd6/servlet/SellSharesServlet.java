@@ -95,7 +95,7 @@ public class SellSharesServlet extends HttpServlet {
         double price = Double.parseDouble(priceStr);
 
         existingWallet.sellShare(ticker, amount, price);
-        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size() - 1);
+        Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
         Share share = existingWallet.scanWalletForShare(ticker);
         transaction.setShare(share);
         transaction.setWallet(existingWallet);

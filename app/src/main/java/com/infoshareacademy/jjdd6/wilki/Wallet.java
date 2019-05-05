@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
@@ -105,11 +106,13 @@ public class Wallet implements Serializable {
 
     public BigDecimal getFreeCash() {
 
-        return getCashFromProfits().add(this.shares.stream()
-                .map(Share::getTotalProfit)
-                .reduce(BigDecimal.ZERO, BigDecimal::add)
+        return getCashFromProfits()
+//                .add(this.shares.stream()
+//                .map(Share::getTotalProfit)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(getBaseCash())
-                .subtract(getBaseWorth())).setScale(2, RoundingMode.HALF_UP);
+                .subtract(getBaseWorth()).setScale(2, RoundingMode.HALF_UP)
+                .subtract(getTotalBuyFees().setScale(2, RoundingMode.HALF_UP));
     }
 
     public BigDecimal getBaseCash() {
@@ -176,11 +179,6 @@ public class Wallet implements Serializable {
         BigDecimal profit = result.sell(amount, price);
         this.addToCashFromProfits(profit);
 
-        for (int i = 0; i < getShares().size(); i++) {
-            if (getShares().get(i).getSharesTotalAmount() == 0) {
-                getShares().remove(i);
-            }
-        }
         return result;
     }
 
@@ -228,6 +226,12 @@ public class Wallet implements Serializable {
 
     public boolean checkIfEnoughCash(int amount, double price) {
         return amount * price <= getFreeCash().doubleValue();
+    }
+
+    public List<Share> walletToDisplay(Wallet wallet) {
+        return wallet.getShares().stream()
+                .filter(o -> o.getSharesTotalAmount() > 0)
+                .collect(Collectors.toList());
     }
 
     @Override
