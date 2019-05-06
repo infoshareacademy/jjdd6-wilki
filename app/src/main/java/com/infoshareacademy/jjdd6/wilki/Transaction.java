@@ -16,8 +16,12 @@ import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 @Table(name = "TRANSACTION")
 @NamedQueries({@NamedQuery(
         name = "Transaction.findAll",
-        query = "SELECT t FROM Transaction t"
-)})
+        query = "SELECT t FROM Transaction t")
+//        ,
+//        @NamedQuery(
+//                name = "Transaction.ShareSum",
+//                query = "SELECT SUM(amount) FROM Transaction WHERE wallet.id = :walletId AND share.id = :shareId")
+})
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
 
@@ -52,10 +56,6 @@ public class Transaction implements Serializable {
     @Column(name = "transaction_type")
     @NotNull
     private TransactionType type;
-
-//    private String ticker;
-//    private String fullCompanyName;
-
 
     @ManyToOne
     @JoinColumn(name = "share_id")
@@ -107,6 +107,7 @@ public class Transaction implements Serializable {
             this.type = BUY;
         } else {
             this.type = SELL;
+
         }
         this.amount = amount;
         this.amountForCalc = amount;
@@ -114,23 +115,6 @@ public class Transaction implements Serializable {
         this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
         this.profit = profit;
     }
-
-//    public Transaction(String ticker, String fullCompanyName, LocalDate date, Integer amount, BigDecimal price, BigDecimal profit) {
-//
-//        this.ticker = ticker;
-//        this.fullCompanyName = fullCompanyName;
-//        this.date = date;
-//        if (amount > 0) {
-//            this.type = BUY;
-//        } else {
-//            this.type = SELL;
-//        }
-//        this.amount = amount;
-//        this.price = price;
-//        this.transactionFeeValue = BigDecimal.valueOf(Math.abs(amount)).multiply(price).multiply(transactionFee);
-//        this.profit = profit;
-//    }
-
 
     public Integer getAmountForCalc() {
         return amountForCalc;

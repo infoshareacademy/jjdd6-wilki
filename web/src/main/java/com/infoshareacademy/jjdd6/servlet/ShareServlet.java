@@ -175,7 +175,6 @@ public class ShareServlet extends HttpServlet {
         if (transaction == null) {
             logger.info("No transaction found for id = {}, nothing to be added to the list", id);
         } else {
-            existingShare.getTransactionLinkedList().add(transaction);
             existingShare.getTransactionHistory().add(transaction);
         }
 

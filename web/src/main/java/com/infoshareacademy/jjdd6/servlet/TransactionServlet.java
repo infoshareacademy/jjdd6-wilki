@@ -105,9 +105,9 @@ public class TransactionServlet extends HttpServlet {
         LocalDate date = LocalDate.parse(dateStr);
         existingTransaction.setDate(date);
 
-        String feeValueStr = req.getParameter("fee-value");
+        String feeValueStr = req.getParameter("fee-freeCash");
         if (!NumberUtils.isParsable(feeValueStr)) {
-            resp.getWriter().println("Fee value should be a number");
+            resp.getWriter().println("Fee freeCash should be a number");
             return;
         }
         Double feeValue = Double.parseDouble(feeValueStr);
@@ -138,7 +138,7 @@ public class TransactionServlet extends HttpServlet {
 
         String priceStr = req.getParameter("amount");
         if (!NumberUtils.isParsable(priceStr)) {
-            resp.getWriter().println("Price should have a numerical value");
+            resp.getWriter().println("Price should have a numerical freeCash");
             return;
         }
         Double price = Double.parseDouble(priceStr);
@@ -146,7 +146,7 @@ public class TransactionServlet extends HttpServlet {
 
         String profitStr = req.getParameter("profit");
         if (!NumberUtils.isParsable(profitStr)) {
-            resp.getWriter().println("Profit should have numerical value");
+            resp.getWriter().println("Profit should have numerical freeCash");
             return;
         }
         Double profit = Double.parseDouble(profitStr);
@@ -156,9 +156,9 @@ public class TransactionServlet extends HttpServlet {
         LocalDate date = LocalDate.parse(dateStr);
         transaction.setDate(date);
 
-        String feeValStr = req.getParameter("fee-value");
+        String feeValStr = req.getParameter("fee-freeCash");
         if (!NumberUtils.isParsable(feeValStr)) {
-            resp.getWriter().println("Fee value should have numerical value");
+            resp.getWriter().println("Fee freeCash should have numerical freeCash");
             return;
         }
         Double feeValue = Double.parseDouble(feeValStr);

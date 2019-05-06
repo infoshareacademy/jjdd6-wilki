@@ -4,6 +4,7 @@ import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -34,12 +35,14 @@ public class ShowWalletServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Wallet existingWallet = walletDao.findById(1L);
+        existingWallet.setBaseCash(BigDecimal.valueOf(100000));
 
-        List<Share> shares = shareDao.findAll();
+        List<Share> shares = existingWallet.getShares();
 
-        BigDecimal roe = walletDao.findById(1L).getROE();
+        BigDecimal roe = existingWallet.getROE();
 
-        BigDecimal freeCash = walletDao.findById(1L).getFreeCash();
+        BigDecimal freeCash = existingWallet.getFreeCash();
 
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);

@@ -24,9 +24,9 @@
     </div>
     <div id="upper_menu">
         <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
-        <div class="upper_menu_info">ROE </br> ${roe} %</div>
-        <div class="upper_menu_info">najwięjszy profit jakiejś akcji (aktualnej) </div>
-        <div class="upper_menu_info">największa strata aktualnej akcji </div>
+        <div class="upper_menu_info">ROE</br> ${roe}%</div>
+        <div class="upper_menu_info">Imieniny:<br>Jurand, Judyta</div>
+        <div class="upper_menu_info" style="color:red">Najblizsza niedziela niehandlowa!</div>
     </div>
     <div id="content">
         <#if content == 1>
