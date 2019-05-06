@@ -1,6 +1,6 @@
 <?php
-<div id="form">
-    <form method="POST" action="/share-buy">
+<div>
+    <form class="buy_form" method="POST" action="/share-buy">
     <div class="input_area">
     TICKER</br>
         <input type="text" class="text-input" name="ticker" required placeholder="e.g. KGH"/></div>

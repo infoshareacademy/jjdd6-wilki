@@ -47,6 +47,7 @@ public class BuySharesServlet extends HttpServlet {
     @Inject
     TemplateProvider templateProvider;
 
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         showMenuWithBuyForm(resp, "");

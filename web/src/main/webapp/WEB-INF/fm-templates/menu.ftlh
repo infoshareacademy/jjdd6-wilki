@@ -33,6 +33,8 @@
             <#include "owned-shares-list.ftlh">
             <#elseif content == 2>
             <#include "buy-shares.ftlh">
+            <#elseif content == 3>
+            <#include "sell-shares.ftlh">
         </#if>
     </div>
 </div>

@@ -123,6 +123,10 @@ body{
     background-color: #c7c7c7;
     width: 10%;
 }
+.sell{
+    background-color: #e8e8e8;
+    width: 20%;
+}
 #table_header div{
     height: 70px;
     background-color: #72737D;
@@ -142,7 +146,7 @@ body{
     border-bottom: 2px solid #0D0F3A;
     line-height: 50px;
 }
-#container form{
+.buy_form{
     width: 1050px;
     height: 200px;
     color: white;
@@ -188,4 +192,7 @@ a:active {
     height: 50px;
     font-size: 30px;
     cursor: pointer;
+}
+.sell_input{
+    width: 100px;
 }
