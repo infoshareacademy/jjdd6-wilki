@@ -1,22 +1,23 @@
 package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.Transaction;
+import org.hibernate.param.CollectionFilterKeyParameterSpecification;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class TransactionDao {
 
     @PersistenceContext
     EntityManager entityManager;
-
-    @Inject
-    WalletDao walletDao;
 
     public Long save(Transaction transaction) {
         entityManager.persist(transaction);
@@ -44,12 +45,4 @@ public class TransactionDao {
         return query.getResultList();
     }
 
-//    public Integer shareSum(Long walletId, Share share) {
-//
-//        final Query query = entityManager.createNamedQuery("Transaction.ShareSum");
-//        query.setParameter("walletId", walletId);
-//        query.setParameter("shareId", share.getId());
-//        return (Integer) query.getSingleResult();
-//
-//    }
-}
+   }
