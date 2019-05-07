@@ -2,7 +2,6 @@ package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.User;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -24,12 +24,6 @@ public class TransactionServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(TransactionServlet.class);
 
     @Inject
-    private ShareDao shareDao;
-
-    @Inject
-    private WalletDao walletDao;
-
-    @Inject
     private TransactionDao transactionDao;
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

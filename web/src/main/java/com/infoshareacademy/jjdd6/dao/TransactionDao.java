@@ -1,18 +1,12 @@
 package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.Transaction;
-import org.hibernate.param.CollectionFilterKeyParameterSpecification;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RequestScoped
 public class TransactionDao {
@@ -46,4 +40,4 @@ public class TransactionDao {
         return query.getResultList();
     }
 
-   }
+}

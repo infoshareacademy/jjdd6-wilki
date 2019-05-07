@@ -23,10 +23,10 @@ import java.util.Objects;
 @Table(name = "SHARE")
 @NamedQueries(
         {@NamedQuery(
-                     name = "Share.findAll",
-                     query = "SELECT s FROM Share s"),
-        @NamedQuery( name = "Share.findByTicker",
-                     query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
+                name = "Share.findAll",
+                query = "SELECT s FROM Share s"),
+                @NamedQuery(name = "Share.findByTicker",
+                        query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
@@ -266,12 +266,12 @@ public class Share implements Serializable {
         }
     }
 
-    public BigDecimal getCurrentReturn(){
+    public BigDecimal getCurrentReturn() {
         return ((getCurrentValue()
                 .divide(getBaseValue(), RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP)
                 .subtract(BigDecimal.ONE))
                 .multiply(BigDecimal.valueOf(100))
-                .setScale(2,RoundingMode.HALF_UP);
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public Integer getSharesTotalAmount() {

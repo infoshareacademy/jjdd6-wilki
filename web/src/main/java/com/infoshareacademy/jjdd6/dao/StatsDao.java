@@ -1,6 +1,5 @@
 package com.infoshareacademy.jjdd6.dao;
 
-import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,14 +22,7 @@ public class StatsDao {
                         "WHERE t.type = 0 " +
                         "GROUP BY s.ticker " +
                         "ORDER BY COUNT(*) DESC");
-        List<String> list = new ArrayList<>();
-        List<Object[]> result = query.getResultList();
-        for (Object[] arr : result) {
-            Long count = (Long) arr[0];
-            String ticker = (String) arr[1];
-            list.add(ticker + " (" + count.toString() + ")");
-        }
-        return list;
+        return mapObjectsFromNativeQuery(query.getResultList());
     }
 
     public List<String> getMostSoldStocks() {
@@ -40,9 +32,12 @@ public class StatsDao {
                         "WHERE t.type = 1" +
                         "GROUP BY s.ticker " +
                         "ORDER BY COUNT(*) DESC");
+        return mapObjectsFromNativeQuery(query.getResultList());
+    }
+
+    public List<String> mapObjectsFromNativeQuery(List<Object[]> queryResult) {
         List<String> list = new ArrayList<>();
-        List<Object[]> result = query.getResultList();
-        for (Object[] arr : result) {
+        for (Object[] arr : queryResult) {
             Long count = (Long) arr[0];
             String ticker = (String) arr[1];
             list.add(ticker + " (" + count.toString() + ")");
