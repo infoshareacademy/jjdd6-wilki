@@ -19,11 +19,7 @@
             <div class="current-value">${share.currentValue?string["###0.00"]} PLN</div>
             <div class="return">${share.currentReturn?string["###0.00"]} %</div>
             <div class="sell">
-                <form class="sell_form" action="share-sell" method="post">
-                    <input type="text" name="amount" placeholder="Amount" class="sell_input" required>&nbsp&nbsp&nbsp
-                    <input type="text" name="price" placeholder="Price" class="sell_input" required>
                     <input id="sell_submit" name="ticker" type="submit" data-id="${share.ticker}" value="SELL">
-                </form>
             </div>
         </#items>
     </#list>
@@ -32,21 +28,14 @@
     $(function () {
 
         $(document).ready(function () {
-            $(".sell_form").submit(function (event) {
-                event.preventDefault();
 
-                var form = $('.sell_form');
-                var ticker= $(this).attr('data-id');
-                var data = new FormData(ticker + form);
+            $(".delete-user").click(function () {
+
                 $.ajax({
-                    processData: false,
-                    cache: false,
-                    contentType: false,
-                    url: '/share-sell',
-                    type: 'POST',
-                    data: data.serialize(),
+                    url: '/share_sell?action=sell_selected&ticker=' + $(this).attr('data-id'),
+                    type: 'GET',
                     success: function (result) {
-                        location.href = '/share-sell';
+                        location.reload();
                     }
                 });
             });

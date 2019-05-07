@@ -48,7 +48,7 @@ public class ShowWalletServlet extends HttpServlet {
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", 1);
+        model.put("content", "show_wallet");
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 

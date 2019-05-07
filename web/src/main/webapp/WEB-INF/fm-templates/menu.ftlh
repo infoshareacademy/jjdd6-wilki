@@ -9,9 +9,9 @@
 <div id="container">
     <div id="left_menu">
         DASHBOARD</br>
-        <a href="/wallet"><div class="menu_option" <#if content == 1> id="selected" </#if>>Show wallet</div></a></br>
-        <a href="/share-buy"><div class="menu_option" <#if content == 2> id="selected" </#if>>Buy shares</div></a></br>
-        <a href="/share-sell"><div class="menu_option" <#if content == 3> id="selected" </#if>>Sell shares</div></a></br>
+        <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>>Show wallet</div></a></br>
+        <a href="/share-buy"><div class="menu_option" <#if content == "add_shares"> id="selected" </#if>>Add shares</div></a></br>
+        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell" || content == "sell_selected"> id="selected" </#if>>Sell shares</div></a></br>
         <div class="menu_option" <#if content == 4> id="selected" </#if>>Manage free cash</div></br></br></br></br>
         ANALYTICS</br>
         <div class="menu_option" <#if content == 5> id="selected" </#if>>Most popular?</div></br>
@@ -29,12 +29,14 @@
         <div class="upper_menu_info" style="color:red">Najblizsza niedziela niehandlowa!</div>
     </div>
     <div id="content">
-        <#if content == 1>
+        <#if content == "show_wallet">
             <#include "owned-shares-list.ftlh">
-            <#elseif content == 2>
+        <#elseif content == "add_shares">
             <#include "buy-shares.ftlh">
-            <#elseif content == 3>
+        <#elseif content == "shares_to_sell">
             <#include "sell-shares.ftlh">
+        <#elseif content == "sell_selected">
+            <#include "sell-selected.ftlh">
         </#if>
     </div>
 </div>

@@ -10,7 +10,7 @@
         <div class="input_area">
     PRICE</br>
         <input type="text" class="text-input" required name="price"/></div></br>
-        <input id="buy" type="submit" value="BUY"/>
+        <input id="buy" type="submit" value="ADD"/>
     <div id="status"
          <#if status == "Transaction success">style="color: lightgreen"</#if>
          <#if status == "Amount should be a whole number">style="color: red"</#if>
