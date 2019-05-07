@@ -4,6 +4,7 @@ import com.infoshareacademy.jjdd6.wilki.Transaction;
 import org.hibernate.param.CollectionFilterKeyParameterSpecification;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Stateless
+@RequestScoped
 public class TransactionDao {
 
     @PersistenceContext
