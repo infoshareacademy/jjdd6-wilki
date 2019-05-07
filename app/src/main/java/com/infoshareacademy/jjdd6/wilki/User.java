@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
         name = "User.findAll",
         query = "SELECT u FROM User u"),
         @NamedQuery(name = "User.findUserByEmail",
-                query = "SELECT u FROM User u WHERE u.email = :email")})
+                query = "SELECT u FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findUserByFbUserId",
+                query = "SELECT u FROM User u WHERE u.fbUserId = :fbUserId")})
 public class User {
 
     @Id
@@ -21,13 +23,49 @@ public class User {
     @NotNull
     private String email;
 
+    @Column(name = "name")
+    @NotNull
+    private String name;
+
+    @Column(name = "fb_user_id")
+    @NotNull
+    private String fbUserId;
+
     @OneToOne
     @JoinColumn(name = "wallet_id", unique = true)
     private Wallet wallet;
 
+    @OneToOne
+    @JoinColumn(name = "user_token_id", unique = true)
+    private FacebookToken userToken;
+
     public User(String email, Wallet wallet) {
         this.email = email;
         this.wallet = wallet;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFbUserId() {
+        return fbUserId;
+    }
+
+    public void setFbUserId(String fbUserId) {
+        this.fbUserId = fbUserId;
+    }
+
+    public FacebookToken getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(FacebookToken userToken) {
+        this.userToken = userToken;
     }
 
     public User() {
