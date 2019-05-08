@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.filter;
 
+import com.infoshareacademy.jjdd6.dao.FacebookTokenDao;
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
@@ -11,9 +12,11 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+@Transactional
 @WebFilter(
         filterName = "CreateAdminFilter",
         urlPatterns = {"/*"})
@@ -24,6 +27,9 @@ public class CreateAdminFilter implements Filter {
 
     @Inject
     WalletDao walletDao;
+
+    @Inject
+    FacebookTokenDao facebookTokenDao;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -51,15 +57,17 @@ public class CreateAdminFilter implements Filter {
             user.setWallet(wallet);
             user.setFbUserId("test");
             user.setName("Adam Testowy");
+
             FacebookToken facebookToken = new FacebookToken();
             facebookToken.setAccessToken("test");
             facebookToken.setExpirationSeconds(999999999L);
             facebookToken.setTokenType("test");
             user.setUserToken(facebookToken);
+            facebookTokenDao.save(facebookToken);
             userDao.save(user);
             session.setAttribute("user", user.getId());
         }
 
-            filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }
