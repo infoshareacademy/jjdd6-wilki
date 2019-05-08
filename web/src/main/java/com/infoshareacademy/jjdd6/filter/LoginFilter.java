@@ -27,7 +27,7 @@ public class LoginFilter implements Filter {
 
     private final String STATE = String.valueOf(Math.random() * 1000 * Math.random() * 1000);
     private final String APP_ID = "2337908682898870";
-    private final String REDIRECT_URL = "http://localhost:8080/wallet";
+    private final String REDIRECT_URL = "http://localhost:8080/login";
     private final String APP_SECRET = "918fce13c991ddf3477eeb04bf4c5a4f";
     private static Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 
@@ -54,23 +54,24 @@ public class LoginFilter implements Filter {
         if (session.getAttribute("token") == null) {
             String error = req.getParameter("error");
 
-            if (error != "" && error != null) {
-                logger.info("Unauthorized login attempt");
+            if (error != null && !error.isEmpty()) {
+                logger.info("Unauthorized login attempt: {}", error);
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
 
             if (session.getAttribute("state") == null) {
                 session.setAttribute("state", STATE);
             }
 
-            if (req.getParameter("state") != STATE || req.getParameter("state") == null) {
+            if (req.getParameter("state") == null || !req.getParameter("state").equals(STATE)) {
 
                 resp.sendRedirect("https://www.facebook.com/v3.3/dialog/oauth?client_id=" + APP_ID
                         + "&redirect_uri=" + REDIRECT_URL
                         + "&state=" + STATE);
             } else {
                 String code = req.getParameter("code");
-                if (code != "" && code != null) {
+                if (code != null && !code.isEmpty()) {
                     session.setAttribute("code", code);
                     final Client client = ClientBuilder.newClient();
                     final WebTarget webTarget = client.target("https://graph.facebook.com/v3.3/oauth/access_token?"
@@ -89,6 +90,7 @@ public class LoginFilter implements Filter {
                             + "access_token=" + userToken.getAccessToken());
                     final Response response2 = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
                     final FacebookUser facebookUser = response.readEntity(FacebookUser.class);
+                    response.close();
                     User user = userDao.findByFbUserId(facebookUser.getId());
                     if (user == null) {
                         user.setEmail(facebookUser.getEmail());

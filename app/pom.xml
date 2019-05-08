@@ -65,7 +65,7 @@
         <maven.compiler.source>11</maven.compiler.source>
     </properties>
 
-    <name>StockWalletApp</name>
+    <name>ConsoleApp</name>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
