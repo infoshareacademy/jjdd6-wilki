@@ -86,7 +86,7 @@ public class SellSharesServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (validators.isIntegerGreaterThanZero(idStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
             logger.info("Incorrect wallet walletId = {}", idStr);
             return;
@@ -108,7 +108,7 @@ public class SellSharesServlet extends HttpServlet {
 
         String amountStr = req.getParameter("amount");
 
-        if (validators.isIntegerGreaterThanZero(amountStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
             resp.getWriter().println("Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
             return;
@@ -117,7 +117,7 @@ public class SellSharesServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isDoubleGreaterThanZero(priceStr)) {
-            resp.getWriter().println("Price should be a number greater than 0");
+            resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", amountStr);
             return;
         }

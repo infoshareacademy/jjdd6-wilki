@@ -26,7 +26,7 @@ public class Validators {
         return (!isEmail(email));
     }
 
-    public boolean isIntegerGreaterThanZero(String id) {
+    public boolean isNotIntegerOrIsSmallerThanZero(String id) {
         return (!isDigits(id)
                 || (Integer.valueOf(id) < 0));
     }

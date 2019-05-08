@@ -1,6 +1,8 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.slf4j.Logger;
@@ -11,15 +13,25 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 @WebServlet("/sl-and-tp")
+@Transactional
 public class SetSlAndTpPrice extends HttpServlet {
 
     private static Logger logger = LoggerFactory.getLogger(SetSlAndTpPrice.class);
 
     @Inject
     WalletDao walletDao;
+
+    @Inject
+    ShareDao shareDao;
+
+    @Inject
+    Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -51,19 +63,94 @@ public class SetSlAndTpPrice extends HttpServlet {
     private void setStopLoos(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-//                final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Long walletId = 1L;
+        String idStr = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", idStr);
+            return;
+        }
+
+        if (validators.isWalletNotPresent(idStr)) {
+            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+            return;
+        }
+
         String ticker = req.getParameter("ticker");
+
+        if (validators.isTickerNotValid(ticker)) {
+            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
+            logger.info("Ticker = {} is not valid.", ticker);
+            return;
+        }
+
+        String priceStr = req.getParameter("price");
+
+        if (validators.isDoubleGreaterThanZero(priceStr)) {
+            resp.getWriter().println("Price should have a numerical value greater than 0");
+            logger.info("Incorrect price = {}", priceStr);
+            return;
+        }
+
+        final Long walletId = Long.valueOf(idStr);
         final Wallet existingWallet = walletDao.findById(walletId);
 
-        existingWallet.getShares().stream()
-                .map(Share::getTicker)
-                .filter(s -> s.equals(ticker));
+        List<Share> listFromExistingWallet = existingWallet.getShares();
 
+        for (Share share : listFromExistingWallet) {
+            if (share.getTicker().contains(ticker.toUpperCase())) {
+                share.setStopLossPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
+                logger.info("Set stop-loose price for share with id: {}", share.getId());
+                shareDao.update(share);
+                logger.info("Share with id: {} updated!", share.getId());
+            }
+        }
     }
 
     private void setTakeProfit(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+        String idStr = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", idStr);
+            return;
+        }
+
+        if (validators.isWalletNotPresent(idStr)) {
+            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+            return;
+        }
+
+        String ticker = req.getParameter("ticker");
+
+        if (validators.isTickerNotValid(ticker)) {
+            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
+            logger.info("Ticker = {} is not valid.", ticker);
+            return;
+        }
+
+        String priceStr = req.getParameter("price");
+
+        if (validators.isDoubleGreaterThanZero(priceStr)) {
+            resp.getWriter().println("Price should have a numerical value greater than 0");
+            logger.info("Incorrect price = {}", priceStr);
+            return;
+        }
+
+        final Long walletId = Long.valueOf(idStr);
+        final Wallet existingWallet = walletDao.findById(walletId);
+
+        List<Share> listFromExistingWallet = existingWallet.getShares();
+
+        for (Share share : listFromExistingWallet) {
+            if (share.getTicker().contains(ticker.toUpperCase())) {
+                share.setTakeProfitPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
+                logger.info("Set take-profit price for share with id: {}", share.getId());
+                shareDao.update(share);
+                logger.info("Share with id: {} updated!", share.getId());
+            }
+        }
     }
 }

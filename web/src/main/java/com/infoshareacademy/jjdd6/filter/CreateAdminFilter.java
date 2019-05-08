@@ -49,7 +49,7 @@ public class CreateAdminFilter implements Filter {
         if (userDao.findById(1L) == null) {
 
             final Wallet wallet = new Wallet();
-            wallet.setBaseCash(BigDecimal.valueOf(1000000));
+            wallet.setBaseCash(BigDecimal.valueOf(1000));
             walletDao.save(wallet);
 
             final User user = new User();
