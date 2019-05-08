@@ -134,7 +134,7 @@ public class BuySharesServlet extends HttpServlet {
         final Long walletId = 1L;
         final Wallet existingWallet = walletDao.findById(walletId);
 
-        if (validators.isEnoughCashToBuyShares(existingWallet, amount, price)) {
+        if (validators.isEnoughCash(existingWallet, amount, price)) {
             resp.getWriter().println("You don't have enough money! Your current balance is: "
                     + existingWallet.getFreeCash());
             logger.info("Not enough money to buy shares");
