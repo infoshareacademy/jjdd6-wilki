@@ -1,8 +1,12 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +17,9 @@ import java.io.IOException;
 public class SetSlAndTpPrice extends HttpServlet {
 
     private static Logger logger = LoggerFactory.getLogger(SetSlAndTpPrice.class);
+
+    @Inject
+    WalletDao walletDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -43,6 +50,15 @@ public class SetSlAndTpPrice extends HttpServlet {
 
     private void setStopLoos(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
+
+//                final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
+        final Long walletId = 1L;
+        String ticker = req.getParameter("ticker");
+        final Wallet existingWallet = walletDao.findById(walletId);
+
+        existingWallet.getShares().stream()
+                .map(Share::getTicker)
+                .filter(s -> s.equals(ticker));
 
     }
 
