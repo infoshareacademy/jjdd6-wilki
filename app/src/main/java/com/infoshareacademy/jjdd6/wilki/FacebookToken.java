@@ -31,7 +31,7 @@ public class FacebookToken {
 
     @Column(name = "expires_in")
     @JsonProperty("expires_in")
-    private String expirationSeconds;
+    private Long expirationSeconds;
 
     @Column(name = "expire_date")
     @JsonIgnore
@@ -72,11 +72,11 @@ public class FacebookToken {
         this.tokenType = tokenType;
     }
 
-    public String getExpirationSeconds() {
+    public Long getExpirationSeconds() {
         return expirationSeconds;
     }
 
-    public void setExpirationSeconds(String expirationSeconds) {
+    public void setExpirationSeconds(Long expirationSeconds) {
         this.expirationSeconds = expirationSeconds;
     }
 }

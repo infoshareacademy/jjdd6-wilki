@@ -22,7 +22,7 @@ import java.time.LocalTime;
 @Transactional
 @WebFilter(
         filterName = "CreateAdminFilter",
-        urlPatterns = {"/*"})
+        urlPatterns = {"/createadmin"})
 public class CreateAdminFilter implements Filter {
 
     @Inject
@@ -62,7 +62,7 @@ public class CreateAdminFilter implements Filter {
             user.setName("Adam Testowy");
             FacebookToken facebookToken = new FacebookToken();
             facebookToken.setAccessToken("test");
-            facebookToken.setExpirationSeconds("999999999");
+            facebookToken.setExpirationSeconds(999999999L);
             facebookToken.setExpireDate(LocalDateTime.of(LocalDate.MAX, LocalTime.MIDNIGHT));
             facebookToken.setTokenType("test");
             user.setUserToken(facebookToken);

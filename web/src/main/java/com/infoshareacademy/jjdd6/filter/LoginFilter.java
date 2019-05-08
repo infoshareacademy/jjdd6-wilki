@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -25,14 +26,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional
 @WebFilter(
         filterName = "LoginFilter",
-        urlPatterns = {"/*"})
+        urlPatterns = {"/login"})
 public class LoginFilter implements Filter {
 
     private final String STATE = String.valueOf(Math.random() * 1000 * Math.random() * 1000);
     private final String APP_ID = "2337908682898870";
-    private final String REDIRECT_URL = "http://localhost:8080/wallet";
+    private final String REDIRECT_URL = "http://localhost:8080/login";
     private final String APP_SECRET = "918fce13c991ddf3477eeb04bf4c5a4f";
     private static Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 
@@ -114,8 +116,8 @@ public class LoginFilter implements Filter {
                         user.setEmail(facebookUser.getEmail());
                         user.setFbUserId(facebookUser.getId());
                         user.setName(facebookUser.getName());
-                        userToken.setExpireDate(LocalDateTime.now()
-                                .plusSeconds(Long.parseLong(userToken.getExpirationSeconds())));
+//                        userToken.setExpireDate(LocalDateTime.now()
+//                                .plusSeconds(userToken.getExpirationSeconds()));
                         user.setUserToken(userToken);
                         facebookTokenDao.save(userToken);
                         final Wallet wallet = new Wallet();
