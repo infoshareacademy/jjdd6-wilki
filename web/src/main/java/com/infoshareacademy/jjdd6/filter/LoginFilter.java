@@ -51,7 +51,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        if (session.getAttribute("token") == null) {
+        if (session.getAttribute("user") == null) {
             String error = req.getParameter("error");
 
             if (error != null && !error.isEmpty()) {
