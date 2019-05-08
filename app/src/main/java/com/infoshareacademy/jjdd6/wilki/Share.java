@@ -23,10 +23,10 @@ import java.util.Objects;
 @Table(name = "SHARE")
 @NamedQueries(
         {@NamedQuery(
-                     name = "Share.findAll",
-                     query = "SELECT s FROM Share s"),
-        @NamedQuery( name = "Share.findByTicker",
-                     query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
+                name = "Share.findAll",
+                query = "SELECT s FROM Share s"),
+                @NamedQuery(name = "Share.findByTicker",
+                        query = "SELECT s FROM Share s WHERE s.ticker = :ticker")})
 public class Share implements Serializable {
 
     private static Logger logger = LoggerFactory.getLogger(Share.class);
@@ -57,9 +57,6 @@ public class Share implements Serializable {
 
     @Column(name = "volume")
     private Long volume;
-
-    @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
-    private List<Transaction> transactionLinkedList = new LinkedList<>();
 
     @Column(name = "transaction_history")
     @OneToMany(mappedBy = "share", fetch = FetchType.LAZY)
@@ -214,8 +211,8 @@ public class Share implements Serializable {
 
     public BigDecimal getAvgBuyPrice() {
         try {
-            return this.transactionLinkedList.stream()
-                    .map(o -> o.getPrice().setScale(4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(o.getAmount())).setScale(4, RoundingMode.HALF_UP))
+            return this.transactionHistory.stream()
+                    .map(o -> o.getPrice().setScale(4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(o.getAmountForCalc())).setScale(4, RoundingMode.HALF_UP))
                     .reduce(BigDecimal.ZERO, BigDecimal::add)
                     .divide(BigDecimal.valueOf(getSharesTotalAmount()), RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {
@@ -224,7 +221,6 @@ public class Share implements Serializable {
     }
 
     public void buy(Integer amount, double price) {
-        this.transactionLinkedList.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
         this.transactionHistory.add(new Transaction(amount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP)));
     }
 
@@ -232,29 +228,26 @@ public class Share implements Serializable {
 
         BigDecimal profit = BigDecimal.valueOf(0);
         int tempAmount = amount;
+        int i = 0;
+        while (amount > this.transactionHistory.get(i).getAmountForCalc()) {
 
-        while (amount > this.transactionLinkedList.get(0).getAmount()) {
-            amount -= this.transactionLinkedList.get(0).getAmount();
+            amount -= this.transactionHistory.get(i).getAmountForCalc();
 
             profit = profit
-                    .add(BigDecimal.valueOf(this.transactionLinkedList.get(0).getAmount())
+                    .add(BigDecimal.valueOf(this.transactionHistory.get(i).getAmountForCalc())
                             .multiply((BigDecimal.valueOf(price)
-                                    .subtract(this.transactionLinkedList.get(0).getPrice()))));
+                                    .subtract(this.transactionHistory.get(i).getPrice()))));
 
-            this.transactionLinkedList.remove(0);
+            ++i;
         }
 
         profit = profit
                 .add(BigDecimal.valueOf(amount)
                         .multiply((BigDecimal.valueOf(price)
-                                .subtract(this.transactionLinkedList.get(0).getPrice()))));
+                                .subtract(this.transactionHistory.get(i).getPrice()))));
 
-        this.transactionLinkedList.get(0)
-                .setAmount(this.transactionLinkedList.get(0).getAmount() - amount);
-
-        if (this.transactionLinkedList.get(0).getAmount() == 0) {
-            this.transactionLinkedList.remove(0);
-        }
+        this.transactionHistory.get(i)
+                .setAmountForCalc(this.transactionHistory.get(i).getAmountForCalc() - amount);
 
         this.transactionHistory.add(new Transaction(-tempAmount, BigDecimal.valueOf(price).setScale(4, RoundingMode.HALF_UP), profit));
         return profit.setScale(2, RoundingMode.HALF_UP);
@@ -273,10 +266,18 @@ public class Share implements Serializable {
         }
     }
 
+    public BigDecimal getCurrentReturn() {
+        return ((getCurrentValue()
+                .divide(getBaseValue(), RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP)
+                .subtract(BigDecimal.ONE))
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.HALF_UP);
+    }
+
     public Integer getSharesTotalAmount() {
 
-        return this.transactionLinkedList.stream()
-                .mapToInt(Transaction::getAmount)
+        return this.transactionHistory.stream()
+                .mapToInt(Transaction::getAmountForCalc)
                 .sum();
     }
 
@@ -290,14 +291,6 @@ public class Share implements Serializable {
 
     public int calculateDelay(LocalTime time) {
         return (int) Duration.between(time, LocalTime.now()).toMinutes();
-    }
-
-    public List<Transaction> getTransactionLinkedList() {
-        return transactionLinkedList;
-    }
-
-    public void setTransactionLinkedList(LinkedList<Transaction> transactionLinkedList) {
-        this.transactionLinkedList = transactionLinkedList;
     }
 
     public void setTransactionHistory(List<Transaction> transactionHistory) {
@@ -391,7 +384,6 @@ public class Share implements Serializable {
         sb.append(", stopLossPrice=").append(stopLossPrice);
         sb.append(", currentPE=").append(currentPE);
         sb.append(", volume=").append(volume);
-        sb.append(", transactionLinkedList=").append(transactionLinkedList);
         sb.append(", transactionHistory=").append(transactionHistory);
         sb.append(", highestPrice=").append(highestPrice);
         sb.append(", lowestPrice=").append(lowestPrice);
@@ -416,7 +408,6 @@ public class Share implements Serializable {
                 Objects.equals(stopLossPrice, share.stopLossPrice) &&
                 Objects.equals(currentPE, share.currentPE) &&
                 Objects.equals(volume, share.volume) &&
-                Objects.equals(transactionLinkedList, share.transactionLinkedList) &&
                 Objects.equals(transactionHistory, share.transactionHistory) &&
                 Objects.equals(highestPrice, share.highestPrice) &&
                 Objects.equals(lowestPrice, share.lowestPrice) &&
@@ -426,6 +417,6 @@ public class Share implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticker, fullCompanyName, currentPrice, takeProfitPrice, stopLossPrice, currentPE, volume, transactionLinkedList, transactionHistory, highestPrice, lowestPrice, dataDate, dataTime, delay);
+        return Objects.hash(ticker, fullCompanyName, currentPrice, takeProfitPrice, stopLossPrice, currentPE, volume, transactionHistory, highestPrice, lowestPrice, dataDate, dataTime, delay);
     }
 }

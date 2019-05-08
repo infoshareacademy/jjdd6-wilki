@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +21,7 @@ class WalletTest {
 
 
     @Test
-    void checkIfgetSharesReturnsCorrectListOfShares() {
+    void shouldReturn2Shares() {
         //given
 
         //when
@@ -32,7 +33,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetBaseWorthReturnsCorrectAmount() {
+    void shouldReturnCorrectBaseWorth() {
         //given
 
         //when
@@ -44,31 +45,48 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetCurrentWorthReturnsCorrectAmount() {
+    void shouldReturnCorrectCurrentWorth() {
         //given
+        BigDecimal expectedValue = wallet.getSharesCurrentWorth().add(wallet.getFreeCash()).setScale(2, RoundingMode.HALF_UP);
 
         //when
         BigDecimal result = wallet.getCurrentWorth();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(999373.25).setScale(2, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(expectedValue);
 
     }
 
     @Test
-    void checkIfgetSharesCurrentWorthReturnCorrectAmount() {
+    void shouldReturnCorrectSharesCurrentWorth() {
         //given
+        BigDecimal expectedValue = wallet.getShares().stream()
+                .map(Share::getCurrentValue)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
 
         //when
         BigDecimal result = wallet.getSharesCurrentWorth();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(10923.25).setScale(2, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(expectedValue);
 
     }
 
     @Test
-    void checkIfgetStopLossWorthReturnsCorrectAmount() {
+    void shouldNotAddShareWithZeroAmountToList() {
+        //given
+        wallet.sellShare("PKN", 55, 100);
+
+        //when
+        List<Share> result = wallet.walletToDisplay(wallet);
+
+        //then
+        assertThat(result.stream().filter(o -> o.getSharesTotalAmount() == 0).collect(Collectors.toList())).size().isEqualTo(0);
+    }
+
+    @Test
+    void shouldReturnCorrectStopLossWorth() {
         //given
 
         //when
@@ -80,7 +98,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetTakeProfitWorthReturnsCorrectAmount() {
+    void shouldReturnCorrectTakeProfitWorth() {
         //given
 
         //when
@@ -92,7 +110,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetCashFromProfitsReturnsCorrectAmount() {
+    void shouldReturnCorrectValueOfCashFromProfits() {
         //given
 
         //when
@@ -104,7 +122,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfaddToCashFromProfitsWorksCorrectly() {
+    void shouldAddProfitToCashFromProfits() {
         //given
 
         BigDecimal profit = BigDecimal.valueOf(10000.25);
@@ -119,34 +137,32 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetFreeCashReturnsCorrectAmount() {
+    void shouldReturnCorrectAmountOfFreeCash() {
         //given
 
         //when
         BigDecimal result = wallet.getFreeCash();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(988450.00).setScale(2, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(BigDecimal.valueOf(987918.10).setScale(2, RoundingMode.HALF_UP));
 
     }
 
 
     @Test
-    void checkIfgetROEreturnsCorrectNumber() {
+    void shouldReturnCorrectRoeInPercentsWithoutSymbol() {
         //given
-
+        BigDecimal expectedValue = (wallet.getCurrentWorth().divide(wallet.getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
         //when
         BigDecimal result = wallet.getROE();
-//        DecimalFormat df = new DecimalFormat("0.00");
-//        String result = df.format(resultROE);
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(-0.06));
+        assertThat(result).isEqualTo(expectedValue);
 
     }
 
     @Test
-    void checkIfincreaseBaseCashReturnsCorrectAmount() {
+    void shouldReturnCorrectAmountOfBaseCash() {
         //given
 
         BigDecimal amount = BigDecimal.valueOf(10000.10);
@@ -161,7 +177,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfreduceBaseCashReturnsCorrectAmount() {
+    void shouldSubstractCashFromBaseCash() {
         //given
 
         BigDecimal amount = BigDecimal.valueOf(10000.10);
@@ -176,19 +192,19 @@ class WalletTest {
     }
 
     @Test
-    void checkIfgetTotalBuyFeesReturnsCorrectAmount() {
+    void shouldReturnTotalAmountOfPaidFees() {
         //given
 
         //when
         BigDecimal result = wallet.getTotalBuyFees();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(46.80).setScale(2, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(BigDecimal.valueOf(81.90).setScale(2, RoundingMode.HALF_UP));
 
     }
 
     @Test
-    void checkIfscanWalletForShareReturnsShareWithCorrectTicker() {
+    void shouldReturnTickerInUppercase() {
         //given
 
 
@@ -201,7 +217,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfscanWalletForShareReturnsShareWhenPresent() {
+    void shouldReturnShareObjectForCorrectTicker() {
         //given
 
 
@@ -214,7 +230,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfscanWalletForShareReturnsNewObjectWhenShareIsNotPresent() {
+    void shouldReturnNewShareObjectWhenShareNotInWallet() {
         //given
 
 
@@ -227,7 +243,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfShareIsPresentShouldReturnTrueIfShareIsIncludedInWallet() {
+    void shouldReturnTrueWhenShareInWallet() {
         //given
 
 
@@ -240,7 +256,7 @@ class WalletTest {
     }
 
     @Test
-    void checkIfsellShareWorksCorrectly() {
+    void shouldUpdateShareAmountFreeCashSharePriceAfterSellTransaction() {
         //given
         String ticker = "KGH";
         int amount = 49;
@@ -254,13 +270,13 @@ class WalletTest {
 
         //then
         assertThat(resultAmount).isEqualTo(1);
-        assertThat(resultFreeCash).isEqualTo(BigDecimal.valueOf(1000700.00).setScale(2, RoundingMode.HALF_UP));
+        assertThat(resultFreeCash).isEqualTo(BigDecimal.valueOf(997679.88).setScale(2, RoundingMode.HALF_UP));
         assertThat(resultPriceFromTransactionList).isEqualTo(BigDecimal.valueOf(200.0000).setScale(4, RoundingMode.HALF_UP));
 
     }
 
     @Test
-    void CheckIfbuyShareWorksCorrectly() {
+    void shouldUpdateShareAmountFreeCashAvgPriceAfterBuyTransaction() {
         //given
         String ticker = "KGH";
         int amount = 49;
@@ -276,13 +292,13 @@ class WalletTest {
         //then
         assertThat(resultAmount).isEqualTo(99);
         assertThat(resultAvgPrice).isEqualTo(BigDecimal.valueOf(174.7475).setScale(4, RoundingMode.HALF_UP));
-        assertThat(resultFreeCash).isEqualTo(BigDecimal.valueOf(978650.00).setScale(2, RoundingMode.HALF_UP));
+        assertThat(resultFreeCash).isEqualTo(BigDecimal.valueOf(978079.88).setScale(2, RoundingMode.HALF_UP));
         assertThat(resultPriceFromTransactionList).isEqualTo(BigDecimal.valueOf(200.0000).setScale(4, RoundingMode.HALF_UP));
 
     }
 
     @Test
-    void shouldReturnTrueIfCashIsEnoughToBuyShare() {
+    void shouldReturnTrueIfEnoughCashToBuyShare() {
         //given
 
 
@@ -291,5 +307,16 @@ class WalletTest {
 
         //then
         assertThat(result).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseIfNotEnoughCashToBuyShare() {
+        //given
+
+        //when
+        boolean result = wallet.checkIfEnoughCash(10000, 1000);
+
+        //then
+        assertThat(result).isFalse();
     }
 }

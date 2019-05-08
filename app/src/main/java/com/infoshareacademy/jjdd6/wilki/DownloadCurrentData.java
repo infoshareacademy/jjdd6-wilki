@@ -4,13 +4,13 @@ import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.enterprise.context.RequestScoped;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -18,9 +18,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class DownloadCurrentData {
 
     private static Logger logger = LoggerFactory.getLogger(DownloadCurrentData.class);
+
+    public List<DataFromFile> getMostTradedVolume() throws MalformedURLException {
+
+        logger.info("Downloading stats");
+        return parse(new URL("https://stooq.pl/q/l/?s=_stat_plws_tr_+_stat_plws_nt_&f=sd2t2ohlcm2vr&h&e=csv"));
+    }
 
     public List<DataFromFile> get(String ticker) throws MalformedURLException {
 
@@ -35,7 +42,7 @@ public class DownloadCurrentData {
     }
 
     public List<DataFromFile> parse(URL file) {
-        List<String[]> dataLoaded = ReadFromURL(file);
+        List<String[]> dataLoaded = readFromURL(file);
         return dataLoaded.stream()
                 .skip(1)
                 .map(a -> {
@@ -47,15 +54,21 @@ public class DownloadCurrentData {
                     dataFromFile.setHighestPrice(new BigDecimal(a[4]));
                     dataFromFile.setLowestPrice(new BigDecimal(a[5]));
                     dataFromFile.setClosingPrice(new BigDecimal(a[6]));
-                    if (!file.getFile().contains("_pe")) {
+                    if (!file.getFile().contains("_pe") && !file.getFile().contains("stat")) {
                         dataFromFile.setVolume(Long.parseLong(a[7]));
                     }
+                    if (file.getFile().contains("stat")) {
+                        dataFromFile.setChange(a[7]);
+                        dataFromFile.setVolume(Long.parseLong(a[8]));
+                        dataFromFile.setTurnover(Long.parseLong(a[9]));
+                    }
+
                     return dataFromFile;
                 }).
                         collect(Collectors.toList());
     }
 
-    private List ReadFromURL(URL file) {
+    private List readFromURL(URL file) {
 
         List<String[]> allData = new ArrayList<>();
         try {
@@ -71,7 +84,7 @@ public class DownloadCurrentData {
         try {
             URL tickersURL = new URL("https://raw.githubusercontent.com/stockwallet/tickers/master/tickers.csv");
             logger.info("Loading tickers from " + tickersURL);
-            List<String[]> dataLoaded = new DownloadCurrentData().ReadFromURL(tickersURL);
+            List<String[]> dataLoaded = new DownloadCurrentData().readFromURL(tickersURL);
             Map<String, String> tickersMap = dataLoaded.stream()
                     .collect(Collectors.toMap(l -> l[0], l -> l[1]));
             return tickersMap.get(ticker);

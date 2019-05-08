@@ -14,7 +14,6 @@ public class WalletToXML {
     private static Logger logger = LoggerFactory.getLogger(AppRunner.class);
     private static final String SERIALIZED_FILE_NAME = "wallet.xml";
 
-
     public void saveToXml(Wallet wallet) {
         XmlMapper xmlMapper = new XmlMapper();
 
@@ -23,7 +22,7 @@ public class WalletToXML {
         xmlMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
         try {
-            xmlMapper.writeValue(new File(Thread.currentThread().getContextClassLoader().getResource("wallet.xml").getPath()), wallet);
+            xmlMapper.writeValue(new File(Thread.currentThread().getContextClassLoader().getResource(SERIALIZED_FILE_NAME).getPath()), wallet);
         } catch (IOException e) {
             logger.error("Wallet export to XML failed");
         }

@@ -2,13 +2,13 @@ package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.User;
 
-import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-@Stateless
+@RequestScoped
 public class UserDao {
 
     @PersistenceContext
@@ -32,6 +32,19 @@ public class UserDao {
 
     public User findById(Long id) {
         return entityManager.find(User.class, id);
+    }
+
+    public User findByFbUserId(String fbUserId) {
+        final Query query = entityManager.createNamedQuery("User.findUserByFbUserId");
+        query.setParameter("fbUserId", fbUserId);
+        return (User)query.getSingleResult();
+    }
+
+
+    public List<User> findUserByEmail(String email) {
+        final Query query = entityManager.createNamedQuery("User.findUserByEmail");
+        query.setParameter("email", email);
+        return query.getResultList();
     }
 
     public List<User> findAll() {

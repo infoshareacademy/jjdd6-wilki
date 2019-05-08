@@ -21,6 +21,7 @@ public class TemplateProvider {
     public Template getTemplate(ServletContext servletContext, String templateName) throws IOException {
 
         configuration = configProvider.getConfiguration();
+        configuration.setDefaultEncoding("UTF-8");
         configuration.setServletContextForTemplateLoading(servletContext, TEMPLATES_DIRECTORY_PATH);
         return configuration.getTemplate(templateName);
     }

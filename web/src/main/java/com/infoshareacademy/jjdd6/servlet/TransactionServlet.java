@@ -16,19 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/transaction")
 public class TransactionServlet extends HttpServlet {
-    private Logger LOG = LoggerFactory.getLogger(TransactionServlet.class);
-
-    @Inject
-    private ShareDao shareDao;
-
-    @Inject
-    private WalletDao walletDao;
+    private static Logger logger = LoggerFactory.getLogger(TransactionServlet.class);
 
     @Inject
     private TransactionDao transactionDao;
@@ -56,7 +49,7 @@ public class TransactionServlet extends HttpServlet {
 
     private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final String action = req.getParameter("action");
-        LOG.info("Requested action: {}", action);
+        logger.info("Requested action: {}", action);
         if (action == null || action.isEmpty()) {
             resp.getWriter().write("Empty action parameter.");
         }
@@ -67,15 +60,15 @@ public class TransactionServlet extends HttpServlet {
             throws IOException {
         String idStr = req.getParameter("id");
         if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("Transaction id should bean integer");
+            resp.getWriter().println("Transaction id should be an integer");
             return;
         }
         final Long id = Long.parseLong(idStr);
-        LOG.info("Updating Transaction with id = {}", id);
+        logger.info("Updating Transaction with id = {}", id);
 
         final Transaction existingTransaction = transactionDao.findById(id);
         if (existingTransaction == null) {
-            LOG.info("No Transaction found for id = {}, nothing to be updated", id);
+            logger.info("No Transaction found for id = {}, nothing to be updated", id);
             return;
         }
         String amountStr = req.getParameter("amount");
@@ -106,9 +99,9 @@ public class TransactionServlet extends HttpServlet {
         LocalDate date = LocalDate.parse(dateStr);
         existingTransaction.setDate(date);
 
-        String feeValueStr = req.getParameter("fee-value");
+        String feeValueStr = req.getParameter("fee-freeCash");
         if (!NumberUtils.isParsable(feeValueStr)) {
-            resp.getWriter().println("Fee value should be a number");
+            resp.getWriter().println("Fee freeCash should be a number");
             return;
         }
         Double feeValue = Double.parseDouble(feeValueStr);
@@ -119,7 +112,7 @@ public class TransactionServlet extends HttpServlet {
         existingTransaction.setType(type);
 
         transactionDao.update(existingTransaction);
-        LOG.info("Transaction object updated: {}", existingTransaction);
+        logger.info("Transaction object updated: {}", existingTransaction);
 
         findAllTransactions(req, resp);
 
@@ -139,7 +132,7 @@ public class TransactionServlet extends HttpServlet {
 
         String priceStr = req.getParameter("amount");
         if (!NumberUtils.isParsable(priceStr)) {
-            resp.getWriter().println("Price should have a numerical value");
+            resp.getWriter().println("Price should have a numerical freeCash");
             return;
         }
         Double price = Double.parseDouble(priceStr);
@@ -147,7 +140,7 @@ public class TransactionServlet extends HttpServlet {
 
         String profitStr = req.getParameter("profit");
         if (!NumberUtils.isParsable(profitStr)) {
-            resp.getWriter().println("Profit should have numerical value");
+            resp.getWriter().println("Profit should have numerical freeCash");
             return;
         }
         Double profit = Double.parseDouble(profitStr);
@@ -157,9 +150,9 @@ public class TransactionServlet extends HttpServlet {
         LocalDate date = LocalDate.parse(dateStr);
         transaction.setDate(date);
 
-        String feeValStr = req.getParameter("fee-value");
+        String feeValStr = req.getParameter("fee-freeCash");
         if (!NumberUtils.isParsable(feeValStr)) {
-            resp.getWriter().println("Fee value should have numerical value");
+            resp.getWriter().println("Fee freeCash should have numerical freeCash");
             return;
         }
         Double feeValue = Double.parseDouble(feeValStr);
@@ -170,7 +163,7 @@ public class TransactionServlet extends HttpServlet {
         transaction.setType(type);
 
         transactionDao.save(transaction);
-        LOG.info("Saved a new Transaction object: {}", transaction);
+        logger.info("Saved a new Transaction object: {}", transaction);
 
         findAllTransactions(req, resp);
     }
@@ -184,7 +177,7 @@ public class TransactionServlet extends HttpServlet {
         }
         final Long id = Long.parseLong(req.getParameter("id"));
         if (transactionDao.findById(id) != null) {
-            LOG.info("Removing Transaction with id = {}", id);
+            logger.info("Removing Transaction with id = {}", id);
             transactionDao.delete(id);
         } else {
             resp.getWriter().println("There is no transaction with id = " + id);
@@ -194,7 +187,7 @@ public class TransactionServlet extends HttpServlet {
 
     private void findAllTransactions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         final List<Transaction> result = transactionDao.findAll();
-        LOG.info("Found {} objects", result.size());
+        logger.info("Found {} objects", result.size());
         for (Transaction transaction : result) {
             resp.getWriter().write(transaction.toString() + "\n");
         }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <File name="MyLogFile" fileName="logs/App.log">
+            <PatternLayout>
+                <Pattern>%d %p %c [%t] %m%n</Pattern>
+            </PatternLayout>
+        </File>
+        <Async name="Async">
+            <AppenderRef ref="MyLogFile"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.infoshareacademy.jjdd6.wilki" level="info" additivity="false">
+            <AppenderRef ref="Async"/>
+        </Logger>
+    </Loggers>
+</Configuration>
