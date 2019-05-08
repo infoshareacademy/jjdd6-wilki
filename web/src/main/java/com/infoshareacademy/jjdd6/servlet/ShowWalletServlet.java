@@ -1,9 +1,8 @@
 package com.infoshareacademy.jjdd6.servlet;
 
-import com.infoshareacademy.jjdd6.dao.ShareDao;
-import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -25,24 +24,20 @@ import java.util.Map;
 public class ShowWalletServlet extends HttpServlet {
 
     @Inject
-    ShareDao shareDao;
-
-    @Inject
-    WalletDao walletDao;
-
-    @Inject
     TemplateProvider templateProvider;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Wallet existingWallet = walletDao.findById(1L);
-        existingWallet.setBaseCash(BigDecimal.valueOf(100000));
 
-        List<Share> shares = existingWallet.getShares();
+        User user = (User)req.getSession().getAttribute("user");
 
-        BigDecimal roe = existingWallet.getROE();
+        Wallet userWallet = user.getWallet();
 
-        BigDecimal freeCash = existingWallet.getFreeCash();
+        List<Share> shares = userWallet.getShares();
+
+        BigDecimal roe = userWallet.getROE();
+
+        BigDecimal freeCash = userWallet.getFreeCash();
 
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);

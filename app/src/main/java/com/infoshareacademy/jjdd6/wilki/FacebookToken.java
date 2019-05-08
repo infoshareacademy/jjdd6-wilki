@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TOKENS")
@@ -30,9 +31,21 @@ public class FacebookToken {
 
     @Column(name = "expires_in")
     @JsonProperty("expires_in")
-    private Long expirationSeconds;
+    private String expirationSeconds;
+
+    @Column(name = "expire_date")
+    @JsonIgnore
+    private LocalDateTime expireDate;
 
     public FacebookToken() {
+    }
+
+    public LocalDateTime getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = expireDate;
     }
 
     public Long getId() {
@@ -59,11 +72,11 @@ public class FacebookToken {
         this.tokenType = tokenType;
     }
 
-    public Long getExpirationSeconds() {
+    public String getExpirationSeconds() {
         return expirationSeconds;
     }
 
-    public void setExpirationSeconds(Long expirationSeconds) {
+    public void setExpirationSeconds(String expirationSeconds) {
         this.expirationSeconds = expirationSeconds;
     }
 }

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Transactional
 @WebFilter(
@@ -57,15 +60,15 @@ public class CreateAdminFilter implements Filter {
             user.setWallet(wallet);
             user.setFbUserId("test");
             user.setName("Adam Testowy");
-
             FacebookToken facebookToken = new FacebookToken();
             facebookToken.setAccessToken("test");
-            facebookToken.setExpirationSeconds(999999999L);
+            facebookToken.setExpirationSeconds("999999999");
+            facebookToken.setExpireDate(LocalDateTime.of(LocalDate.MAX, LocalTime.MIDNIGHT));
             facebookToken.setTokenType("test");
             user.setUserToken(facebookToken);
             facebookTokenDao.save(facebookToken);
             userDao.save(user);
-            session.setAttribute("user", user.getId());
+            session.setAttribute("user", user);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
