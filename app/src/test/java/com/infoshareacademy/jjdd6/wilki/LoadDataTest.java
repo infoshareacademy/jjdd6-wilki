@@ -3,12 +3,11 @@ package com.infoshareacademy.jjdd6.wilki;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoadDataTest {
 
     @Test
-    void checkIfloadAndScanTickersReturnsFullNameForCorrectTicker() {
+    void shouldReturnFullNameForCorrectTicker() {
         //given
         String correctTicker = "KGH";
 
@@ -21,7 +20,7 @@ class LoadDataTest {
     }
 
     @Test
-    void checkIfvalidateTickerReturnsTrueForCorrectTicker() {
+    void shouldReturnTrueForCorrectTicker() {
         //given
         String correctTicker = "KGH";
 
@@ -33,7 +32,7 @@ class LoadDataTest {
     }
 
     @Test
-    void checkIfvalidateTickerReturnsFalseWhenTickerIsInvalid() {
+    void shouldReturnFalseWhenTickerIsInvalid() {
         //given
         String falseTicker = "KGA";
 
