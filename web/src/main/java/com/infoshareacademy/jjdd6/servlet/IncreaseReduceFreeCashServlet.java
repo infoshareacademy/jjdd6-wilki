@@ -1,7 +1,9 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
 
     @Inject
     WalletDao walletDao;
+
+    @Inject
+    Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -70,11 +75,12 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
         String cash = req.getParameter("cash");
         if (!NumberUtils.isParsable(cash)) {
             resp.getWriter().println("Cash should be a number");
-        } else {
-            Double cashDouble = Double.valueOf(cash);
-            BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
-            existingWallet.increaseBaseCash(cashBigDecimal);
+            return;
         }
+
+        double cashDouble = Double.parseDouble(cash);
+        BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
+        existingWallet.increaseBaseCash(cashBigDecimal);
 
         walletDao.update(existingWallet);
         logger.info("Wallet object updated: {}", existingWallet);
@@ -101,13 +107,19 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
         String cash = req.getParameter("cash");
         if (!NumberUtils.isParsable(cash)) {
             resp.getWriter().println("Cash should be a number");
-        } else {
-            Double cashDouble = Double.valueOf(cash);
-            BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
-            existingWallet.reduceBaseCash(cashBigDecimal);
-            resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
-
         }
+
+        if (validators.isEnoughCashToReduceFreeCash(existingWallet, cash)) {
+            resp.getWriter().println("You don't have enough money! Your current balance is: "
+                    + existingWallet.getFreeCash());
+            logger.info("Not enough money to reduce free cash");
+            return;
+        }
+
+        Double cashDouble = Double.valueOf(cash);
+        BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
+        existingWallet.reduceBaseCash(cashBigDecimal);
+        resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
 
         walletDao.update(existingWallet);
         logger.info("Wallet object updated: {}", existingWallet);

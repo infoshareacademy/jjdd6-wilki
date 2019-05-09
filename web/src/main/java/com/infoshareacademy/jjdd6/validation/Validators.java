@@ -26,14 +26,14 @@ public class Validators {
         return (!isEmail(email));
     }
 
-    public boolean isIntegerGreaterThanZero(String id) {
+    public boolean isNotIntegerOrIsSmallerThanZero(String id) {
         return (!isDigits(id)
                 || (Integer.valueOf(id) <= 0));
     }
 
     public boolean isDoubleGreaterThanZero(String id) {
         return (!isCreatable(id)
-                || (Double.valueOf(id) < 0));
+                || (Double.valueOf(id) <= 0));
     }
 
     public boolean isEmailPresent(String email) {
@@ -53,10 +53,13 @@ public class Validators {
         return !downloadCurrentData.validateTicker(ticker);
     }
 
-    public boolean isEnoughCash(Wallet existingWallet, int amount, double price) {
-
+    public boolean isEnoughCashToBuyShares(Wallet existingWallet, int amount, double price) {
         return BigDecimal.valueOf(amount*price).
                 compareTo(existingWallet.getFreeCash()) >= 0;
+    }
 
+    public boolean isEnoughCashToReduceFreeCash(Wallet existingWallet, String value) {
+        return BigDecimal.valueOf(Double.valueOf(value)).
+                compareTo(existingWallet.getFreeCash()) > 0;
     }
 }

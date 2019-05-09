@@ -69,7 +69,7 @@ public class UserServlet extends HttpServlet {
 
         String idStr = req.getParameter("id");
 
-        if (validators.isIntegerGreaterThanZero(idStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
             resp.getWriter().println("User id should be an integer greater than 0");
             logger.info("Incorrect user id = {}", idStr);
             return;
@@ -95,7 +95,7 @@ public class UserServlet extends HttpServlet {
 
         String walletIdStr = req.getParameter("wallet_id");
 
-        if (validators.isIntegerGreaterThanZero(walletIdStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(walletIdStr)) {
             resp.getWriter().println("Wallet id should be an integer greater than 0");
             logger.info("Incorrect wallet id = {}", idStr);
             return;
@@ -151,7 +151,7 @@ public class UserServlet extends HttpServlet {
 
         String idStr = req.getParameter("id");
 
-        if (validators.isIntegerGreaterThanZero(idStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
             resp.getWriter().println("User id should be an integer greater than 0");
             logger.info("Incorrect user id = {}", idStr);
             return;
