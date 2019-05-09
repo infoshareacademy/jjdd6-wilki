@@ -1,6 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -12,7 +13,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -20,16 +20,18 @@ import java.util.List;
 import java.util.Map;
 
 @WebServlet("/wallet")
-@Transactional
 public class ShowWalletServlet extends HttpServlet {
 
     @Inject
     TemplateProvider templateProvider;
 
+    @Inject
+    UserService userService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        User user = (User)req.getSession().getAttribute("user");
+        User user = userService.loggedUser(req);
 
         Wallet userWallet = user.getWallet();
 
