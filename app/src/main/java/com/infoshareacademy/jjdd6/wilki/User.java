@@ -1,7 +1,6 @@
 package com.infoshareacademy.jjdd6.wilki;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USER")
@@ -30,6 +29,9 @@ public class User {
 
     @Column(name = "fb_user_id")
     private String fbUserId;
+
+    @Column(name = "is_admin")
+    boolean isAdmin = false;
 
     @OneToOne
     @JoinColumn(name = "wallet_id", unique = true)
@@ -101,6 +103,14 @@ public class User {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     @Override
