@@ -34,6 +34,10 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
+        if (req.getParameter("code") != null) {
+            logger.info("Received code");
+        }
+
         if (session.getAttribute("user") == null) {
             logger.info("New user, trying to login");
             forwardToLogin(req, resp, session);
@@ -47,6 +51,7 @@ public class LoginFilter implements Filter {
             session.setAttribute("reqPath", req.getRequestURI());
         }
         logger.info("Requested view: " + req.getRequestURI());
+//        resp.sendRedirect("/login");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/login");
         requestDispatcher.forward(req, resp);
     }

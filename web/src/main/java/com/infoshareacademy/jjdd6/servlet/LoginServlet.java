@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.servlet;
 import com.infoshareacademy.jjdd6.dao.FacebookTokenDao;
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.view.FacebookTokenParse;
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
 import com.infoshareacademy.jjdd6.wilki.FacebookUser;
 import com.infoshareacademy.jjdd6.wilki.User;
@@ -50,8 +51,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String reqPath = (String) session.getAttribute("reqPath");
-        String REDIRECT_URL = "http://localhost:8080/" + reqPath;
+        String REDIRECT_URL = "http://localhost:8080/login";
 
         if (session.getAttribute("user") != null) {
             Long userId = (Long) session.getAttribute("user");
@@ -82,24 +82,31 @@ public class LoginServlet extends HttpServlet {
                 String code = req.getParameter("code");
                 logger.info("Returned code: " + code);
                 if (code != null && !code.isEmpty()) {
-                    final Client client = ClientBuilder.newClient();
-                    final WebTarget webTarget = client.target("https://graph.facebook.com/v3.3/oauth/access_token?"
+                    Client client = ClientBuilder.newClient();
+                    String url = "https://graph.facebook.com/v3.3/oauth/access_token?"
+                            + "client_id=" + APP_ID
+                            + "&redirect_uri=" + REDIRECT_URL
+                            + "&client_secret=" + APP_SECRET
+                            + "&code=" + code;
+                    logger.info(url);
+                    WebTarget webTarget = client.target("https://graph.facebook.com/v3.3/oauth/access_token?"
                             + "client_id=" + APP_ID
                             + "&redirect_uri=" + REDIRECT_URL
                             + "&client_secret=" + APP_SECRET
                             + "&code=" + code);
-                    final Response response = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
-                    final FacebookToken userToken = response.readEntity(FacebookToken.class);
+                    Response response = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
+                    FacebookTokenParse facebookTokenParse = response.readEntity(FacebookTokenParse.class);
                     response.close();
+                    FacebookToken userToken = new FacebookToken(facebookTokenParse.getAccess_token(), facebookTokenParse.getToken_type(), facebookTokenParse.getExpires_in());
                     logger.info("Token: " + userToken.getAccessToken());
                     session.setAttribute("token", userToken);
 
-                    final Client client2 = ClientBuilder.newClient();
-                    final WebTarget webTarget2 = client2.target("https://graph.facebook.com/me"
+                    Client client2 = ClientBuilder.newClient();
+                    WebTarget webTarget2 = client2.target("https://graph.facebook.com/me"
                             + "?fields=id,name,email&"
                             + "access_token=" + userToken.getAccessToken());
-                    final Response response2 = webTarget2.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
-                    final FacebookUser facebookUser = response2.readEntity(FacebookUser.class);
+                    Response response2 = webTarget2.request().accept(MediaType.APPLICATION_JSON_TYPE).get();
+                    FacebookUser facebookUser = response2.readEntity(FacebookUser.class);
                     response2.close();
                     logger.info("User: " + facebookUser.getName());
                     List<User> userList = userDao.findByFbUserId(facebookUser.getId());
@@ -128,12 +135,13 @@ public class LoginServlet extends HttpServlet {
                             user.setUserToken(userToken);
                         }
                     }
+                    String forward = (String) session.getAttribute("reqPath");
+                    session.removeAttribute("reqPath");
+                    RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
+                    requestDispatcher.forward(req, resp);
                 }
             }
         }
-        String forward = (String) session.getAttribute("reqPath");
-        session.removeAttribute("reqPath");
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
-        requestDispatcher.forward(req, resp);
+
     }
 }
