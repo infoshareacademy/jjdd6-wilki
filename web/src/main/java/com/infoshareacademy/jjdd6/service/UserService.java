@@ -10,7 +10,6 @@ import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +23,6 @@ import java.util.List;
 public class UserService {
 
     private static Logger logger = LoggerFactory.getLogger(LoginServlet.class);
-
 
     @Inject
     UserDao userDao;
@@ -75,7 +73,6 @@ public class UserService {
             if (!user.getUserToken().getAccessToken().equals(userToken.getAccessToken())) {
                 user.setUserToken(userToken);
             }
-
         }
     }
 
@@ -89,7 +86,6 @@ public class UserService {
                 session.invalidate();
             }
         }
-
     }
 
     public List<User> findByFbUserId(FacebookUser facebookUser) {
