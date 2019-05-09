@@ -19,7 +19,7 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetRiskRewardRatioReturnCorrectData() {
+    void shouldReturnCorrectRiskRewardRatio() {
         //given
 
         BigDecimal stopLossPrice = BigDecimal.valueOf(100);
@@ -37,10 +37,10 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetRiskRewardRatioReturnZeroWhenRatioIsLessThanZero() {
+    void shouldReturnZeroWhenRRRatioIsLessThanZero() {
         //given
 
-        BigDecimal stopLossPrice = BigDecimal.valueOf(200).setScale(4,RoundingMode.HALF_UP);
+        BigDecimal stopLossPrice = BigDecimal.valueOf(200).setScale(4, RoundingMode.HALF_UP);
         BigDecimal takeProfitPrice = BigDecimal.valueOf(100).setScale(4, RoundingMode.HALF_UP);
 
 
@@ -55,10 +55,10 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetTargetPEcalculatesCorrectRatio() {
+    void shouldCorrectlyCalculateTargetPE() {
         //given
 
-        BigDecimal takeProfitPrice = BigDecimal.valueOf(200).setScale(4,RoundingMode.HALF_UP);
+        BigDecimal takeProfitPrice = BigDecimal.valueOf(200).setScale(4, RoundingMode.HALF_UP);
 
         //when
         wallet.getShares().get(0).setTakeProfitPrice(takeProfitPrice);
@@ -74,7 +74,7 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetTakeProfitValueReturnsCorrectValue() {
+    void shouldReturnCorrectTakeProfitValue() {
         //given
 
         //when
@@ -86,7 +86,7 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetStopLossValueReturnsCorrectValue() {
+    void shouldReturnCorrectStopLossValue() {
         //given
 
         //when
@@ -98,7 +98,7 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetBaseValueReturnsCorrectValue() {
+    void shouldReturnCorrectBaseValue() {
         //given
 
         //when
@@ -110,22 +110,23 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetCurrentValueReturnsCorrectValue() {
+    void shouldReturnCorrectCurrentValue() {
         //given
+        BigDecimal expectedValue = wallet.getShares().get(0).getCurrentPrice().multiply(BigDecimal.valueOf(wallet.getShares().get(0).getSharesTotalAmount())).setScale(2, RoundingMode.HALF_UP);
 
         //when
         BigDecimal result = wallet.getShares().get(0).getCurrentValue();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(5360.00).setScale(2, RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(expectedValue);
 
     }
 
     @Test
-    void checkIfgetAvgBuyPriceReturnsCorrectValue() {
+    void shouldCalculateCorrectAvgBuyPrice() {
         //given
-        wallet.buyShare("PEO", 100,100);
-        wallet.buyShare("PEO", 100,200);
+        wallet.buyShare("PEO", 100, 100);
+        wallet.buyShare("PEO", 100, 200);
 
         //when
         BigDecimal result = wallet.getShares().get(2).getAvgBuyPrice();
@@ -136,10 +137,10 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetTotalProfitReturnsCorrectValue() {
+    void shouldReturnCorrectTotalProfit() {
         //given
-        wallet.buyShare("PEO", 100,100);
-        wallet.sellShare("PEO", 50,200);
+        wallet.buyShare("PEO", 100, 100);
+        wallet.sellShare("PEO", 50, 200);
 
         //when
         BigDecimal result = wallet.getShares().get(2).getTotalProfit();
@@ -150,10 +151,10 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetSharesTotalAmountReturnsCorrectValue() {
+    void shouldReturnCorrectSharesTotalAmount() {
         //given
-        wallet.buyShare("PEO", 100,100);
-        wallet.buyShare("PEO", 50,200);
+        wallet.buyShare("PEO", 100, 100);
+        wallet.buyShare("PEO", 50, 200);
 
         //when
         Integer result = wallet.getShares().get(2).getSharesTotalAmount();
@@ -164,16 +165,16 @@ class ShareTest {
     }
 
     @Test
-    void checkIfgetFeeAmountReturnsCorrectValue() {
+    void shouldReturnCorrectFeeAmount() {
         //given
-        wallet.buyShare("PEO", 100,100);
-        wallet.sellShare("PEO", 50,200);
+        wallet.buyShare("PEO", 100, 100);
+        wallet.sellShare("PEO", 50, 200);
 
         //when
         BigDecimal result = wallet.getShares().get(2).getFeeAmount();
 
         //then
-        assertThat(result).isEqualTo(BigDecimal.valueOf(20000.00).multiply(Transaction.transactionFee).setScale(2,RoundingMode.HALF_UP));
+        assertThat(result).isEqualTo(BigDecimal.valueOf(20000.00).multiply(Transaction.transactionFee).setScale(2, RoundingMode.HALF_UP));
     }
 
 
