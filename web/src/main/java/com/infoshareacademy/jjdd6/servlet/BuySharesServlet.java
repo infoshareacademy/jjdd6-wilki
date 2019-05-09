@@ -84,24 +84,24 @@ public class BuySharesServlet extends HttpServlet {
     private void buyShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-//        String idStr = req.getParameter("wallet_id");
-//        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
-//            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-//            logger.info("Incorrect wallet walletId = {}", idStr);
-//            return;
-//        }
+        String idStr = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            showMenuWithBuyForm(resp,"Problems detected, we are trying to fix it");
+            logger.info("Incorrect wallet walletId = {}", idStr);
+            return;
+        }
 
-//        if (validators.isWalletNotPresent(idStr)) {
-//            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-//            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
-//            return;
-//        }
+        if (validators.isWalletNotPresent(idStr)) {
+            showMenuWithBuyForm(resp,"Problems detected, we are trying to fix it");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+            return;
+        }
 
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
-            logger.info("Ticker = {} is not valid.", ticker);
+            showMenuWithBuyForm(resp,"Ticker = {" + ticker + "} is not valid");
+            logger.info("Ticker {} is not valid.", ticker);
             return;
         }
 
@@ -128,8 +128,7 @@ public class BuySharesServlet extends HttpServlet {
         final Wallet existingWallet = walletDao.findById(walletId);
 
         if (validators.isEnoughCashToBuyShares(existingWallet, amount, price)) {
-            resp.getWriter().println("You don't have enough money! Your current balance is: "
-                    + existingWallet.getFreeCash());
+            showMenuWithBuyForm(resp,"You don't have enough money!");
             logger.info("Not enough money to buy shares");
             return;
         }
