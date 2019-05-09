@@ -13,12 +13,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Transactional
 @WebServlet("/wallet")
 public class ShowWalletServlet extends HttpServlet {
 
@@ -32,13 +35,9 @@ public class ShowWalletServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         User user = userService.loggedUser(req);
-
         Wallet userWallet = user.getWallet();
-
         List<Share> shares = userWallet.getShares();
-
         BigDecimal roe = userWallet.getROE();
-
         BigDecimal freeCash = userWallet.getFreeCash();
 
         Map<String, Object> model = new HashMap<>();

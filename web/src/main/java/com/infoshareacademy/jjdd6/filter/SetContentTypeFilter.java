@@ -7,7 +7,7 @@ import java.io.IOException;
 
 @WebFilter(
         filterName = "SetContentTypeFilter",
-        urlPatterns = {"/bbbbbbbb/*"})
+        urlPatterns = {"/*"})
 public class SetContentTypeFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

@@ -34,13 +34,11 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        if (req.getParameter("code") != null) {
-            logger.info("Received code");
-        }
-
-        if (session.getAttribute("user") == null) {
-            logger.info("New user, trying to login");
-            forwardToLogin(req, resp, session);
+        if (!req.getRequestURI().equals("/login")) {
+            if (session.getAttribute("user") == null) {
+                logger.info("New user, trying to login");
+                forwardToLogin(req, resp, session);
+            }
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

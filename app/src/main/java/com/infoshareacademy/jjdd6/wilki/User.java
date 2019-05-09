@@ -25,6 +25,9 @@ public class User {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "surname")
+    private String surname;
+
     @Column(name = "fb_user_id")
     private String fbUserId;
 
@@ -90,6 +93,14 @@ public class User {
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     @Override

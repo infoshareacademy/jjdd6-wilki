@@ -6,7 +6,6 @@ import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -68,7 +67,7 @@ public class CreateAdminFilter implements Filter {
             user.setUserToken(facebookToken);
             facebookTokenDao.save(facebookToken);
             userDao.save(user);
-            session.setAttribute("user", user);
+            session.setAttribute("user", user.getId());
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
