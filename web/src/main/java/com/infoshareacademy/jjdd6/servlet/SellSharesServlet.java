@@ -116,7 +116,7 @@ public class SellSharesServlet extends HttpServlet {
 
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
             resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", amountStr);
             return;

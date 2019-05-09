@@ -31,9 +31,9 @@ public class Validators {
                 || (Integer.valueOf(id) <= 0));
     }
 
-    public boolean isDoubleGreaterThanZero(String id) {
-        return (!isCreatable(id)
-                || (Double.valueOf(id) <= 0));
+    public boolean isNotDoubleOrIsSmallerThanZero(String price) {
+        return (!isCreatable(price)
+                || (Double.valueOf(price) <= 0));
     }
 
     public boolean isEmailPresent(String email) {
