@@ -12,12 +12,12 @@
         <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>>Show wallet</div></a></br>
         <a href="/share-buy"><div class="menu_option" <#if content == "add_shares"> id="selected" </#if>>Add shares</div></a></br>
         <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell" || content == "sell_selected"> id="selected" </#if>>Sell shares</div></a></br>
-        <div class="menu_option" <#if content == 4> id="selected" </#if>>Manage free cash</div></br></br></br></br>
+        <div class="menu_option" <#if content == ""> id="selected" </#if>>Manage free cash</div></br></br></br></br>
         ANALYTICS</br>
-        <div class="menu_option" <#if content == 5> id="selected" </#if>>Most popular?</div></br>
-        <div class="menu_option" <#if content == 6> id="selected" </#if>>Most profitable?</div></br>
-        <div class="menu_option" <#if content == 7> id="selected" </#if>>Profit chart</div></br>
-        <div class="menu_option" <#if content == 8> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
+        <div class="menu_option" <#if content == ""> id="selected" </#if>>Most popular?</div></br>
+        <div class="menu_option" <#if content == ""> id="selected" </#if>>Most profitable?</div></br>
+        <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
+        <div class="menu_option" <#if content == ""> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
         USER</br>
         <div class="menu_option">(nazwa uzytkownika)</div></br>
         <div class="menu_option">Log out</div></br>

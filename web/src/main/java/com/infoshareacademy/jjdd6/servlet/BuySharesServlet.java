@@ -63,7 +63,7 @@ public class BuySharesServlet extends HttpServlet {
 
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", 2);
+        model.put("content", "add_shares");
         if (null != status) {
             model.put("status", status);
         }

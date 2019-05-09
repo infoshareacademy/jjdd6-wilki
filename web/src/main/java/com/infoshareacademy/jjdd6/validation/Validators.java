@@ -28,7 +28,7 @@ public class Validators {
 
     public boolean isIntegerGreaterThanZero(String id) {
         return (!isDigits(id)
-                || (Integer.valueOf(id) < 0));
+                || (Integer.valueOf(id) <= 0));
     }
 
     public boolean isDoubleGreaterThanZero(String id) {
