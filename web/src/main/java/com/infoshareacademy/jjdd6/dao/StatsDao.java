@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequestScoped
+@Transactional
 public class StatsDao {
 
     @PersistenceContext
