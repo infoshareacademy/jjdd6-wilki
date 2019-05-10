@@ -35,7 +35,11 @@ public class UserService {
 
     public User loggedUser(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        Long userId = (Long) session.getAttribute("user");
+        logger.info("Setting 'user' session attribute for sessionId " + session.getId());
+        Object userIdObject = session.getAttribute("user");
+        logger.info("userIdObject: " + userIdObject);
+        Long userId = (Long) userIdObject;
+        logger.info("userId: " + userId);
         return userDao.findById(userId);
     }
 
@@ -75,6 +79,7 @@ public class UserService {
     }
 
     private void setSessionAttributes(HttpSession session, User user) {
+        logger.info("Setting 'user' session attribute for sessionId " + session.getId());
         session.setAttribute("user", user.getId());
         session.setAttribute("tokenExpireDate", user.getUserToken().getExpireDate());
         logger.info("Logged in user id: " + user.getId() + " name: " + user.getName() + " " + user.getSurname() + " token expires on: " + user.getUserToken().getExpireDate());
