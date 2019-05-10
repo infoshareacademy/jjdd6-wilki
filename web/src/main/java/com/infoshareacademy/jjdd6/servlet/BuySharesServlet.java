@@ -64,7 +64,6 @@ public class BuySharesServlet extends HttpServlet {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        List<Share> shares = userWallet.getShares();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
@@ -95,21 +94,20 @@ public class BuySharesServlet extends HttpServlet {
     private void buyShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-//        String idStr = req.getParameter("wallet_id");
-//        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
-//            showMenuWithBuyForm(resp,"Problems detected, we are trying to fix it");
-//            logger.info("Incorrect wallet walletId = {}", idStr);
-//            return;
-//        }
-//
-//        if (validators.isWalletNotPresent(idStr)) {
-//            showMenuWithBuyForm(resp,"Problems detected, we are trying to fix it");
-//            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
-//            return;
-//        }
+        String idStr = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            showMenuWithBuyForm(req, resp,"Problems detected, we are trying to fix it");
+            logger.info("Incorrect wallet walletId = {}", idStr);
+            return;
+        }
+
+        if (validators.isWalletNotPresent(idStr)) {
+            showMenuWithBuyForm(req ,resp,"Problems detected, we are trying to fix it");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+            return;
+        }
 
         String ticker = req.getParameter("ticker");
-
         if (validators.isTickerNotValid(ticker)) {
             showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
             logger.info("Ticker {} is not valid.", ticker);
@@ -117,7 +115,6 @@ public class BuySharesServlet extends HttpServlet {
         }
 
         String amountStr = req.getParameter("amount");
-
         if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
             showMenuWithBuyForm(req, resp,"Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
@@ -125,18 +122,16 @@ public class BuySharesServlet extends HttpServlet {
         }
 
         String priceStr = req.getParameter("price");
-
         if (validators.isDoubleGreaterThanZero(priceStr)) {
             showMenuWithBuyForm(req, resp,"Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", priceStr);
            return;
         }
 
+        User user = userService.loggedUser(req);
         int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-//                final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Long walletId = 1L;
-        final Wallet existingWallet = walletDao.findById(walletId);
+        final Wallet existingWallet = user.getWallet();
 
         if (validators.isEnoughCashToBuyShares(existingWallet, amount, price)) {
             showMenuWithBuyForm(req, resp,"You don't have enough money!");
