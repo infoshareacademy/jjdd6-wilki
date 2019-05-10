@@ -36,7 +36,7 @@ public class LoginFilter implements Filter {
 
         if (!req.getRequestURI().equals("/login")) {
             if (session.getAttribute("user") == null) {
-                logger.info("New user, trying to login");
+                logger.info("User not logged in, trying to login");
                 forwardToLogin(req, resp, session);
             }
         }
@@ -49,7 +49,6 @@ public class LoginFilter implements Filter {
             session.setAttribute("reqPath", req.getRequestURI());
         }
         logger.info("Requested view: " + req.getRequestURI());
-//        resp.sendRedirect("/login");
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/login");
         requestDispatcher.forward(req, resp);
     }

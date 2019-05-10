@@ -7,13 +7,11 @@ import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -26,10 +24,10 @@ import java.util.Map;
 public class ShowWalletServlet extends HttpServlet {
 
     @Inject
-    TemplateProvider templateProvider;
+    private TemplateProvider templateProvider;
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

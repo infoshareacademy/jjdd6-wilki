@@ -13,8 +13,8 @@ public class AppProperties {
 
     private static final String DATE_FORMAT = "dateFormat";
     private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
-    private static final String CONFIG_PROPERTIES_PATH = Thread.currentThread().getContextClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath();
+    static final String CONFIG_PROPERTIES_FILENAME = "config.properties";
+    static final String CONFIG_PROPERTIES_PATH = Thread.currentThread().getContextClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath();
 
     private static DateTimeFormatter dateTimeFormatter;
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class TransactionDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(Transaction transaction) {
         entityManager.persist(transaction);

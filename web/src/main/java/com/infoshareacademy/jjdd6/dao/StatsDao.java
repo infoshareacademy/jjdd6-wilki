@@ -12,7 +12,7 @@ import java.util.List;
 public class StatsDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public List<String> getMostBoughtStocks() {
         final Query query = entityManager

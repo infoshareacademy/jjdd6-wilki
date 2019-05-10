@@ -22,16 +22,16 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-    private static Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    FacebookTokenDao facebookTokenDao;
+    private FacebookTokenDao facebookTokenDao;
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     public User loggedUser(HttpServletRequest req) {
         HttpSession session = req.getSession();
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     public void setupUser(HttpSession session, FacebookToken userToken, FacebookUser facebookUser, List<User> userList) {
-        if (userList.size() == 0) {
+        if (userList.isEmpty()) {
             User user = new User();
             user.setEmail(facebookUser.getEmail());
             user.setFbUserId(facebookUser.getId());

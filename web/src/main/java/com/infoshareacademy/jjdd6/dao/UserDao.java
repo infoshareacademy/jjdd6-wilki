@@ -12,7 +12,7 @@ import java.util.List;
 public class UserDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(User user) {
         entityManager.persist(user);

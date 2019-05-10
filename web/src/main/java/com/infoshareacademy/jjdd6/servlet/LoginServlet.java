@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
     private final String APP_ID = "2337908682898870";
     private final String APP_SECRET = "918fce13c991ddf3477eeb04bf4c5a4f";
 
-    private static Logger logger = LoggerFactory.getLogger(LoginServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 
     @Inject
     UserService userService;
@@ -39,8 +39,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        String REDIRECT_URL = "http://localhost:8080/login";
-
+        String REDIRECT_URL = req.getRequestURL().toString();
+        logger.info(REDIRECT_URL);
         userService.checkIfTokenExpired(session);
 
         if (session.getAttribute("user") == null || session.getAttribute("user").toString().isEmpty()) {
