@@ -2,6 +2,7 @@ package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.UserService;
+import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -34,7 +35,9 @@ public class ShowWalletServlet extends HttpServlet {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
+        DownloadCurrentData.updateWalletData(userWallet);
         List<Share> shares = userWallet.getShares();
+
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
