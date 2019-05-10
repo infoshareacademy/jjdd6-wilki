@@ -25,9 +25,6 @@ import java.util.Map;
 public class ShowWalletServlet extends HttpServlet {
 
     @Inject
-    ShareDao shareDao;
-
-    @Inject
     WalletDao walletDao;
 
     @Inject

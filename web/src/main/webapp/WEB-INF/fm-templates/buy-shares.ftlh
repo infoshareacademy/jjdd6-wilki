@@ -14,7 +14,7 @@
     <input id="buy" type="submit" value="ADD"/>
 </form>
 <div id="info">
-    Available money: ${freeCash} PLN</br>
+    Available money: ${"${freeCash}"?replace(","," ")} PLN</br>
     Transaction: </br>
     Money left: </br>
 </div>
