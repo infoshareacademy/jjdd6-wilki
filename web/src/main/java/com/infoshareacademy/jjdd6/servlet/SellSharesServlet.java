@@ -114,6 +114,16 @@ public class SellSharesServlet extends HttpServlet {
             return;
         }
 
+        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(walletId);
+        int amount = Integer.parseInt(amountStr);
+
+        if (validators.isEnoughSharesToSell(existingWallet, amount, ticker)) {
+            resp.getWriter().println("You don't have enough shares!");
+            logger.info("Incorrect amount of shares to sell = {}", amountStr);
+            return;
+        }
+
         String priceStr = req.getParameter("price");
 
         if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
@@ -122,10 +132,7 @@ public class SellSharesServlet extends HttpServlet {
             return;
         }
 
-        int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(walletId);
 
         existingWallet.sellShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
