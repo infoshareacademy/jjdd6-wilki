@@ -88,6 +88,10 @@ public class UserService {
         }
     }
 
+    public void logoutUser(HttpServletRequest req) {
+        req.getSession().invalidate();
+    }
+
     public List<User> findByFbUserId(FacebookUser facebookUser) {
         return userDao.findByFbUserId(facebookUser.getId());
     }

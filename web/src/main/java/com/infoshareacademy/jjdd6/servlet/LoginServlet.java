@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.view.FacebookTokenParse;
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
@@ -7,6 +8,7 @@ import com.infoshareacademy.jjdd6.wilki.FacebookUser;
 import com.infoshareacademy.jjdd6.wilki.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -27,20 +29,24 @@ import java.util.List;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private final String STATE = "FMuJDKrajzZ2sTcJZ0bV";
-    private final String APP_ID = "2337908682898870";
-    private final String APP_SECRET = "918fce13c991ddf3477eeb04bf4c5a4f";
 
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 
     @Inject
     UserService userService;
 
+    @Inject
+    WebAppProperties webAppProperties;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         HttpSession session = req.getSession();
+        final String STATE = webAppProperties.getProperty("STATE");
+        final String APP_ID = webAppProperties.getProperty("APP_ID");
+        final String APP_SECRET = webAppProperties.getProperty("APP_SECRET");
         String REDIRECT_URL = req.getRequestURL().toString();
-        logger.info(REDIRECT_URL);
+
         userService.checkIfTokenExpired(session);
 
         if (session.getAttribute("user") == null || session.getAttribute("user").toString().isEmpty()) {
@@ -61,7 +67,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 String code = req.getParameter("code");
                 if (code != null && !code.isEmpty()) {
-                    FacebookTokenParse facebookTokenParse = getFacebookTokenParse(REDIRECT_URL, code);
+                    FacebookTokenParse facebookTokenParse = getFacebookTokenParse(REDIRECT_URL, code, APP_ID, APP_SECRET);
                     FacebookToken userToken = new FacebookToken(facebookTokenParse.getAccess_token(), facebookTokenParse.getToken_type(), facebookTokenParse.getExpires_in());
                     FacebookUser facebookUser = getFacebookUser(userToken);
                     List<User> userList = userService.findByFbUserId(facebookUser);
@@ -84,7 +90,7 @@ public class LoginServlet extends HttpServlet {
         return facebookUser;
     }
 
-    private FacebookTokenParse getFacebookTokenParse(String REDIRECT_URL, String code) {
+    private FacebookTokenParse getFacebookTokenParse(String REDIRECT_URL, String code, String APP_ID, String APP_SECRET) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target("https://graph.facebook.com/v3.3/oauth/access_token?"
                 + "client_id=" + APP_ID
