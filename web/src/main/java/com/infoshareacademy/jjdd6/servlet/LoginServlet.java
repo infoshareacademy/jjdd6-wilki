@@ -32,10 +32,10 @@ public class LoginServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(LoginServlet.class);
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Inject
-    WebAppProperties webAppProperties;
+    private WebAppProperties webAppProperties;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,7 +73,9 @@ public class LoginServlet extends HttpServlet {
                     resp.setStatus(400);
                     return;
                 }
+                logger.info(facebookUser.getName());
                 List<User> userList = userService.findByFbUserId(facebookUser);
+                logger.info(userList.toString());
                 userService.setupUser(session, userToken, facebookUser, userList);
                 forwardToRequestedView(req, resp, session);
             }
