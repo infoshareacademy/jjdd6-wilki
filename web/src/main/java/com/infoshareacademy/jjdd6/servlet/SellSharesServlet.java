@@ -50,26 +50,55 @@ public class SellSharesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        showWalletWithSellForm(resp, "");
+        String action = req.getParameter("action");
+
+        if("sell_selected".equals(action)){
+            Map<String, Object> model = new HashMap<>();
+
+            Wallet existingWallet = walletDao.findById(1L);
+            String ticker = req.getParameter("ticker");
+
+            Share share = existingWallet.scanWalletForShare(ticker);
+            showSellSpecifiedShare(resp, "", model);
+        }
+        else {
+            showWalletWithSellForm(resp, "");
+        }
+    }
+
+    private void showSellSpecifiedShare(HttpServletResponse resp, String status, Map<String, Object> model) throws IOException {
+
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
+
+        try {
+            template.process(model, resp.getWriter());
+        } catch (TemplateException e) {
+            resp.getWriter().println("Something went wrong");
+        }
+
     }
 
     private void showWalletWithSellForm(HttpServletResponse resp, String status) throws IOException {
         Map<String, Object> model = new HashMap<>();
 
-        List<Share> shares = shareDao.findAll();
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 
-        BigDecimal roe = walletDao.findById(1L).getROE();
+        Wallet existingWallet = walletDao.findById(1L);
 
-        BigDecimal freeCash = walletDao.findById(1L).getFreeCash();
+        List<Share> shares = existingWallet.getShares();
+
+        BigDecimal roe = existingWallet.getROE();
+
+        BigDecimal freeCash = existingWallet.getFreeCash();
 
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", 3);
+        model.put("content", "sell_selected");
+
         if(null != status){
             model.put("status", status);
         }
-        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
         try {
             template.process(model, resp.getWriter());
         } catch (TemplateException e) {
@@ -86,7 +115,7 @@ public class SellSharesServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (validators.isIntegerGreaterThanZero(idStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
             logger.info("Incorrect wallet walletId = {}", idStr);
             return;
@@ -108,7 +137,7 @@ public class SellSharesServlet extends HttpServlet {
 
         String amountStr = req.getParameter("amount");
 
-        if (validators.isIntegerGreaterThanZero(amountStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
             resp.getWriter().println("Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
             return;
@@ -117,7 +146,7 @@ public class SellSharesServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isDoubleGreaterThanZero(priceStr)) {
-            resp.getWriter().println("Price should be a number greater than 0");
+            resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", amountStr);
             return;
         }
