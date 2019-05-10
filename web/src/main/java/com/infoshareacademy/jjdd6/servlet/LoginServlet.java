@@ -8,7 +8,6 @@ import com.infoshareacademy.jjdd6.wilki.FacebookUser;
 import com.infoshareacademy.jjdd6.wilki.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
@@ -47,36 +46,38 @@ public class LoginServlet extends HttpServlet {
         final String APP_SECRET = webAppProperties.getProperty("APP_SECRET");
         String REDIRECT_URL = req.getRequestURL().toString();
 
-        userService.checkIfTokenExpired(session);
+        String error = req.getParameter("error");
 
-        if (session.getAttribute("user") == null || session.getAttribute("user").toString().isEmpty()) {
-            String error = req.getParameter("error");
-
-            if (error != null && !error.isEmpty()) {
-                logger.info("Unauthorized login attempt: {}", error);
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
-            if (req.getParameter("state") == null || !req.getParameter("state").equals(STATE)) {
-
-
-                resp.sendRedirect("https://www.facebook.com/v3.3/dialog/oauth?client_id=" + APP_ID
-                        + "&redirect_uri=" + REDIRECT_URL
-                        + "&state=" + STATE);
-            } else {
-                String code = req.getParameter("code");
-                if (code != null && !code.isEmpty()) {
-                    FacebookTokenParse facebookTokenParse = getFacebookTokenParse(REDIRECT_URL, code, APP_ID, APP_SECRET);
-                    FacebookToken userToken = new FacebookToken(facebookTokenParse.getAccess_token(), facebookTokenParse.getToken_type(), facebookTokenParse.getExpires_in());
-                    FacebookUser facebookUser = getFacebookUser(userToken);
-                    List<User> userList = userService.findByFbUserId(facebookUser);
-                    userService.setupUser(session, userToken, facebookUser, userList);
-                    forwardToRequestedView(req, resp, session);
-                }
-            }
+        if (error != null && !error.isEmpty()) {
+            logger.info("Unauthorized login attempt: {}", error);
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
+        if (req.getParameter("state") == null || !req.getParameter("state").equals(STATE)) {
+
+            resp.sendRedirect("https://www.facebook.com/v3.3/dialog/oauth?client_id=" + APP_ID
+                    + "&redirect_uri=" + REDIRECT_URL
+                    + "&state=" + STATE);
+        } else {
+            String code = req.getParameter("code");
+            if (code != null && !code.isEmpty()) {
+                FacebookTokenParse facebookTokenParse = getFacebookTokenParse(REDIRECT_URL, code, APP_ID, APP_SECRET);
+                if (facebookTokenParse.getAccess_token() == null) {
+                    resp.setStatus(400);
+                    return;
+                }
+                FacebookToken userToken = new FacebookToken(facebookTokenParse.getAccess_token(), facebookTokenParse.getToken_type(), facebookTokenParse.getExpires_in());
+                FacebookUser facebookUser = getFacebookUser(userToken);
+                if (facebookUser.getId() == null) {
+                    resp.setStatus(400);
+                    return;
+                }
+                List<User> userList = userService.findByFbUserId(facebookUser);
+                userService.setupUser(session, userToken, facebookUser, userList);
+                forwardToRequestedView(req, resp, session);
+            }
+        }
     }
 
     private FacebookUser getFacebookUser(FacebookToken userToken) {

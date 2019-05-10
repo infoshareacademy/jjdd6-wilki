@@ -9,6 +9,7 @@ import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -57,12 +58,10 @@ public class UserService {
             user.setWallet(wallet);
             walletDao.save(wallet);
             userDao.save(user);
-            session.setAttribute("user", user.getId());
-            logger.info("Logged in user id: " + user.getId() + " name: " + user.getName() + " " + user.getSurname());
+            setSessionAttributes(session, user);
         } else {
             User user = userList.get(0);
-            session.setAttribute("user", user.getId());
-            logger.info("Logged in user id: " + user.getId() + " name: " + user.getName() + " " + user.getSurname());
+            setSessionAttributes(session, user);
             if (user.getEmail() != null && facebookUser.getEmail() != null && !user.getEmail().equals(facebookUser.getEmail())) {
                 user.setEmail(facebookUser.getEmail());
             }
@@ -75,16 +74,10 @@ public class UserService {
         }
     }
 
-    public void checkIfTokenExpired(HttpSession session) {
-        if (session.getAttribute("user") != null) {
-            Long userId = (Long) session.getAttribute("user");
-            User user = userDao.findById(userId);
-
-            if (user.getUserToken() != null && user.getUserToken().getExpireDate() != null && user.getUserToken().getExpireDate().isBefore(LocalDateTime.now())) {
-                logger.info("Token expired on " + user.getUserToken().getExpireDate() + " for user " + user.getName() + "");
-                session.invalidate();
-            }
-        }
+    private void setSessionAttributes(HttpSession session, User user) {
+        session.setAttribute("user", user.getId());
+        session.setAttribute("tokenExpireDate", user.getUserToken().getExpireDate());
+        logger.info("Logged in user id: " + user.getId() + " name: " + user.getName() + " " + user.getSurname() + " token expires on: " + user.getUserToken().getExpireDate());
     }
 
     public void logoutUser(HttpServletRequest req) {

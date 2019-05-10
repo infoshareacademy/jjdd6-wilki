@@ -12,7 +12,7 @@ import java.util.Properties;
 @RequestScoped
 public class WebAppProperties {
 
-    private static final Logger logger = LoggerFactory.getLogger(AppProperties.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebAppProperties.class);
 
     private Properties setupFacebookLogon() {
 
@@ -22,6 +22,7 @@ public class WebAppProperties {
 
         try {
             Properties properties = new Properties();
+            logger.info("Loading config: " + getClass().getClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath());
             properties.load(getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_FILENAME));
             logger.info("Facebook logon config loaded successfully");
             return properties;
