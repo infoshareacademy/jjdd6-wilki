@@ -3,7 +3,6 @@ package com.infoshareacademy.jjdd6.service;
 import com.infoshareacademy.jjdd6.dao.FacebookTokenDao;
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
-import com.infoshareacademy.jjdd6.servlet.LoginServlet;
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
 import com.infoshareacademy.jjdd6.wilki.FacebookUser;
 import com.infoshareacademy.jjdd6.wilki.User;
