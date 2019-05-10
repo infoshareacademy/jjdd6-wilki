@@ -11,7 +11,7 @@ import java.util.List;
 public class FacebookTokenDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(FacebookToken token) {
         entityManager.persist(token);
