@@ -40,6 +40,7 @@ public class LoginFilter implements Filter {
             if (session.getAttribute("user") == null || checkIfTokenExpired(session)) {
                 logger.info("User not logged in, trying to login");
                 forwardToLogin(req, resp, session);
+                return;
             }
         }
 
