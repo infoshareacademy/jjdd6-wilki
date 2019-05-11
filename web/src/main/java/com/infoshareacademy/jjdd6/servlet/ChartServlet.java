@@ -1,5 +1,8 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.service.ChartGenerator;
+
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,9 +12,28 @@ import java.io.IOException;
 
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
+
+    @Inject
+    ChartGenerator chartGenerator;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String ticker = req.getParameter("ticker").toLowerCase();
-        resp.getWriter().print("<img src=\"https://stooq.com/c/?s=" + ticker + "&c=5m&t=c&a=lg&b&g.png\" />");
+        if (!ticker.isEmpty()) {
+            resp.getWriter().print("<html>\n" +
+                    "<head>\n" +
+                    "  <meta charset=\"utf-8\">\n" +
+                    "  <title>Wallet App</title>\n" +
+                    "  <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/style.css\"/>\n" +
+                    "</head>\n" +
+                    "<body>\n" +
+                    "<div id=\"container\" align=\"center\">\n" +
+                    "<img src=\"" + req.getRequestURL() + chartGenerator.getChart(ticker, req.getServletContext().getRealPath("chart.png")) + "\" width=\"600\" height=\"300\"/>\n" +
+                    "</div>\n" +
+                    "</body>\n" +
+                    "</html>");
+        } else {
+            resp.getWriter().print("Parameter ticker is required");
+        }
     }
 }
