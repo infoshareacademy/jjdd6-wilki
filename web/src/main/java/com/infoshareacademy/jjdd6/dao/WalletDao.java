@@ -12,7 +12,7 @@ import java.util.List;
 public class WalletDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(Wallet wallet) {
         entityManager.persist(wallet);

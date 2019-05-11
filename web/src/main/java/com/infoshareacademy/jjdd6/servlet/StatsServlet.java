@@ -28,7 +28,7 @@ public class StatsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.getWriter().println("Most traded shares in App (buy transactions):");
         for (String mostBoughtStock : statsDao.getMostBoughtStocks()) {
-            if (mostBoughtStock == "" || mostBoughtStock == null) {
+            if (mostBoughtStock == null || mostBoughtStock.isEmpty()) {
                 resp.getWriter().println("None");
             } else {
                 resp.getWriter().println(mostBoughtStock);
@@ -36,7 +36,7 @@ public class StatsServlet extends HttpServlet {
         }
         resp.getWriter().println("\nMost traded shares in App(sell transactions):");
         for (String mostSoldStock : statsDao.getMostSoldStocks()) {
-            if (mostSoldStock == "" || mostSoldStock == null) {
+            if (mostSoldStock == null || mostSoldStock.isEmpty()) {
                 resp.getWriter().println("None");
             } else {
                 resp.getWriter().println(mostSoldStock);

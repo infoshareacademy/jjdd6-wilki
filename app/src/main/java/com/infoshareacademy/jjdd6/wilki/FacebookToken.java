@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TOKENS")
@@ -12,7 +14,7 @@ import javax.persistence.*;
         name = "Tokens.findAll",
         query = "SELECT t FROM FacebookToken t")})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FacebookToken {
+public class FacebookToken implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +34,19 @@ public class FacebookToken {
     @JsonProperty("expires_in")
     private Long expirationSeconds;
 
+    @Column(name = "expire_date")
+    @JsonIgnore
+    private LocalDateTime expireDate;
+
     public FacebookToken() {
+    }
+
+    public LocalDateTime getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(LocalDateTime expireDate) {
+        this.expireDate = expireDate;
     }
 
     public Long getId() {
@@ -64,6 +78,12 @@ public class FacebookToken {
     }
 
     public void setExpirationSeconds(Long expirationSeconds) {
+        this.expirationSeconds = expirationSeconds;
+    }
+
+    public FacebookToken(String accessToken, String tokenType, Long expirationSeconds) {
+        this.accessToken = accessToken;
+        this.tokenType = tokenType;
         this.expirationSeconds = expirationSeconds;
     }
 }

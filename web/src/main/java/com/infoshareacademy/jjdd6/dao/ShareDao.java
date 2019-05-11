@@ -12,7 +12,7 @@ import java.util.List;
 public class ShareDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(Share share) {
         entityManager.persist(share);
