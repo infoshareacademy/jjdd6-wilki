@@ -94,19 +94,6 @@ public class BuySharesServlet extends HttpServlet {
     private void buyShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
-            showMenuWithBuyForm(req, resp,"Problems detected, we are trying to fix it");
-            logger.info("Incorrect wallet walletId = {}", idStr);
-            return;
-        }
-
-        if (validators.isWalletNotPresent(idStr)) {
-            showMenuWithBuyForm(req ,resp,"Problems detected, we are trying to fix it");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
-            return;
-        }
-
         String ticker = req.getParameter("ticker");
         if (validators.isTickerNotValid(ticker)) {
             showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
