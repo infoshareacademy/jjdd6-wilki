@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/share-buy")
+@WebServlet("/share-add")
 @Transactional
 public class BuySharesServlet extends HttpServlet {
 

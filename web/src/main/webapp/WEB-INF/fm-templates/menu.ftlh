@@ -10,8 +10,8 @@
     <div id="left_menu">
         DASHBOARD</br>
         <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>>Show wallet</div></a></br>
-        <a href="/share-buy"><div class="menu_option" <#if content == "add_shares"> id="selected" </#if>>Add shares</div></a></br>
-        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell" || content == "sell_selected"> id="selected" </#if>>Sell shares</div></a></br>
+        <a href="/share-add"><div class="menu_option" <#if content == "add_shares"> id="selected" </#if>>Add shares</div></a></br>
+        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell" || content == "sell_specified"> id="selected" </#if>>Sell shares</div></a></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Manage free cash</div></br></br></br></br>
         ANALYTICS</br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Most popular?</div></br>
@@ -37,7 +37,7 @@
         <#elseif content == "shares_to_sell">
             <#include "sell-shares.ftlh">
         <#elseif content == "sell_selected">
-            <#include "sell-selected.ftlh">
+            <#include "sell-specified.ftlh">
         </#if>
     </div>
 </div>

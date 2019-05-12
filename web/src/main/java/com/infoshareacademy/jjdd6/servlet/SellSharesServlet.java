@@ -4,9 +4,11 @@ import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Transaction;
+import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -33,32 +35,40 @@ public class SellSharesServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(SellSharesServlet.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    ShareDao shareDao;
+    private ShareDao shareDao;
 
     @Inject
-    TransactionDao transactionDao;
+    private TransactionDao transactionDao;
 
     @Inject
     private Validators validators;
 
     @Inject
-    TemplateProvider templateProvider;
+    private TemplateProvider templateProvider;
+
+    @Inject
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        String action = req.getParameter("action");
+        String ticker = req.getParameter("ticker");
 
-        if("sell_selected".equals(action)){
+        if(null != ticker){
             Map<String, Object> model = new HashMap<>();
-
-            Wallet existingWallet = walletDao.findById(1L);
-            String ticker = req.getParameter("ticker");
-
-            Share share = existingWallet.scanWalletForShare(ticker);
+            User user = userService.loggedUser(req);
+            Wallet userWallet = user.getWallet();
+            Share share = userWallet.scanWalletForShare(ticker);
+            String profilePicURL = userService.userProfilePicURL(user);
+            model.put("ticker", share.getTicker());
+            model.put("availableAmount", share.getSharesTotalAmount());
+            model.put("currentPrice", share.getCurrentPrice());
+            model.put("content", "sell-specified");
+            model.put("profilePicURL", profilePicURL);
+            model.put("userName", user.getName());
             showSellSpecifiedShare(resp, "", model);
         }
         else {
