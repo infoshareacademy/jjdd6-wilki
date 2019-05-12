@@ -3,7 +3,6 @@ package com.infoshareacademy.jjdd6.servlet;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +22,10 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

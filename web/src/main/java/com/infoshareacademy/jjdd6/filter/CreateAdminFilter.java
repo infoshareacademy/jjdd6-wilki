@@ -23,13 +23,13 @@ import java.math.BigDecimal;
 public class CreateAdminFilter implements Filter {
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    FacebookTokenDao facebookTokenDao;
+    private FacebookTokenDao facebookTokenDao;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -46,7 +46,7 @@ public class CreateAdminFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpSession session = req.getSession();
 
-        if (userDao.findById(1L) == null) {
+        if (userDao.findAll().isEmpty()) {
 
             final Wallet wallet = new Wallet();
             wallet.setBaseCash(BigDecimal.valueOf(1000));

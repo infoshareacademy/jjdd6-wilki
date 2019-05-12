@@ -25,13 +25,13 @@ public class SetSlAndTpPrice extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(SetSlAndTpPrice.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    ShareDao shareDao;
+    private ShareDao shareDao;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
