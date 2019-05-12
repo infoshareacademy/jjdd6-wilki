@@ -86,7 +86,7 @@ public class SellSharesServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (validators.isIntegerGreaterThanZero(idStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
             logger.info("Incorrect wallet walletId = {}", idStr);
             return;
@@ -108,24 +108,31 @@ public class SellSharesServlet extends HttpServlet {
 
         String amountStr = req.getParameter("amount");
 
-        if (validators.isIntegerGreaterThanZero(amountStr)) {
+        if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
             resp.getWriter().println("Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
             return;
         }
 
+        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(walletId);
+        int amount = Integer.parseInt(amountStr);
+
+        if (validators.isEnoughSharesToSell(existingWallet, amount, ticker)) {
+            resp.getWriter().println("You don't have enough shares!");
+            logger.info("Incorrect amount of shares to sell = {}", amountStr);
+            return;
+        }
+
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
-            resp.getWriter().println("Price should be a number greater than 0");
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
+            resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", amountStr);
             return;
         }
 
-        int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(walletId);
 
         existingWallet.sellShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);

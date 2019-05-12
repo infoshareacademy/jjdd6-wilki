@@ -10,7 +10,6 @@ import com.infoshareacademy.jjdd6.wilki.Transaction;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +85,7 @@ public class BuySharesServlet extends HttpServlet {
             throws IOException {
 
 //        String idStr = req.getParameter("wallet_id");
-//        if (validators.isIntegerGreaterThanZero(idStr)) {
+//        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
 //            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
 //            logger.info("Incorrect wallet walletId = {}", idStr);
 //            return;
@@ -108,24 +107,18 @@ public class BuySharesServlet extends HttpServlet {
 
         String amountStr = req.getParameter("amount");
 
-        if (validators.isIntegerGreaterThanZero(amountStr)) {
-            resp.getWriter().println("Amount should be an integer greater than 0");
+        if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
+            showMenuWithBuyForm(resp,"Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
-            if (!NumberUtils.isDigits(amountStr)) {
-                showMenuWithBuyForm(resp, "Amount should be a whole number");
-                return;
-            }
+            return;
         }
 
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
-            resp.getWriter().println("Price should be a number greater than 0");
-            logger.info("Incorrect price = {}", amountStr);
-            if (!NumberUtils.isParsable(priceStr)) {
-                showMenuWithBuyForm(resp, "Price should have a numerical value");
-                return;
-            }
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
+            showMenuWithBuyForm(resp,"Price should be a number greater than 0 - format 0.00");
+            logger.info("Incorrect price = {}", priceStr);
+           return;
         }
 
         int amount = Integer.parseInt(amountStr);
@@ -134,7 +127,7 @@ public class BuySharesServlet extends HttpServlet {
         final Long walletId = 1L;
         final Wallet existingWallet = walletDao.findById(walletId);
 
-        if (validators.isEnoughCash(existingWallet, amount, price)) {
+        if (validators.isEnoughCashToBuyShares(existingWallet, amount, price)) {
             resp.getWriter().println("You don't have enough money! Your current balance is: "
                     + existingWallet.getFreeCash());
             logger.info("Not enough money to buy shares");

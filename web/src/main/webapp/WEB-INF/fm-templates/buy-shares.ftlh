@@ -14,7 +14,7 @@
     <div id="status"
          <#if status == "Transaction success">style="color: lightgreen"</#if>
          <#if status == "Amount should be a whole number">style="color: red"</#if>
-            <#if status == "Price should have a numerical value">style="color: red"</#if>
+            <#if status == "Price should have a numerical value - format 0.00">style="color: red"</#if>
     >${status}</div>
     </form>
 </div>

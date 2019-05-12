@@ -1,6 +1,5 @@
 package com.infoshareacademy.jjdd6.dao;
 
-
 import com.infoshareacademy.jjdd6.wilki.Share;
 
 import javax.enterprise.context.RequestScoped;
