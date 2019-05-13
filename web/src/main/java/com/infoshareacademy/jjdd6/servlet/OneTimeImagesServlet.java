@@ -14,10 +14,10 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 
 @WebServlet("/images/*")
-public class ImagesServlet extends HttpServlet {
+public class OneTimeImagesServlet extends HttpServlet {
 
     @Inject
-    WebAppProperties webAppProperties;
+    private WebAppProperties webAppProperties;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
