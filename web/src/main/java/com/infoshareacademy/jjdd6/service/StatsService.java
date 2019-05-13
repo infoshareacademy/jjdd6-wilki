@@ -21,7 +21,6 @@ public class StatsService {
 
     private static Logger logger = LoggerFactory.getLogger(StatsService.class);
 
-
     @Inject
     StatsDao statsDao;
 
