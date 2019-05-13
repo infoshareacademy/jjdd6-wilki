@@ -33,19 +33,19 @@ public class SellSharesServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(SellSharesServlet.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    ShareDao shareDao;
+    private ShareDao shareDao;
 
     @Inject
-    TransactionDao transactionDao;
+    private TransactionDao transactionDao;
 
     @Inject
     private Validators validators;
 
     @Inject
-    TemplateProvider templateProvider;
+    private TemplateProvider templateProvider;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

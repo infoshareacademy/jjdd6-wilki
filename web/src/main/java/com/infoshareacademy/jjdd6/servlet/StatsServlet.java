@@ -19,10 +19,10 @@ import java.util.List;
 public class StatsServlet extends HttpServlet {
 
     @Inject
-    StatsDao statsDao;
+    private StatsDao statsDao;
 
     @Inject
-    DownloadCurrentData downloadCurrentData;
+    private DownloadCurrentData downloadCurrentData;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

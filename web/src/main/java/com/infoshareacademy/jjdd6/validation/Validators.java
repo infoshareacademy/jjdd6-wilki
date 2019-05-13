@@ -19,10 +19,10 @@ import static org.apache.commons.validator.GenericValidator.isEmail;
 public class Validators {
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     public boolean isEmailIncorrect(String email) {
         return (!isEmail(email));

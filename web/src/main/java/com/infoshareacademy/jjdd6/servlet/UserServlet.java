@@ -25,13 +25,13 @@ public class UserServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(UserServlet.class);
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
