@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequestScoped
+@Transactional
 public class StatsDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public List<String> getMostBoughtStocks() {
         final Query query = entityManager

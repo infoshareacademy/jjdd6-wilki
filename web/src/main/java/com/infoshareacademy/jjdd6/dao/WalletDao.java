@@ -8,12 +8,11 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-
 @RequestScoped
 public class WalletDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(Wallet wallet) {
         entityManager.persist(wallet);

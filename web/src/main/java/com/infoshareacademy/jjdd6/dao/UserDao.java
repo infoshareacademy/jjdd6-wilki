@@ -12,7 +12,7 @@ import java.util.List;
 public class UserDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public Long save(User user) {
         entityManager.persist(user);
@@ -34,10 +34,10 @@ public class UserDao {
         return entityManager.find(User.class, id);
     }
 
-    public User findByFbUserId(String fbUserId) {
+    public List<User> findByFbUserId(String fbUserId) {
         final Query query = entityManager.createNamedQuery("User.findUserByFbUserId");
         query.setParameter("fbUserId", fbUserId);
-        return (User)query.getSingleResult();
+        return query.getResultList();
     }
 
 
