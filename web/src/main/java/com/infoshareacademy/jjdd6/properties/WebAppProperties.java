@@ -1,11 +1,9 @@
 package com.infoshareacademy.jjdd6.properties;
 
-import com.infoshareacademy.jjdd6.wilki.AppProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -17,6 +15,16 @@ public class WebAppProperties {
     private Properties setupFacebookLogon() {
 
         String CONFIG_PROPERTIES_FILENAME = "facebooklogon.properties";
+        return loadProperties(CONFIG_PROPERTIES_FILENAME);
+    }
+
+    public Properties chartSaveDir() {
+
+        String CONFIG_PROPERTIES_FILENAME = "directory.properties";
+        return loadProperties(CONFIG_PROPERTIES_FILENAME);
+    }
+
+    private Properties loadProperties(String CONFIG_PROPERTIES_FILENAME) {
         String propertyFilePath = Thread.currentThread().getContextClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath();
         logger.info(propertyFilePath);
 
@@ -34,5 +42,9 @@ public class WebAppProperties {
 
     public String getProperty(String property) {
         return setupFacebookLogon().getProperty(property);
+    }
+
+    public String getChartSaveDir(String property) {
+        return chartSaveDir().getProperty(property);
     }
 }

@@ -28,7 +28,7 @@ public class ChartServlet extends HttpServlet {
                     "</head>\n" +
                     "<body>\n" +
                     "<div id=\"container\" align=\"center\">\n" +
-                    "<img src=\"" + req.getRequestURL() + chartGenerator.getChart(ticker, req.getServletContext().getRealPath("chart.png")) + "\" width=\"600\" height=\"300\"/>\n" +
+                    "<img src=\"" + req.getRequestURI() + "/images/" + chartGenerator.getChart(ticker) + "\" width=\"600\" height=\"300\"/>\n" +
                     "</div>\n" +
                     "</body>\n" +
                     "</html>");

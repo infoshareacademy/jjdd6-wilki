@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.service;
 
+import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.wilki.DataFromFile;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import org.knowm.xchart.*;
@@ -24,25 +25,30 @@ public class ChartGenerator {
     @Inject
     DownloadCurrentData downloadCurrentData;
 
+    @Inject
+    WebAppProperties webAppProperties;
+
     private static Logger logger = LoggerFactory.getLogger(ChartGenerator.class);
 
-    public String getChart(String ticker, String path) throws MalformedURLException {
-
+    public String getChart(String ticker) throws MalformedURLException {
+        List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker);
         String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
-        generateChart(title, path, data);
-        return ".png";
+        String path = pathGenerator(ticker);
+        generateChart(title, path, currentData, data);
+        return path.substring(1);
     }
 
-    public String getChart(String ticker, String path, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
-
+    public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
+        List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
         String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
-        generateChart(title, path, data);
-        return ".png";
+        String path = pathGenerator(ticker);
+        generateChart(title, path, currentData, data);
+        return path.substring(1);
     }
 
-    private void generateChart(String title, String path, List<DataFromFile> data) {
+    private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
         XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
         chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         chart.getStyler().setAxisTitlesVisible(false);
@@ -68,6 +74,12 @@ public class ChartGenerator {
                     .toInstant()));
             yAxis.add(datum.getClosingPrice().doubleValue());
         }
+
+        xAxis.add(Date.from(currentData.get(0).getDate().atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant()));
+        yAxis.add(currentData.get(0).getClosingPrice().doubleValue());
+
         chart.addSeries(title.toUpperCase(), xAxis, yAxis);
 
         try {
@@ -75,6 +87,11 @@ public class ChartGenerator {
         } catch (IOException e) {
             logger.info("Writing chart file failed.");
         }
+    }
+
+    public String pathGenerator(String ticker){
+        int random = (int)Math.random()*100+3;
+        return webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + ticker + "_" + random + "_chart.png";
     }
 
 }
