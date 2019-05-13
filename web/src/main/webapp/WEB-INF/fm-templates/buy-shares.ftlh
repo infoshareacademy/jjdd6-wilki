@@ -11,7 +11,7 @@
         PRICE IN PLN</br>
         <input type="text" class="text-input" autocomplete="off" id="price" required name="price"/></div>
     </br>
-    <input id="buy" type="submit" value="ADD"/>
+    <input id="buy" type="submit" value="Report BUY"/>
 </form>
 <div id="info">
     Total price has fee included!</br>

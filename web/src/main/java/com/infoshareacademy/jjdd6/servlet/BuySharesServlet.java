@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet("/share-add")
+@WebServlet("/share-buy")
 @Transactional
 public class BuySharesServlet extends HttpServlet {
 
@@ -70,7 +70,7 @@ public class BuySharesServlet extends HttpServlet {
 
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", "add_shares");
+        model.put("content", "buy_shares");
         model.put("profilePicURL", profilePicURL);
         model.put("userName", user.getName());
         if (null != status) {

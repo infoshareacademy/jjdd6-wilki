@@ -6,10 +6,7 @@ import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
-import com.infoshareacademy.jjdd6.wilki.Share;
-import com.infoshareacademy.jjdd6.wilki.Transaction;
-import com.infoshareacademy.jjdd6.wilki.User;
-import com.infoshareacademy.jjdd6.wilki.Wallet;
+import com.infoshareacademy.jjdd6.wilki.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -58,25 +55,44 @@ public class SellSharesServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
 
         if(null != ticker){
-            Map<String, Object> model = new HashMap<>();
+
             User user = userService.loggedUser(req);
             Wallet userWallet = user.getWallet();
             Share share = userWallet.scanWalletForShare(ticker);
-            String profilePicURL = userService.userProfilePicURL(user);
-            model.put("ticker", share.getTicker());
-            model.put("availableAmount", share.getSharesTotalAmount());
-            model.put("currentPrice", share.getCurrentPrice());
-            model.put("content", "sell-specified");
-            model.put("profilePicURL", profilePicURL);
-            model.put("userName", user.getName());
-            showSellSpecifiedShare(resp, "", model);
+
+            if(!(validators.isTickerNotValid(ticker)) && userWallet.checkIfShareIsPresent(ticker)) {
+                showSellSpecifiedShare(req, resp, "", ticker);
+            }
+            else{
+                resp.sendRedirect("/share-sell");
+            }
         }
         else {
-            showWalletWithSellForm(resp, "");
+            showWalletWithSellBtn(req, resp, "");
         }
     }
 
-    private void showSellSpecifiedShare(HttpServletResponse resp, String status, Map<String, Object> model) throws IOException {
+    private void showSellSpecifiedShare(HttpServletRequest req, HttpServletResponse resp, String status, String ticker) throws IOException {
+
+        Map<String, Object> model = new HashMap<>();
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        Share share = userWallet.scanWalletForShare(ticker);
+        String profilePicURL = userService.userProfilePicURL(user);
+        BigDecimal roe = userWallet.getROE();
+        BigDecimal freeCash = userWallet.getFreeCash();
+        model.put("roe", roe);
+        model.put("freeCash", freeCash);
+        model.put("ticker", share.getTicker());
+        model.put("companyName", share.getFullCompanyName());
+        model.put("amount", share.getSharesTotalAmount());
+        model.put("avgBuyPrice", share.getAvgBuyPrice());
+        model.put("baseValue", share.getBaseValue());
+        model.put("currentPrice", share.getCurrentPrice());
+        model.put("status", status);
+        model.put("content", "sell_specified");
+        model.put("profilePicURL", profilePicURL);
+        model.put("userName", user.getName());
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 
@@ -85,27 +101,25 @@ public class SellSharesServlet extends HttpServlet {
         } catch (TemplateException e) {
             resp.getWriter().println("Something went wrong");
         }
-
     }
 
-    private void showWalletWithSellForm(HttpServletResponse resp, String status) throws IOException {
+    private void showWalletWithSellBtn(HttpServletRequest req, HttpServletResponse resp, String status) throws IOException {
         Map<String, Object> model = new HashMap<>();
-
-        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
-
-        Wallet existingWallet = walletDao.findById(1L);
-
-        List<Share> shares = existingWallet.getShares();
-
-        BigDecimal roe = existingWallet.getROE();
-
-        BigDecimal freeCash = existingWallet.getFreeCash();
-
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        List<Share> shares = userWallet.getShares();
+        BigDecimal roe = userWallet.getROE();
+        String profilePicURL = userService.userProfilePicURL(user);
+        BigDecimal freeCash = userWallet.getFreeCash();
+        DownloadCurrentData.updateWalletData(userWallet);
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", "sell_selected");
+        model.put("profilePicURL", profilePicURL);
+        model.put("userName", user.getName());
+        model.put("content", "shares_to_sell");
 
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
         if(null != status){
             model.put("status", status);
         }

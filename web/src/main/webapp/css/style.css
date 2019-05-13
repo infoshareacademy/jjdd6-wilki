@@ -237,3 +237,35 @@ a:active {
     line-height: 90px;
     padding-top: 4%;
 }
+#sell_btn{
+    margin-top: 8px;
+    width: 150px;
+    cursor: pointer;
+    font-size: 17px;
+}
+#sell_ticker{
+    width: 20%;
+    height: 20%;
+    line-height: 110px;
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_full_com_name{
+    width: 80%;
+    height: 20%;
+    line-height: 110px;
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
