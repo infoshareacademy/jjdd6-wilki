@@ -17,10 +17,10 @@ import java.io.IOException;
 public class StatsServlet extends HttpServlet {
 
     @Inject
-    StatsService statsService;
+    private StatsService statsService;
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

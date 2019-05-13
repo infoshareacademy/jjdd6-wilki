@@ -23,10 +23,10 @@ import java.util.List;
 public class ChartGenerator {
 
     @Inject
-    DownloadCurrentData downloadCurrentData;
+    private DownloadCurrentData downloadCurrentData;
 
     @Inject
-    WebAppProperties webAppProperties;
+    private WebAppProperties webAppProperties;
 
     private static Logger logger = LoggerFactory.getLogger(ChartGenerator.class);
 

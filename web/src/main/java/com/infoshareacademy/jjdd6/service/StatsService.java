@@ -22,10 +22,10 @@ public class StatsService {
     private static Logger logger = LoggerFactory.getLogger(StatsService.class);
 
     @Inject
-    StatsDao statsDao;
+    private StatsDao statsDao;
 
     @Inject
-    DownloadCurrentData downloadCurrentData;
+    private DownloadCurrentData downloadCurrentData;
 
     public List<String> getMostBoughtStocks() {
         return statsDao.getMostBoughtStocks();

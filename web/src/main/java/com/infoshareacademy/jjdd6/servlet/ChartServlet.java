@@ -14,7 +14,7 @@ import java.io.IOException;
 public class ChartServlet extends HttpServlet {
 
     @Inject
-    ChartGenerator chartGenerator;
+    private ChartGenerator chartGenerator;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
