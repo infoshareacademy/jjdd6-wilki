@@ -84,7 +84,7 @@ public class ChartGenerator {
         chart.addSeries(title.toUpperCase(), xAxis, yAxis);
 
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 300);
+            BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
         } catch (IOException e) {
             logger.info("Writing chart file failed.");
         }
@@ -139,7 +139,7 @@ public class ChartGenerator {
         chart.addSeries(title.toUpperCase(), xAxis, yAxis);
 
         try {
-            BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 300);
+            BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
         } catch (IOException e) {
             logger.info("Writing chart file failed.");
         }
