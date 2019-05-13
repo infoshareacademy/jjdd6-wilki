@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 @Transactional
 @WebFilter(
         filterName = "CreateAdminFilter",
-        urlPatterns = {"/*"})
+        urlPatterns = {"/createadmin"})
 public class CreateAdminFilter implements Filter {
 
     @Inject
