@@ -95,6 +95,7 @@ public class BuySharesServlet extends HttpServlet {
             throws IOException {
 
         String ticker = req.getParameter("ticker");
+
         if (validators.isTickerNotValid(ticker)) {
             showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
             logger.info("Ticker {} is not valid.", ticker);
@@ -102,6 +103,7 @@ public class BuySharesServlet extends HttpServlet {
         }
 
         String amountStr = req.getParameter("amount");
+
         if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
             showMenuWithBuyForm(req, resp,"Amount should be an integer greater than 0");
             logger.info("Incorrect amount = {}", amountStr);
@@ -109,6 +111,7 @@ public class BuySharesServlet extends HttpServlet {
         }
 
         String priceStr = req.getParameter("price");
+
         if (validators.isDoubleGreaterThanZero(priceStr)) {
             showMenuWithBuyForm(req, resp,"Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", priceStr);

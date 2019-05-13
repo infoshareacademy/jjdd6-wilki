@@ -62,4 +62,8 @@ public class Validators {
         return BigDecimal.valueOf(Double.valueOf(value)).
                 compareTo(existingWallet.getFreeCash()) > 0;
     }
+
+    public boolean isEnoughSharesToSell(Wallet existingWallet, String ticker, int amount){
+        return existingWallet.scanWalletForShare(ticker).getSharesTotalAmount() >= amount;
+    }
 }

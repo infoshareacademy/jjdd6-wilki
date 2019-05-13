@@ -269,3 +269,147 @@ a:active {
     box-shadow: 0px 0px 5px white;
     float: left;
 }
+#report_sell{
+    width: 100%;
+    height: 10%;
+    line-height: 50px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 400;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 20px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_amount{
+    width: 30%;
+    height: 15%;
+    line-height: 35px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_amount span{
+    font-size: 20px;
+}
+#sell_buy_price{
+    width: 30%;
+    height: 15%;
+    line-height: 35px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_buy_price span{
+    font-size: 20px;
+}
+#sell_value{
+    width: 40%;
+    height: 15%;
+    line-height: 35px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_value span{
+    font-size: 20px;
+}
+.sell_form{
+    width: 25%;
+    height: 20%;
+    line-height: 55px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+.sell_form input{
+    width: 80%;
+    height: 40%;
+    text-align: center;
+    font-size: 35px;
+    font-weight: 600;
+    color: black;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+#sell_calc_current{
+    width: 50%;
+    height: 20%;
+    line-height: 45px;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 7px;
+    box-shadow: 0px 0px 5px white;
+    float: left;
+}
+#sell_calc_current span{
+    font-size: 25px;
+}
+#confirm{
+    width: 50%;
+    height: 10%;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 10px;
+    float: left;
+    margin-left: 25%;
+    margin-top: 30px;
+}
+#confirm input{
+    width: 40%;
+    height: 80%;
+    font-size: 30px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.2s;
+}
+#confirm input:hover{
+    width: 40%;
+    height: 80%;
+    font-size: 30px;
+    letter-spacing: 5px;
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+    border-radius: 5px;
+    transition-duration: 0.2s;;
+}
+#sell_status{
+    width: 100%;
+    height: 25%;
+    line-height: 60px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    letter-spacing: 1px;
+    float: left;
+}

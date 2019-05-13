@@ -138,23 +138,10 @@ public class SellSharesServlet extends HttpServlet {
     private void sellShare(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
-            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", idStr);
-            return;
-        }
-
-        if (validators.isWalletNotPresent(idStr)) {
-            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
-            return;
-        }
-
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
+            showSellSpecifiedShare(req, resp, "Ticker = {" + ticker + "} is not valid", ticker);
             logger.info("Ticker = {} is not valid.", ticker);
             return;
         }
@@ -162,7 +149,7 @@ public class SellSharesServlet extends HttpServlet {
         String amountStr = req.getParameter("amount");
 
         if (validators.isNotIntegerOrIsSmallerThanZero(amountStr)) {
-            resp.getWriter().println("Amount should be an integer greater than 0");
+            showSellSpecifiedShare(req, resp, "Amount should be an integer greater than 0", ticker);
             logger.info("Incorrect amount = {}", amountStr);
             return;
         }
@@ -170,15 +157,20 @@ public class SellSharesServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isDoubleGreaterThanZero(priceStr)) {
-            resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
+            showSellSpecifiedShare(req, resp, "Price should be a number greater than 0 - format 0.00", ticker);
             logger.info("Incorrect price = {}", amountStr);
             return;
         }
 
+        User user = userService.loggedUser(req);
+        final Wallet existingWallet = user.getWallet();
         int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(walletId);
+        
+        if(!(validators.isEnoughSharesToSell(existingWallet, ticker, amount))){
+            showSellSpecifiedShare(req, resp, "You try to sell more shares than you have", ticker);
+            return;
+        }
 
         existingWallet.sellShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
@@ -192,7 +184,6 @@ public class SellSharesServlet extends HttpServlet {
 
         logger.info("Wallet object updated: {}", existingWallet);
 
-        resp.getWriter().println("Transaction success."
-                + "\nFree Cash: " + existingWallet.getFreeCash());
+        showSellSpecifiedShare(req, resp, "Transaction success", ticker);
     }
 }
