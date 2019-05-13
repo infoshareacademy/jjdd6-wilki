@@ -18,7 +18,7 @@ public class WebAppProperties {
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
     }
 
-    public Properties chartSaveDir() {
+    private Properties chartSaveDir() {
 
         String CONFIG_PROPERTIES_FILENAME = "directory.properties";
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
