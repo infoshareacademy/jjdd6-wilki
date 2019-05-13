@@ -34,18 +34,19 @@ public class ChartGenerator {
         List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker);
         String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
-        String path = pathGenerator(ticker);
+        String filename = pathGenerator(ticker);
+        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
         generateChart(title, path, currentData, data);
-        return path.substring(1);
+        return filename;
     }
 
     public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
         List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
         String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
-        String path = pathGenerator(ticker);
+        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + pathGenerator(ticker);
         generateChart(title, path, currentData, data);
-        return path.substring(1);
+        return path;
     }
 
     private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
@@ -90,8 +91,8 @@ public class ChartGenerator {
     }
 
     public String pathGenerator(String ticker){
-        int random = (int)Math.random()*100+3;
-        return webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + ticker + "_" + random + "_chart.png";
+        int random = (int)(Math.random()*100)+3;
+        return ticker + "_" + random + "_chart.png";
     }
 
 }
