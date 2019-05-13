@@ -25,13 +25,13 @@ public class SetSlAndTpPrice extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(SetSlAndTpPrice.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    ShareDao shareDao;
+    private ShareDao shareDao;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -86,7 +86,7 @@ public class SetSlAndTpPrice extends HttpServlet {
 
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
             resp.getWriter().println("Price should have a numerical value greater than 0");
             logger.info("Incorrect price = {}", priceStr);
             return;
@@ -133,7 +133,7 @@ public class SetSlAndTpPrice extends HttpServlet {
 
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
             resp.getWriter().println("Price should have a numerical value greater than 0");
             logger.info("Incorrect price = {}", priceStr);
             return;

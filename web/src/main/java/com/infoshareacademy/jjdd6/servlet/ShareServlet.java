@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.servlet;
 import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Transaction;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -35,6 +36,9 @@ public class ShareServlet extends HttpServlet {
 
     @Inject
     private TransactionDao transactionDao;
+
+    @Inject
+    private Validators validators;
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {

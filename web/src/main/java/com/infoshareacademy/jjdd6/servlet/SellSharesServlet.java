@@ -50,55 +50,26 @@ public class SellSharesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        String action = req.getParameter("action");
-
-        if("sell_selected".equals(action)){
-            Map<String, Object> model = new HashMap<>();
-
-            Wallet existingWallet = walletDao.findById(1L);
-            String ticker = req.getParameter("ticker");
-
-            Share share = existingWallet.scanWalletForShare(ticker);
-            showSellSpecifiedShare(resp, "", model);
-        }
-        else {
-            showWalletWithSellForm(resp, "");
-        }
-    }
-
-    private void showSellSpecifiedShare(HttpServletResponse resp, String status, Map<String, Object> model) throws IOException {
-
-        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
-
-        try {
-            template.process(model, resp.getWriter());
-        } catch (TemplateException e) {
-            resp.getWriter().println("Something went wrong");
-        }
-
+        showWalletWithSellForm(resp, "");
     }
 
     private void showWalletWithSellForm(HttpServletResponse resp, String status) throws IOException {
         Map<String, Object> model = new HashMap<>();
 
-        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
+        List<Share> shares = shareDao.findAll();
 
-        Wallet existingWallet = walletDao.findById(1L);
+        BigDecimal roe = walletDao.findById(1L).getROE();
 
-        List<Share> shares = existingWallet.getShares();
-
-        BigDecimal roe = existingWallet.getROE();
-
-        BigDecimal freeCash = existingWallet.getFreeCash();
+        BigDecimal freeCash = walletDao.findById(1L).getFreeCash();
 
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", "sell_selected");
-
+        model.put("content", 3);
         if(null != status){
             model.put("status", status);
         }
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
         try {
             template.process(model, resp.getWriter());
         } catch (TemplateException e) {
@@ -143,18 +114,25 @@ public class SellSharesServlet extends HttpServlet {
             return;
         }
 
+        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(walletId);
+        int amount = Integer.parseInt(amountStr);
+
+        if (validators.isEnoughSharesToSell(existingWallet, amount, ticker)) {
+            resp.getWriter().println("You don't have enough shares!");
+            logger.info("Incorrect amount of shares to sell = {}", amountStr);
+            return;
+        }
+
         String priceStr = req.getParameter("price");
 
-        if (validators.isDoubleGreaterThanZero(priceStr)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
             resp.getWriter().println("Price should be a number greater than 0 - format 0.00");
             logger.info("Incorrect price = {}", amountStr);
             return;
         }
 
-        int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        final Long walletId = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(walletId);
 
         existingWallet.sellShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size()-1);
