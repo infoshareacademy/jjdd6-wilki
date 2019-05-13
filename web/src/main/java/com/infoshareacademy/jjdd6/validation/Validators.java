@@ -4,6 +4,7 @@ import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 
 import javax.enterprise.context.RequestScoped;
@@ -75,5 +76,11 @@ public class Validators {
             }
         }
         return totalShareAmount >= amount;
+    }
+
+    public boolean isUserNotAllowedToWalletModification(String userId, String walletId) {
+        User user = userDao.findById(Long.valueOf(userId));
+        return !Long.valueOf(walletId).equals(user.getWallet().getId());
+
     }
 }

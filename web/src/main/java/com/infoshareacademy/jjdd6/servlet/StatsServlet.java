@@ -5,7 +5,6 @@ import com.infoshareacademy.jjdd6.wilki.DataFromFile;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 
 import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +24,7 @@ public class StatsServlet extends HttpServlet {
     private DownloadCurrentData downloadCurrentData;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.getWriter().println("Most traded shares in App (buy transactions):");
         for (String mostBoughtStock : statsDao.getMostBoughtStocks()) {
             if (mostBoughtStock == null || mostBoughtStock.isEmpty()) {

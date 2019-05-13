@@ -57,16 +57,25 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private void increaseFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+        String walletId = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(walletId)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", idStr);
+            logger.info("Incorrect wallet walletId = {}", walletId);
             return;
         }
 
-        if (validators.isWalletNotPresent(idStr)) {
-            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+        if (validators.isWalletNotPresent(walletId)) {
+            resp.getWriter().println("No wallet found for walletId = {" + walletId + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", walletId);
+            return;
+        }
+
+        String userId = String.valueOf(req.getSession().getAttribute("user"));
+
+        if (validators.isUserNotAllowedToWalletModification(userId, walletId)) {
+            resp.getWriter().println("Unauthorized try to modify wallet!");
+            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", walletId, userId );
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -91,16 +100,25 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private void reduceFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+        String walletId = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(walletId)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", idStr);
+            logger.info("Incorrect wallet walletId = {}", walletId);
             return;
         }
 
-        if (validators.isWalletNotPresent(idStr)) {
-            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+        if (validators.isWalletNotPresent(walletId)) {
+            resp.getWriter().println("No wallet found for walletId = {" + walletId + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", walletId);
+            return;
+        }
+
+        String userId = String.valueOf(req.getSession().getAttribute("user"));
+
+        if (validators.isUserNotAllowedToWalletModification(userId, walletId)) {
+            resp.getWriter().println("Unauthorized try to modify wallet!");
+            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", walletId, userId );
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
