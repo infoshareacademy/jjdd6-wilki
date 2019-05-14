@@ -6,7 +6,7 @@
     <form action="/increase-reduce-free-cash" method="POST">
         <input type="number" min="0.01" step="0.01" autocomplete="off" placeholder="Enter amount in PLN" required name="cash"/></br>
         <input type="hidden" name="action" value="increase"/>
-        <input type="submit" value="CONFIRM"/>
+        <input type="submit" name="submit" value="CONFIRM"/>
     </form>
 </div>
 <div id="reduce">
@@ -14,11 +14,11 @@
     <form action="/increase-reduce-free-cash" method="POST">
         <input type="number" min="0.01" step="0.01" autocomplete="off" placeholder="Enter amount in PLN" required name="cash"/></br>
         <input type="hidden" name="action" value="reduce"/>
-        <input type="submit" value="CONFIRM"/>
+        <input type="submit" name="submit" value="CONFIRM"/>
     </form>
 </div>
 <div id="cash_status"
-     <#if status == "Success">style="color: lightgreen"</#if>
+     <#if status?ends_with("PLN")>style="color: lightgreen"<#else> style="color: red"</#if>
 >
-${status}aaaaaaaaaaaaaaaaaaaaaaaaaaaa
+${status}
 </div>
