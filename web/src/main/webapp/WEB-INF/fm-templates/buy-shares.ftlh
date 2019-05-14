@@ -30,7 +30,7 @@
 >${status}</div>
 </div>
 <script>
-    $("#amount").keyup(function() {
+    $("#amount, #price").on('change keyup', function() {
         var money = parseFloat(${"${freeCash}"?replace(",","")});
         var amount = document.getElementById("amount").value;
         var price = document.getElementById("price").value;
@@ -50,26 +50,11 @@
                     "<span style='color:red;'>Money left: " + moneyLeft.toFixed(2)+ " PLN</span>";
             }
         }
-    });
-    $("#price").keyup(function() {
-        var money = parseFloat(${"${freeCash}"?replace(",","")});
-        var amount = document.getElementById("amount").value;
-        var price = document.getElementById("price").value;
-        var totalPrice = parseInt(amount) * parseFloat(price);
-        var totalPriceFeeIncluded = (totalPrice + (totalPrice*0.0039)).toFixed(2);
-        var moneyLeft = money - totalPriceFeeIncluded;
-        if (!isNaN(totalPrice)) {
-            if(moneyLeft >= 0)
-                document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
-                    "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
-                    "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
-                    "<span>Money left: " + moneyLeft.toFixed(2) + " PLN</span>";
-            else{
-                document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
-                    "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
-                    "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
-                    "<span style='color:red; '>Money left: " + moneyLeft.toFixed(2) + " PLN</span>";
-            }
+        else{
+            document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+                "    Available money: ${"${freeCash}"?replace(","," ")} PLN </br> " +
+                "    Transaction: 0 PLN</br>" +
+                "    <span>Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>"
         }
     });
 </script>
