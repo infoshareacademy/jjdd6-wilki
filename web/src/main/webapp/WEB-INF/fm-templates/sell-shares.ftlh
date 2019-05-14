@@ -13,32 +13,14 @@
         <#items as share>
             <div class="ticker">${share.ticker}</div>
             <div class="amount">${share.sharesTotalAmount?string["0"]}</div>
-            <div class="avg-buy-price">${share.avgBuyPrice?string["###0.0000"]} PLN</div>
+            <div class="avg-buy-price">${share.avgBuyPrice?string["###0.00##"]} PLN</div>
             <div class="value">${share.baseValue?string["###0.00"]} PLN</div>
-            <div class="current-price">${share.currentPrice?string["###0.0000"]} PLN</div>
+            <div class="current-price">${share.currentPrice?string["###0.00##"]} PLN</div>
             <div class="current-value">${share.currentValue?string["###0.00"]} PLN</div>
             <div class="return">${share.currentReturn?string["###0.00"]} %</div>
             <div class="sell">
-                    <input id="sell_submit" name="ticker" type="submit" data-id="${share.ticker}" value="SELL">
+                <input id="sell_btn" name="ticker" type="button" onClick="location.href='/share-sell?ticker=${share.ticker}'" value="Report SELL">
             </div>
         </#items>
     </#list>
 </div>
-<script>
-    $(function () {
-
-        $(document).ready(function () {
-
-            $(".delete-user").click(function () {
-
-                $.ajax({
-                    url: '/share_sell?action=sell_selected&ticker=' + $(this).attr('data-id'),
-                    type: 'GET',
-                    success: function (result) {
-                        location.reload();
-                    }
-                });
-            });
-        });
-    });
-</script>
