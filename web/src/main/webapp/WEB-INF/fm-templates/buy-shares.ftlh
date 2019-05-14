@@ -6,10 +6,10 @@
         <input type="text" class="text-input" autocomplete="off" name="ticker" required placeholder="e.g. KGH"/></div>
     <div class="input_area">
         AMOUNT</br>
-        <input type="text" class="text-input" autocomplete="off" id="amount" required name="amount"/></div>
+        <input type="number" min="1" step="1" class="text-input" autocomplete="off" id="amount" required name="amount"/></div>
     <div class="input_area">
         PRICE IN PLN</br>
-        <input type="text" class="text-input" autocomplete="off" id="price" required name="price"/></div>
+        <input type="number" min="0.01" step="0.01" class="text-input" autocomplete="off" id="price" required name="price"/></div>
     </br>
     <input id="buy" type="submit" value="Report BUY"/>
 </form>

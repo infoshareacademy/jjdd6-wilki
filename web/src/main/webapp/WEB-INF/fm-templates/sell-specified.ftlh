@@ -22,11 +22,11 @@
 <form action="share-sell" method="POST">
     <div class="sell_form">
         Amount </br>
-        <input type="number" min="0" max="${"${amount}"?replace(",","")}" step="1" required name="amount"/>
+        <input type="number" min="1" autocomplete="off" max="${"${amount}"?replace(",","")}" step="1" required name="amount"/>
     </div>
     <div class="sell_form">
         Price in PLN</br>
-        <input type="number" min="0" required name="price"/>
+        <input type="number" min="0.01" step="0.01" autocomplete="off" required name="price"/>
     </div>
     <div id="sell_calc_current">
         <span>Transaction</span></br>
