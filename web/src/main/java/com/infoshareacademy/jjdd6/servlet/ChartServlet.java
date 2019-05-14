@@ -23,14 +23,10 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
+    private static Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+
     @Inject
     private ChartGenerator chartGenerator;
-
-    @Inject
-    private DownloadCurrentData downloadCurrentData;
-
-
-    private static Logger logger = LoggerFactory.getLogger(ChartServlet.class);
 
     @Inject
     private Validators validators;
@@ -45,6 +41,8 @@ public class ChartServlet extends HttpServlet {
         String to = req.getParameter("from");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+        String mini = "mini";
+        String full = "full";
 
         if (validators.isTickerNotValid(ticker)) {
             logger.info("Ticker = {} is not valid.", ticker);
@@ -52,11 +50,23 @@ public class ChartServlet extends HttpServlet {
             return;
         }
 
-        if (type.equals("mini")) {
+        if (validators.isTypeIncorrect(type, mini, full)) {
+            logger.info("Incorrect chart type = {} .", type);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        if (validators.isNotIntegerOrIsSmallerThanZero(monthsStr)) {
+            logger.info("Incorrect month = {} .", monthsStr);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        if (type.equals(mini)) {
             String forward = "/images/" + chartGenerator.getMiniChart(ticker);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
-        } else if (type.equals("full")) {
+        } else if (type.equals(full)) {
 
             if (from != null && !from.isEmpty()) {
                 try {

@@ -83,4 +83,8 @@ public class Validators {
         return !Long.valueOf(walletId).equals(user.getWallet().getId());
 
     }
+
+    public boolean isTypeIncorrect(String type, String firsValue, String secondValue) {
+        return !type.equals(firsValue) && !type.equals(secondValue);
+    }
 }
