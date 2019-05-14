@@ -40,7 +40,6 @@
         <#elseif content == "manage">
             <#include "manage-free-cash.ftlh">
         </#if>
-
     </div>
 </div>
 </body>

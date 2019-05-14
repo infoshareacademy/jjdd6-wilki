@@ -167,7 +167,7 @@ public class SellSharesServlet extends HttpServlet {
         final Wallet existingWallet = user.getWallet();
         int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        
+
         if(!(validators.isEnoughSharesToSell(existingWallet, amount, ticker))){
             showSellSpecifiedShare(req, resp, "You try to sell more shares than you have", ticker);
             return;
