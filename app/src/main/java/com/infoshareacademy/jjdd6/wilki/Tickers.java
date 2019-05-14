@@ -1,4 +1,4 @@
-package com.infoshareacademy.jjdd6.view;
+package com.infoshareacademy.jjdd6.wilki;
 
 import javax.persistence.*;
 
@@ -6,16 +6,19 @@ import javax.persistence.*;
 @Table(name = "TICKERS")
 @NamedQueries({@NamedQuery(
         name = "Tickers.findAll",
-        query = "SELECT t FROM Tickers t")})
+        query = "SELECT t FROM Tickers t"),
+        @NamedQuery(
+                name = "Tickers.getCount",
+                query = "SELECT COUNT(*) FROM Tickers t")
+})
 public class Tickers {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ticker")
-    String tickerName;
+    @Column(name = "ticker", length = 4)
+    private String tickerName;
 
     @Column(name = "full_name")
-    String fullName;
+    private String fullName;
 
     public Tickers() {
     }
@@ -33,6 +36,11 @@ public class Tickers {
     }
 
     public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Tickers(String tickerName, String fullName) {
+        this.tickerName = tickerName;
         this.fullName = fullName;
     }
 }

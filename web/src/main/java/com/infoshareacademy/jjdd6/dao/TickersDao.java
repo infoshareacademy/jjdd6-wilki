@@ -1,6 +1,6 @@
 package com.infoshareacademy.jjdd6.dao;
 
-import com.infoshareacademy.jjdd6.view.Tickers;
+import com.infoshareacademy.jjdd6.wilki.Tickers;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,5 +36,11 @@ public class TickersDao {
     public List<Tickers> findAll() {
         final Query query = entityManager.createNamedQuery("Tickers.findAll");
         return query.getResultList();
+    }
+
+    public Long getCount() {
+        final Query query = entityManager.createNamedQuery("Tickers.getCount");
+        List<Long> list = query.getResultList();
+        return list.get(0);
     }
 }

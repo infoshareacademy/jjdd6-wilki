@@ -12,6 +12,7 @@
         <class>com.infoshareacademy.jjdd6.wilki.User</class>
         <class>com.infoshareacademy.jjdd6.wilki.Wallet</class>
         <class>com.infoshareacademy.jjdd6.wilki.FacebookToken</class>
+        <class>com.infoshareacademy.jjdd6.wilki.Tickers</class>
 
         <properties>
             <!-- Hibernate settings -->

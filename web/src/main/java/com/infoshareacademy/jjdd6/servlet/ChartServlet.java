@@ -1,7 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.service.TickersService;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -21,7 +21,7 @@ public class ChartServlet extends HttpServlet {
     private ChartGenerator chartGenerator;
 
     @Inject
-    private DownloadCurrentData downloadCurrentData;
+    private TickersService tickersService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,7 +34,7 @@ public class ChartServlet extends HttpServlet {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 
-        if (!downloadCurrentData.validateTicker(ticker)) {
+        if (!tickersService.validateTicker(ticker)) {
             resp.setStatus(400);
             return;
         }

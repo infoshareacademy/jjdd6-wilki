@@ -97,7 +97,7 @@ public class DownloadCurrentData {
                         collect(Collectors.toList());
     }
 
-    private List readFromURL(URL file) {
+    public List readFromURL(URL file) {
 
         List<String[]> allData = new ArrayList<>();
         try {
