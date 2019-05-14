@@ -41,7 +41,7 @@ public class DownloadCurrentData {
     public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMdd");
         logger.info("Downloading historical data from " + df.format(fromDate) + " to " + df.format(toDate));
-        return parse(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
+        return parseHistory(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
     }
 
     public List<DataFromFile> get(String ticker) throws MalformedURLException {
