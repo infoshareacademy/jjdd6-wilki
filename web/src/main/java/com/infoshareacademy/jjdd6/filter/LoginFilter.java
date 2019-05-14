@@ -1,6 +1,5 @@
 package com.infoshareacademy.jjdd6.filter;
 
-import com.infoshareacademy.jjdd6.wilki.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        if (!req.getRequestURI().equals("/login")) {
+        if (!req.getRequestURI().equals("/login") && !req.getRequestURI().equals("/chart")) {
             if (session.getAttribute("user") == null || checkIfTokenExpired(session)) {
                 logger.info("User not logged in, trying to login");
                 forwardToLogin(req, resp, session);
@@ -61,6 +60,7 @@ public class LoginFilter implements Filter {
         if (session.getAttribute("reqPath") == null) {
             session.setAttribute("reqPath", req.getRequestURI());
         }
+
         logger.info("Requested view: " + req.getRequestURI());
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("/login");
         requestDispatcher.forward(req, resp);
