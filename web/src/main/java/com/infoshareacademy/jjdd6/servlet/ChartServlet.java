@@ -39,17 +39,13 @@ public class ChartServlet extends HttpServlet {
         String ticker = req.getParameter("ticker").toLowerCase();
 
         if (validators.isTickerNotValid(ticker)) {
-            resp.getWriter().println("Ticker = {" + ticker + "} is not valid");
             logger.info("Ticker = {} is not valid.", ticker);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         String type = req.getParameter("type");
 
-        if (!downloadCurrentData.validateTicker(ticker)) {
-            resp.setStatus(400);
-            return;
-        }
         if (type.equals("mini")) {
             String forward = "/images/" + chartGenerator.getMiniChart(ticker);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
@@ -59,7 +55,7 @@ public class ChartServlet extends HttpServlet {
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
         } else {
-            resp.setStatus(400);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         resp.getWriter().print("<img src=\"https://stooq.com/c/?s=" + ticker + "&c=5m&t=c&a=lg&b&g.png\" />");
