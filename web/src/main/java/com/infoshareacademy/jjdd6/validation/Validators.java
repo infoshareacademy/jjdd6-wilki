@@ -3,11 +3,13 @@ package com.infoshareacademy.jjdd6.validation;
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.apache.commons.lang3.math.NumberUtils.isCreatable;
 import static org.apache.commons.lang3.math.NumberUtils.isDigits;
@@ -31,9 +33,9 @@ public class Validators {
                 || (Integer.valueOf(id) <= 0));
     }
 
-    public boolean isDoubleGreaterThanZero(String id) {
-        return (!isCreatable(id)
-                || (Double.valueOf(id) <= 0));
+    public boolean isNotDoubleOrIsSmallerThanZero(String price) {
+        return (!isCreatable(price)
+                || (Double.valueOf(price) <= 0));
     }
 
     public boolean isEmailPresent(String email) {
@@ -63,7 +65,15 @@ public class Validators {
                 compareTo(existingWallet.getFreeCash()) > 0;
     }
 
-    public boolean isEnoughSharesToSell(Wallet existingWallet, String ticker, int amount){
-        return existingWallet.scanWalletForShare(ticker).getSharesTotalAmount() >= amount;
+    public boolean isEnoughSharesToSell(Wallet existingWallet, int amount, String ticker) {
+
+        List<Share> listFromExistingWallet = existingWallet.getShares();
+        Integer totalShareAmount = null;
+        for (Share share : listFromExistingWallet) {
+            if (share.getTicker().contains(ticker.toUpperCase())) {
+               totalShareAmount = share.getSharesTotalAmount();
+            }
+        }
+        return totalShareAmount >= amount;
     }
 }

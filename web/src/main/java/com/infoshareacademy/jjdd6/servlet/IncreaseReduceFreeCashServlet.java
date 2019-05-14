@@ -3,8 +3,6 @@ package com.infoshareacademy.jjdd6.servlet;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +22,10 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(IncreaseReduceFreeCashServlet.class);
 
     @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -60,26 +58,28 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("Wallet id should be an integer");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", idStr);
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        logger.info("Updating wallet with id = {}", id);
 
-        final Wallet existingWallet = walletDao.findById(id);
-        if (existingWallet == null) {
-            logger.info("No wallet found for id = {}, nothing to be updated", id);
+        if (validators.isWalletNotPresent(idStr)) {
+            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
             return;
         }
+
+        final Long id = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(id);
+
         String cash = req.getParameter("cash");
-        if (!NumberUtils.isParsable(cash)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(cash)) {
             resp.getWriter().println("Cash should be a number");
             return;
         }
 
-        double cashDouble = Double.parseDouble(cash);
-        BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
+        BigDecimal cashBigDecimal = BigDecimal.valueOf(Double.parseDouble(cash));
         existingWallet.increaseBaseCash(cashBigDecimal);
 
         walletDao.update(existingWallet);
@@ -92,22 +92,29 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             throws IOException {
 
         String idStr = req.getParameter("wallet_id");
-        if (!NumberUtils.isDigits(idStr)) {
-            resp.getWriter().println("Wallet id should be an integer");
+        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", idStr);
             return;
         }
-        final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        logger.info("Updating wallet with id = {}", id);
 
-        final Wallet existingWallet = walletDao.findById(id);
-        if (existingWallet == null) {
-            logger.info("No wallet found for id = {}, nothing to be updated", id);
+        if (validators.isWalletNotPresent(idStr)) {
+            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
             return;
         }
+
+        final Long id = Long.parseLong(req.getParameter("wallet_id"));
+        final Wallet existingWallet = walletDao.findById(id);
+
         String cash = req.getParameter("cash");
-        if (!NumberUtils.isParsable(cash)) {
+        if (validators.isNotDoubleOrIsSmallerThanZero(cash)) {
             resp.getWriter().println("Cash should be a number");
+            return;
         }
+
+        BigDecimal cashBigDecimal = BigDecimal.valueOf(Double.parseDouble(cash));
+        existingWallet.increaseBaseCash(cashBigDecimal);
 
         if (validators.isEnoughCashToReduceFreeCash(existingWallet, cash)) {
             resp.getWriter().println("You don't have enough money! Your current balance is: "
@@ -116,8 +123,6 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
             return;
         }
 
-        Double cashDouble = Double.valueOf(cash);
-        BigDecimal cashBigDecimal = BigDecimal.valueOf(cashDouble);
         existingWallet.reduceBaseCash(cashBigDecimal);
         resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
 

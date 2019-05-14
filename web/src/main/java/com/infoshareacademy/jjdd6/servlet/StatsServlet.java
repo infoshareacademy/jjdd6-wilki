@@ -1,8 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
-import com.infoshareacademy.jjdd6.dao.StatsDao;
-import com.infoshareacademy.jjdd6.wilki.DataFromFile;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.service.StatsService;
+import com.infoshareacademy.jjdd6.service.UserService;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -12,47 +11,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet("/stats")
 @Transactional
+@WebServlet("/stats")
 public class StatsServlet extends HttpServlet {
 
     @Inject
-    StatsDao statsDao;
+    private StatsService statsService;
 
     @Inject
-    DownloadCurrentData downloadCurrentData;
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.getWriter().println("Most traded shares in App (buy transactions):");
-        for (String mostBoughtStock : statsDao.getMostBoughtStocks()) {
-            if (mostBoughtStock == null || mostBoughtStock.isEmpty()) {
-                resp.getWriter().println("None");
-            } else {
-                resp.getWriter().println(mostBoughtStock);
-            }
-        }
+        resp.getWriter().println(statsService.getMostBoughtStocks());
+
         resp.getWriter().println("\nMost traded shares in App(sell transactions):");
-        for (String mostSoldStock : statsDao.getMostSoldStocks()) {
-            if (mostSoldStock == null || mostSoldStock.isEmpty()) {
-                resp.getWriter().println("None");
-            } else {
-                resp.getWriter().println(mostSoldStock);
-            }
-        }
+        resp.getWriter().println(statsService.getMostSoldStocks());
 
         resp.getWriter().println("\nMost 25 traded shares today on WSE (volume) [change]:");
-        List<DataFromFile> statsWSE = downloadCurrentData.getMostTradedVolume();
+        resp.getWriter().println(statsService.getMostTradedOnWse());
 
-        for (int i = 25; i < statsWSE.size(); i++) {
-            resp.getWriter().println(statsWSE.get(i).getSymbol() + " ("
-                    + statsWSE.get(i).getVolume() + ") ["
-                    + statsWSE.get(i).getChange() + "]");
+        resp.getWriter().println("\nMost profitable share in wallet:");
+        resp.getWriter().println(statsService.getMostProfitableShare(userService.loggedUser(req).getWallet()));
 
-        }
-
-
+        resp.getWriter().println("\nLeast profitable share in wallet:");
+        resp.getWriter().println(statsService.getLeastProfitableShare(userService.loggedUser(req).getWallet()));
     }
 }

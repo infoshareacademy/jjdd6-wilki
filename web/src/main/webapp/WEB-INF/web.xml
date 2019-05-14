@@ -7,7 +7,7 @@
     <data-source>
         <name>java:ds/walletds</name>
         <class-name>com.mysql.cj.jdbc.MysqlDataSource</class-name>
-        <url>jdbc:mysql://0.0.0.0:6603/WalletApp?useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Warsaw</url>
+        <url>jdbc:mysql://db/WalletApp?useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Warsaw</url>
         <user>root</user>
         <password>pass123</password>
     </data-source>
@@ -15,6 +15,16 @@
     <error-page>
         <error-code>404</error-code>
         <location>/Error404.html</location>
+    </error-page>
+
+    <error-page>
+        <error-code>400</error-code>
+        <location>/Error400.html</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/Error500.html</location>
     </error-page>
 
 </web-app>

@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,20 @@ public class DownloadCurrentData {
 
         logger.info("Downloading stats");
         return parse(new URL("https://stooq.pl/q/l/?s=_stat_plws_tr_+_stat_plws_nt_&f=sd2t2ohlcm2vr&h&e=csv"));
+    }
+
+    public List<DataFromFile> getHistoricalData(String ticker) throws MalformedURLException {
+        LocalDate toDate = LocalDate.now();
+        LocalDate fromDate = toDate.minusMonths(6);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMdd");
+        logger.info("Downloading historical data from " + df.format(fromDate) + " to " + df.format(toDate));
+        return parseHistory(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
+    }
+
+    public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMdd");
+        logger.info("Downloading historical data from " + df.format(fromDate) + " to " + df.format(toDate));
+        return parse(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
     }
 
     public List<DataFromFile> get(String ticker) throws MalformedURLException {
@@ -63,6 +78,19 @@ public class DownloadCurrentData {
                         dataFromFile.setTurnover(Long.parseLong(a[9]));
                     }
 
+                    return dataFromFile;
+                }).
+                        collect(Collectors.toList());
+    }
+
+    public List<DataFromFile> parseHistory(URL file) {
+        List<String[]> dataLoaded = readFromURL(file);
+        return dataLoaded.stream()
+                .skip(1)
+                .map(a -> {
+                    DataFromFile dataFromFile = new DataFromFile();
+                    dataFromFile.setDate(LocalDate.parse(a[0]));
+                    dataFromFile.setClosingPrice(new BigDecimal(a[4]));
                     return dataFromFile;
                 }).
                         collect(Collectors.toList());
