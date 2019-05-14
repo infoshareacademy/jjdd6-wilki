@@ -30,23 +30,14 @@ public class ChartGenerator {
 
     private static Logger logger = LoggerFactory.getLogger(ChartGenerator.class);
 
-    public String getChart(String ticker) throws MalformedURLException {
+    public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
         List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
-        List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker);
+        List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
         String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
         String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
         generateChart(title, path, currentData, data);
         return filename;
-    }
-
-    public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
-        List<DataFromFile> currentData = new DownloadCurrentData().get(ticker);
-        List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
-        String title = downloadCurrentData.loadAndScanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + pathGenerator(ticker);
-        generateChart(title, path, currentData, data);
-        return path;
     }
 
     private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
@@ -60,7 +51,7 @@ public class ChartGenerator {
         chart.getStyler().setLegendVisible(false);
         chart.getStyler().setChartBackgroundColor(new Color(13, 15, 58));
         chart.getStyler().setChartFontColor(Color.WHITE);
-        chart.getStyler().setChartTitlePadding(20);
+        chart.getStyler().setChartTitlePadding(0);
         chart.getStyler().setAxisTickLabelsColor(Color.WHITE);
         chart.getStyler().setPlotBackgroundColor(new Color(13, 15, 58));
         chart.getStyler().setPlotGridLinesColor(new Color(114, 115, 125));
@@ -146,7 +137,7 @@ public class ChartGenerator {
     }
 
     public String pathGenerator(String ticker){
-        int random = (int)(Math.random()*100)+3;
+        int random = (int)(Math.random()*1000000);
         return ticker + "_" + random + "_chart.png";
     }
 
