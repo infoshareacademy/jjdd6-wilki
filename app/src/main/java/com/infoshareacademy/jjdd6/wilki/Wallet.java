@@ -107,9 +107,6 @@ public class Wallet implements Serializable {
     public BigDecimal getFreeCash() {
 
         return getCashFromProfits()
-//                .add(this.shares.stream()
-//                .map(Share::getTotalProfit)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .add(getBaseCash())
                 .subtract(getBaseWorth()).setScale(2, RoundingMode.HALF_UP)
                 .subtract(getTotalBuyFees().setScale(2, RoundingMode.HALF_UP));

@@ -35,18 +35,16 @@ public class ShowWalletServlet extends HttpServlet {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        DownloadCurrentData.updateWalletData(userWallet);
         List<Share> shares = userWallet.getShares();
-
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
-
+        DownloadCurrentData.updateWalletData(userWallet);
         Map<String, Object> model = new HashMap<>();
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", 1);
+        model.put("content", "show_wallet");
         model.put("profilePicURL", profilePicURL);
         model.put("userName", user.getName());
 

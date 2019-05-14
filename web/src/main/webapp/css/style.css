@@ -146,16 +146,6 @@ body{
     border-bottom: 2px solid #0D0F3A;
     line-height: 50px;
 }
-.buy_form{
-    width: 1050px;
-    height: 200px;
-    color: white;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    text-align: center;
-    font-size: 40px;
-    margin-top: 100px;
-    margin-left: 90px;
-}
 a:link {
     text-decoration: none;
     color: white;
@@ -176,23 +166,74 @@ a:active {
     color: white;
 }
 .text-input{
-    width: 350px;
+    width: 800px;
     height: 60px;
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 30px;
+    border-radius: 0px;
+
+
 }
 .input_area{
     float: left;
+    width: 800px;
+    margin-top: 25px;
+    box-shadow: 0px 0px 7px white;
+    border: 1px solid white;
 
 }
 #buy{
-    margin: 90px auto;
+    margin: 50px auto;
     width: 200px;
     height: 50px;
     font-size: 30px;
     cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.2s;
+}
+#buy:hover{
+    margin: 50px auto;
+    width: 200px;
+    height: 50px;
+    font-size: 30px;
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+    border-radius: 5px;
+    transition-duration: 0.2s;
 }
 .sell_input{
     width: 100px;
+}
+.buy_form{
+    float: left;
+    width: 64%;
+    height: 100%;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-align: center;
+    font-size: 40px;
+    font-weight: 750;
+}
+#status{
+    float: left;
+    width: 36%;
+    height: 30%;
+    font-size: 25px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 900;
+    line-height: 50px;
+    text-align: center;
+}
+#info{
+    float: left;
+    width: 36%;
+    color: white;
+    height: 61%;
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 900;
+    line-height: 90px;
+    padding-top: 4%;
 }
