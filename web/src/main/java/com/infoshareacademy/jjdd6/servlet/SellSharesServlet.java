@@ -90,9 +90,10 @@ public class SellSharesServlet extends HttpServlet {
         model.put("baseValue", share.getBaseValue());
         model.put("currentPrice", share.getCurrentPrice());
         model.put("status", status);
+        model.put("userName", user.getName());
         model.put("content", "sell_specified");
         model.put("profilePicURL", profilePicURL);
-        model.put("userName", user.getName());
+
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
 
@@ -107,7 +108,7 @@ public class SellSharesServlet extends HttpServlet {
         Map<String, Object> model = new HashMap<>();
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        List<Share> shares = userWallet.getShares();
+        List<Share> shares = userWallet.walletToDisplay();
         BigDecimal roe = userWallet.getROE();
         String profilePicURL = userService.userProfilePicURL(user);
         BigDecimal freeCash = userWallet.getFreeCash();
@@ -166,7 +167,7 @@ public class SellSharesServlet extends HttpServlet {
         final Wallet existingWallet = user.getWallet();
         int amount = Integer.parseInt(amountStr);
         double price = Double.parseDouble(priceStr);
-        
+
         if(!(validators.isEnoughSharesToSell(existingWallet, amount, ticker))){
             showSellSpecifiedShare(req, resp, "You try to sell more shares than you have", ticker);
             return;

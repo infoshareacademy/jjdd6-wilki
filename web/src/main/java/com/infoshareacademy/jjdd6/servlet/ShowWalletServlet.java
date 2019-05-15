@@ -35,7 +35,7 @@ public class ShowWalletServlet extends HttpServlet {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        List<Share> shares = userWallet.getShares();
+        List<Share> shares = userWallet.walletToDisplay();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
