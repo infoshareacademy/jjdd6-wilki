@@ -1,7 +1,7 @@
 package com.infoshareacademy.jjdd6.service;
 
 import com.infoshareacademy.jjdd6.dao.TickersDao;
-import com.infoshareacademy.jjdd6.wilki.Tickers;
+import com.infoshareacademy.jjdd6.wilki.Ticker;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 
 @Transactional
 @RequestScoped
-public class TickersService {
+public class TickerService {
 
-    private static Logger logger = LoggerFactory.getLogger(TickersService.class);
+    private static Logger logger = LoggerFactory.getLogger(TickerService.class);
 
     @Inject
     private TickersDao tickersDao;
@@ -32,11 +32,8 @@ public class TickersService {
             logger.info("Loading tickers from " + tickersURL);
             List<String[]> dataLoaded = downloadCurrentData.readFromURL(tickersURL);
             dataLoaded.stream()
-                    .map((o) -> {Tickers ticker = new Tickers(o[0], o[1]);
-                    tickersDao.save(ticker);
-                    return ticker;})
-                    .collect(Collectors.toList());
-//            tickersList.stream().forEach(tickersDao::save);
+                    .map((o) -> new Ticker(o[0], o[1]))
+                    .forEach(tickersDao::save);
         } catch (MalformedURLException e) {
             logger.error("Error while reading tickers");
         }

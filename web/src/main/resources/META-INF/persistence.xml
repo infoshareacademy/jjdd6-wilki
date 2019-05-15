@@ -12,13 +12,13 @@
         <class>com.infoshareacademy.jjdd6.wilki.User</class>
         <class>com.infoshareacademy.jjdd6.wilki.Wallet</class>
         <class>com.infoshareacademy.jjdd6.wilki.FacebookToken</class>
-        <class>com.infoshareacademy.jjdd6.wilki.Tickers</class>
+        <class>com.infoshareacademy.jjdd6.wilki.Ticker</class>
 
         <properties>
             <!-- Hibernate settings -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.hbm2ddl.auto" value="create"/>
         </properties>
     </persistence-unit>

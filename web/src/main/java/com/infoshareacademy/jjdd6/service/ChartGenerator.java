@@ -25,7 +25,8 @@ public class ChartGenerator {
     @Inject
     private DownloadCurrentData downloadCurrentData;
 
-    @Inject TickersService tickersService;
+    @Inject
+    TickerService tickerService;
 
     @Inject
     private WebAppProperties webAppProperties;
@@ -35,7 +36,7 @@ public class ChartGenerator {
     public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
-        String title = tickersService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
+        String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
         String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
         generateChart(title, path, currentData, data);
@@ -86,7 +87,7 @@ public class ChartGenerator {
     public String getMiniChart(String ticker) throws MalformedURLException {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker);
-        String title = tickersService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
+        String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
         String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
         generateMiniChart(title, path, currentData, data);

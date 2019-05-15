@@ -6,12 +6,12 @@ import javax.persistence.*;
 @Table(name = "TICKERS")
 @NamedQueries({@NamedQuery(
         name = "Tickers.findAll",
-        query = "SELECT t FROM Tickers t"),
+        query = "SELECT t FROM Ticker t"),
         @NamedQuery(
                 name = "Tickers.getCount",
-                query = "SELECT COUNT(*) FROM Tickers t")
+                query = "SELECT COUNT(*) FROM Ticker t")
 })
-public class Tickers {
+public class Ticker {
 
     @Id
     @Column(name = "ticker", length = 4)
@@ -20,7 +20,7 @@ public class Tickers {
     @Column(name = "full_name")
     private String fullName;
 
-    public Tickers() {
+    public Ticker() {
     }
 
     public String getTickerName() {
@@ -39,7 +39,7 @@ public class Tickers {
         this.fullName = fullName;
     }
 
-    public Tickers(String tickerName, String fullName) {
+    public Ticker(String tickerName, String fullName) {
         this.tickerName = tickerName;
         this.fullName = fullName;
     }

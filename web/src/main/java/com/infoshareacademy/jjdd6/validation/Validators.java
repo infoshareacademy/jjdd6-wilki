@@ -2,7 +2,7 @@ package com.infoshareacademy.jjdd6.validation;
 
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.service.TickerService;
 import com.infoshareacademy.jjdd6.wilki.Share;
 import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
@@ -24,6 +24,9 @@ public class Validators {
 
     @Inject
     private WalletDao walletDao;
+
+    @Inject
+    private TickerService tickerService;
 
     public boolean isEmailIncorrect(String email) {
         return (!isEmail(email));
@@ -59,8 +62,7 @@ public class Validators {
     }
 
     public boolean isTickerNotValid(String ticker) {
-        DownloadCurrentData downloadCurrentData = new DownloadCurrentData();
-        return !downloadCurrentData.validateTicker(ticker);
+        return !tickerService.validateTicker(ticker);
     }
 
     public boolean isEnoughCashToBuyShares(Wallet existingWallet, int amount, double price) {

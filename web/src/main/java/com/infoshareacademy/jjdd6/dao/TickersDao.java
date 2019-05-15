@@ -1,39 +1,41 @@
 package com.infoshareacademy.jjdd6.dao;
 
-import com.infoshareacademy.jjdd6.wilki.Tickers;
-import javax.enterprise.context.RequestScoped;
+import com.infoshareacademy.jjdd6.wilki.Ticker;
+
+import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-@RequestScoped
+@Singleton
 public class TickersDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public String save(Tickers ticker) {
+    public String save(Ticker ticker) {
         entityManager.persist(ticker);
+        entityManager.flush();
         return ticker.getTickerName();
     }
 
-    public Tickers update(Tickers ticker) {
+    public Ticker update(Ticker ticker) {
         return entityManager.merge(ticker);
     }
 
     public void delete(String tickerName) {
-        final Tickers ticker = entityManager.find(Tickers.class, tickerName);
+        final Ticker ticker = entityManager.find(Ticker.class, tickerName);
         if (ticker != null) {
             entityManager.remove(ticker);
         }
     }
 
-    public Tickers findById(String tickerName) {
-        return entityManager.find(Tickers.class, tickerName);
+    public Ticker findById(String tickerName) {
+        return entityManager.find(Ticker.class, tickerName);
     }
 
-    public List<Tickers> findAll() {
+    public List<Ticker> findAll() {
         final Query query = entityManager.createNamedQuery("Tickers.findAll");
         return query.getResultList();
     }

@@ -1,7 +1,10 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.service.UserService;
+import com.infoshareacademy.jjdd6.validation.Validators;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -17,11 +20,14 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
+
     @Inject
     private ChartGenerator chartGenerator;
 
     @Inject
-    private DownloadCurrentData downloadCurrentData;
+    Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
