@@ -1,7 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
-import com.infoshareacademy.jjdd6.service.TickersService;
+import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -21,7 +21,7 @@ public class ChartServlet extends HttpServlet {
     private ChartGenerator chartGenerator;
 
     @Inject
-    private TickersService tickersService;
+    private DownloadCurrentData downloadCurrentData;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,16 +33,26 @@ public class ChartServlet extends HttpServlet {
         String to = req.getParameter("from");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+        String mini = "mini";
+        String full = "full";
 
-        if (!tickersService.validateTicker(ticker)) {
-            resp.setStatus(400);
+        if (validators.isTickerNotValid(ticker)) {
+            logger.info("Ticker = {} is not valid.", ticker);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        if (type.equals("mini")) {
+
+        if (validators.isTypeIncorrect(type, mini, full)) {
+            logger.info("Incorrect chart type = {} .", type);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        if (type.equals(mini)) {
             String forward = "/images/" + chartGenerator.getMiniChart(ticker);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
-        } else if (type.equals("full")) {
+        } else if (type.equals(full)) {
 
             if (from != null && !from.isEmpty()) {
                 try {
@@ -54,6 +64,7 @@ public class ChartServlet extends HttpServlet {
                     return;
                 }
             } else if (monthsStr != null) {
+
                 try {
                     Integer months = Integer.valueOf(req.getParameter("months"));
                     LocalDate fromDate = LocalDate.now().minusMonths(months);
@@ -70,7 +81,7 @@ public class ChartServlet extends HttpServlet {
             }
 
         } else {
-            resp.setStatus(400);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 

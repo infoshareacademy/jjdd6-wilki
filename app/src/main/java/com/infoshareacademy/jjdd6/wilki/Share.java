@@ -238,6 +238,8 @@ public class Share implements Serializable {
                             .multiply((BigDecimal.valueOf(price)
                                     .subtract(this.transactionHistory.get(i).getPrice()))));
 
+            this.transactionHistory.get(i).setAmountForCalc(0);
+
             ++i;
         }
 

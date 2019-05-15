@@ -2,8 +2,9 @@ package com.infoshareacademy.jjdd6.validation;
 
 import com.infoshareacademy.jjdd6.dao.UserDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
-import com.infoshareacademy.jjdd6.service.TickersService;
+import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import com.infoshareacademy.jjdd6.wilki.Share;
+import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 
 import javax.enterprise.context.RequestScoped;
@@ -19,13 +20,10 @@ import static org.apache.commons.validator.GenericValidator.isEmail;
 public class Validators {
 
     @Inject
-    UserDao userDao;
+    private UserDao userDao;
 
     @Inject
-    TickersService tickersService;
-
-    @Inject
-    WalletDao walletDao;
+    private WalletDao walletDao;
 
     public boolean isEmailIncorrect(String email) {
         return (!isEmail(email));
@@ -61,7 +59,8 @@ public class Validators {
     }
 
     public boolean isTickerNotValid(String ticker) {
-        return !tickersService.validateTicker(ticker);
+        DownloadCurrentData downloadCurrentData = new DownloadCurrentData();
+        return !downloadCurrentData.validateTicker(ticker);
     }
 
     public boolean isEnoughCashToBuyShares(Wallet existingWallet, int amount, double price) {
@@ -84,5 +83,15 @@ public class Validators {
             }
         }
         return totalShareAmount >= amount;
+    }
+
+    public boolean isUserNotAllowedToWalletModification(String userId, String walletId) {
+        User user = userDao.findById(Long.valueOf(userId));
+        return !Long.valueOf(walletId).equals(user.getWallet().getId());
+
+    }
+
+    public boolean isTypeIncorrect(String type, String firsValue, String secondValue) {
+        return !type.equals(firsValue) && !type.equals(secondValue);
     }
 }
