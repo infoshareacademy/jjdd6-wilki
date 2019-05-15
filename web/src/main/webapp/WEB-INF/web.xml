@@ -23,6 +23,11 @@
     </error-page>
 
     <error-page>
+        <error-code>403</error-code>
+        <location>/Error403.html</location>
+    </error-page>
+
+    <error-page>
         <error-code>404</error-code>
         <location>/Error404.html</location>
     </error-page>
