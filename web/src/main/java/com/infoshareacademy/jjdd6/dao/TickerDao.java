@@ -9,7 +9,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Singleton
-public class TickersDao {
+public class TickerDao {
 
     @PersistenceContext
     private EntityManager entityManager;
