@@ -1,6 +1,7 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import com.infoshareacademy.jjdd6.wilki.Share;
@@ -30,6 +31,9 @@ public class ShowWalletServlet extends HttpServlet {
     @Inject
     private UserService userService;
 
+    @Inject
+    private StatsService statsService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -40,7 +44,11 @@ public class ShowWalletServlet extends HttpServlet {
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
         DownloadCurrentData.updateWalletData(userWallet);
+        Map<String, String> mostProfitable = statsService.getMostProfitableShare(userWallet);
         Map<String, Object> model = new HashMap<>();
+        model.put("mpTicker", mostProfitable.get("ticker"));
+        model.put("mpProfit", mostProfitable.get("profit"));
+        model.put("mpReturn", mostProfitable.get("return"));
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);

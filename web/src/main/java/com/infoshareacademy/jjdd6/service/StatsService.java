@@ -17,7 +17,8 @@ import java.util.*;
 
 @RequestScoped
 @Transactional
-public class StatsService {
+public class
+StatsService {
 
     private static Logger logger = LoggerFactory.getLogger(StatsService.class);
 

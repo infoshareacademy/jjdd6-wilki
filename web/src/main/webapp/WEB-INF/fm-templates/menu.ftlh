@@ -25,7 +25,10 @@
     <div id="upper_menu">
         <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
         <div class="upper_menu_info">ROE</br> ${roe}%</div>
-        <div class="upper_menu_info">Imieniny:<br>Jurand, Judyta</div>
+        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${mpTicker}')">Most profitable</br>
+            ${mpTicker}</br>
+            ${mpProfit} PLN</br>
+            ${mpReturn} %</div>
         <div class="upper_menu_info" style="color:red">Najbliższa niedziela niehandlowa!</div>
     </div>
     <div id="content">
