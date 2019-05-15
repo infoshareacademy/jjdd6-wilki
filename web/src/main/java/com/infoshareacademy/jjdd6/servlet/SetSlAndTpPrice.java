@@ -63,16 +63,25 @@ public class SetSlAndTpPrice extends HttpServlet {
     private void setStopLoos(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+        String stringWalletId = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", idStr);
+            logger.info("Incorrect wallet walletId = {}", stringWalletId);
             return;
         }
 
-        if (validators.isWalletNotPresent(idStr)) {
-            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+        if (validators.isWalletNotPresent(stringWalletId)) {
+            resp.getWriter().println("No wallet found for walletId = {" + stringWalletId + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
+            return;
+        }
+
+        String userId = String.valueOf(req.getSession().getAttribute("user"));
+
+        if (validators.isUserNotAllowedToWalletModification(userId, stringWalletId)) {
+            resp.getWriter().println("Unauthorized try to modify wallet!");
+            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", stringWalletId, userId );
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -92,7 +101,7 @@ public class SetSlAndTpPrice extends HttpServlet {
             return;
         }
 
-        final Long walletId = Long.valueOf(idStr);
+        final Long walletId = Long.valueOf(stringWalletId);
         final Wallet existingWallet = walletDao.findById(walletId);
 
         List<Share> listFromExistingWallet = existingWallet.getShares();
@@ -110,16 +119,25 @@ public class SetSlAndTpPrice extends HttpServlet {
     private void setTakeProfit(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String idStr = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(idStr)) {
+        String stringWalletId = req.getParameter("wallet_id");
+        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
             resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", idStr);
+            logger.info("Incorrect wallet walletId = {}", stringWalletId);
             return;
         }
 
-        if (validators.isWalletNotPresent(idStr)) {
-            resp.getWriter().println("No wallet found for walletId = {" + idStr + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", idStr);
+        if (validators.isWalletNotPresent(stringWalletId)) {
+            resp.getWriter().println("No wallet found for walletId = {" + stringWalletId + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
+            return;
+        }
+
+        String userId = String.valueOf(req.getSession().getAttribute("user"));
+
+        if (validators.isUserNotAllowedToWalletModification(userId, stringWalletId)) {
+            resp.getWriter().println("Unauthorized try to modify wallet!");
+            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", stringWalletId, userId );
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -139,7 +157,7 @@ public class SetSlAndTpPrice extends HttpServlet {
             return;
         }
 
-        final Long walletId = Long.valueOf(idStr);
+        final Long walletId = Long.valueOf(stringWalletId);
         final Wallet existingWallet = walletDao.findById(walletId);
 
         List<Share> listFromExistingWallet = existingWallet.getShares();

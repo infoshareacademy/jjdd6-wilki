@@ -35,7 +35,7 @@ public class StatsDao {
         return mapObjectsFromNativeQuery(query.getResultList());
     }
 
-    public List<String> mapObjectsFromNativeQuery(List<Object[]> queryResult) {
+    private List<String> mapObjectsFromNativeQuery(List<Object[]> queryResult) {
         List<String> list = new ArrayList<>();
         for (Object[] arr : queryResult) {
             Long count = (Long) arr[0];

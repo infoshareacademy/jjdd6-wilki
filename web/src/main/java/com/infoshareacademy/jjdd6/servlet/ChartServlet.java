@@ -5,11 +5,17 @@ import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
+import com.infoshareacademy.jjdd6.validation.Validators;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +23,13 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
+    private static Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+
     @Inject
     private ChartGenerator chartGenerator;
 
     @Inject
-    private DownloadCurrentData downloadCurrentData;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,16 +41,26 @@ public class ChartServlet extends HttpServlet {
         String to = req.getParameter("from");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
+        String mini = "mini";
+        String full = "full";
 
-        if (!downloadCurrentData.validateTicker(ticker)) {
-            resp.setStatus(400);
+        if (validators.isTickerNotValid(ticker)) {
+            logger.info("Ticker = {} is not valid.", ticker);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
-        if (type.equals("mini")) {
+
+        if (validators.isTypeIncorrect(type, mini, full)) {
+            logger.info("Incorrect chart type = {} .", type);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        if (type.equals(mini)) {
             String forward = "/images/" + chartGenerator.getMiniChart(ticker);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
-        } else if (type.equals("full")) {
+        } else if (type.equals(full)) {
 
             if (from != null && !from.isEmpty()) {
                 try {
@@ -54,6 +72,7 @@ public class ChartServlet extends HttpServlet {
                     return;
                 }
             } else if (monthsStr != null) {
+
                 try {
                     Integer months = Integer.valueOf(req.getParameter("months"));
                     LocalDate fromDate = LocalDate.now().minusMonths(months);
@@ -70,7 +89,7 @@ public class ChartServlet extends HttpServlet {
             }
 
         } else {
-            resp.setStatus(400);
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
