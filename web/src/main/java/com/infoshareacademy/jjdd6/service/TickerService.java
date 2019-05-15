@@ -30,11 +30,12 @@ public class TickerService {
             URL tickersURL = new URL("https://raw.githubusercontent.com/stockwallet/tickers/master/tickers.csv");
             logger.info("Loading tickers from " + tickersURL);
             List<String[]> dataLoaded = downloadCurrentData.readFromURL(tickersURL);
+            logger.info("Adding tickers to database");
             dataLoaded.stream()
                     .map((o) -> new Ticker(o[0], o[1]))
                     .forEach(tickerDao::save);
         } catch (MalformedURLException e) {
-            logger.error("Error while reading tickers");
+            logger.error("Error while downloading tickers");
         }
     }
 
