@@ -159,6 +159,7 @@ public class Wallet implements Serializable {
 
     public boolean checkIfShareIsPresent(String ticker) {
         return this.getShares().stream()
+                .filter(o -> o.getSharesTotalAmount() > 0)
                 .filter((o) -> o.getTicker().contains(ticker.toUpperCase()))
                 .count() == 1;
     }
@@ -228,6 +229,12 @@ public class Wallet implements Serializable {
 
     public List<Share> walletToDisplay(Wallet wallet) {
         return wallet.getShares().stream()
+                .filter(o -> o.getSharesTotalAmount() > 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<Share> walletToDisplay() {
+        return this.getShares().stream()
                 .filter(o -> o.getSharesTotalAmount() > 0)
                 .collect(Collectors.toList());
     }

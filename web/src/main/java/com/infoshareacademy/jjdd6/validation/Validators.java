@@ -33,6 +33,10 @@ public class Validators {
                 || (Integer.valueOf(id) <= 0));
     }
 
+    public boolean isSmallerThanZero(Long number){
+        return number < 0;
+    }
+
     public boolean isNotDoubleOrIsSmallerThanZero(String price) {
         return (!isCreatable(price)
                 || (Double.valueOf(price) <= 0));
@@ -48,6 +52,9 @@ public class Validators {
 
     public boolean isWalletNotPresent(String walletId) {
         return walletDao.findById(Long.valueOf(walletId)) == null;
+    }
+    public boolean isWalletNotPresent(Long walletId) {
+        return walletDao.findById(walletId) == null;
     }
 
     public boolean isTickerNotValid(String ticker) {
