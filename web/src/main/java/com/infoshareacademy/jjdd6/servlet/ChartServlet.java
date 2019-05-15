@@ -56,12 +56,6 @@ public class ChartServlet extends HttpServlet {
             return;
         }
 
-        if (validators.isNotIntegerOrIsSmallerThanZero(monthsStr)) {
-            logger.info("Incorrect month = {} .", monthsStr);
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
         if (type.equals(mini)) {
             String forward = "/images/" + chartGenerator.getMiniChart(ticker);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
@@ -78,6 +72,7 @@ public class ChartServlet extends HttpServlet {
                     return;
                 }
             } else if (monthsStr != null) {
+
                 try {
                     Integer months = Integer.valueOf(req.getParameter("months"));
                     LocalDate fromDate = LocalDate.now().minusMonths(months);
