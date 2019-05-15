@@ -14,7 +14,7 @@ services:
     build:
       context: ./web
     ports:
-      - 4310:8080
+      - 4310:8443
       - 4311:9990
     depends_on:
       - db
