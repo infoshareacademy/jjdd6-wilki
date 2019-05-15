@@ -1,12 +1,18 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.WalletDao;
+import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
+import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Transactional
 @WebServlet(urlPatterns = "/increase-reduce-free-cash")
@@ -27,126 +35,135 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     @Inject
     private Validators validators;
 
+    @Inject
+    private UserService userService;
+
+    @Inject
+    private TemplateProvider templateProvider;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        final String action = getAction(req, resp);
-        if (action == null) {
-            return;
-        }
+        showManageFreeCash(req, resp, "");
 
-        if (action.equals("increaseFreeCash")) {
-            increaseFreeCash(req, resp);
-        } else if (action.equals("reduceFreeCash")) {
-            reduceFreeCash(req, resp);
-        } else {
-            resp.getWriter().write("Unknown action.");
-        }
     }
 
-    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            resp.getWriter().write("Empty action parameter.");
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String action = req.getParameter("action");
+        if(action.equals("increase")){
+            increaseFreeCash(req, resp);
         }
-        return action;
+        else{
+            reduceFreeCash(req, resp);
+        }
+
+    }
+
+    private void showManageFreeCash(HttpServletRequest req, HttpServletResponse resp, String status) throws IOException {
+
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        BigDecimal roe = userWallet.getROE();
+        BigDecimal freeCash = userWallet.getFreeCash();
+        String profilePicURL = userService.userProfilePicURL(user);
+        Map<String, Object> model = new HashMap<>();
+        if (null != status) {
+            model.put("status", status);
+        }
+        model.put("roe", roe);
+        model.put("freeCash", freeCash);
+        model.put("content", "manage");
+        model.put("userName", user.getName());
+        model.put("profilePicURL", profilePicURL);
+
+        Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
+
+        try {
+            template.process(model, resp.getWriter());
+        } catch (TemplateException e) {
+            resp.getWriter().println("Something went wrong");
+        }
+
     }
 
     private void increaseFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String walletId = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(walletId)) {
-            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", walletId);
-            return;
-        }
-
-        if (validators.isWalletNotPresent(walletId)) {
-            resp.getWriter().println("No wallet found for walletId = {" + walletId + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", walletId);
-            return;
-        }
-
-        String userId = String.valueOf(req.getSession().getAttribute("user"));
-
-        if (validators.isUserNotAllowedToWalletModification(userId, walletId)) {
-            resp.getWriter().println("Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", walletId, userId );
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(id);
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        Long id = userWallet.getId();
 
         String cash = req.getParameter("cash");
+
+        if (validators.isSmallerThanZero(id)) {
+            showManageFreeCash(req, resp, "Wallet ID should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", id);
+            return;
+        }
+
+        if (validators.isWalletNotPresent(id)) {
+            showManageFreeCash(req, resp, "No wallet found for walletId = {" + id + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", id);
+            return;
+        }
+
         if (validators.isNotDoubleOrIsSmallerThanZero(cash)) {
-            resp.getWriter().println("Cash should be a number");
+            showManageFreeCash(req, resp, "Cash should be a number");
             return;
         }
 
         BigDecimal cashBigDecimal = BigDecimal.valueOf(Double.parseDouble(cash));
-        existingWallet.increaseBaseCash(cashBigDecimal);
 
-        walletDao.update(existingWallet);
-        logger.info("Wallet object updated: {}", existingWallet);
+        userWallet.increaseBaseCash(cashBigDecimal);
 
-        resp.getWriter().println("Free cash increased by: " + cash);
+        walletDao.update(userWallet);
+        logger.info("Wallet object updated: {}", userWallet);
+
+        showManageFreeCash(req, resp, "Free cash increased by: " + cash + " PLN");
     }
 
     private void reduceFreeCash(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String walletId = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(walletId)) {
-            resp.getWriter().println("Wallet walletId should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", walletId);
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        Long id = userWallet.getId();
+
+        if (validators.isSmallerThanZero(id)) {
+            showManageFreeCash(req, resp, "Wallet ID should be an integer greater than 0");
+            logger.info("Incorrect wallet walletId = {}", id);
             return;
         }
 
-        if (validators.isWalletNotPresent(walletId)) {
-            resp.getWriter().println("No wallet found for walletId = {" + walletId + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", walletId);
+        if (validators.isWalletNotPresent(id)) {
+            showManageFreeCash(req, resp, "No wallet found for walletId = {" + id + "}");
+            logger.info("No wallet found for walletId = {}, nothing to be updated", id);
             return;
         }
-
-        String userId = String.valueOf(req.getSession().getAttribute("user"));
-
-        if (validators.isUserNotAllowedToWalletModification(userId, walletId)) {
-            resp.getWriter().println("Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", walletId, userId );
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        final Long id = Long.parseLong(req.getParameter("wallet_id"));
-        final Wallet existingWallet = walletDao.findById(id);
 
         String cash = req.getParameter("cash");
+
         if (validators.isNotDoubleOrIsSmallerThanZero(cash)) {
-            resp.getWriter().println("Cash should be a number");
+            showManageFreeCash(req, resp, "Cash should be a number");
             return;
         }
 
         BigDecimal cashBigDecimal = BigDecimal.valueOf(Double.parseDouble(cash));
-        existingWallet.increaseBaseCash(cashBigDecimal);
 
-        if (validators.isEnoughCashToReduceFreeCash(existingWallet, cash)) {
-            resp.getWriter().println("You don't have enough money! Your current balance is: "
-                    + existingWallet.getFreeCash());
+        if (validators.isEnoughCashToReduceFreeCash(userWallet, cash)) {
+            showManageFreeCash(req, resp, "You don't have enough money!");
             logger.info("Not enough money to reduce free cash");
             return;
         }
 
-        existingWallet.reduceBaseCash(cashBigDecimal);
-        resp.getWriter().println("Total free cash: " + existingWallet.getFreeCash());
+        userWallet.reduceBaseCash(cashBigDecimal);
 
-        walletDao.update(existingWallet);
-        logger.info("Wallet object updated: {}", existingWallet);
+        walletDao.update(userWallet);
+        logger.info("Wallet object updated: {}", userWallet);
 
-        resp.getWriter().println("Free cash reduced by: " + cash);
+        showManageFreeCash(req, resp, "Free cash reduced by: " + cash + " PLN");
     }
 }
