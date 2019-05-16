@@ -51,6 +51,6 @@ public class TickerService {
 
     public Boolean validateTicker(String ticker) {
         checkDataInDatabase();
-        return !tickerDao.findById(ticker).getFullName().isEmpty();
+        return tickerDao.findById(ticker) != null;
     }
 }
