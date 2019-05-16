@@ -25,11 +25,14 @@
     <div id="upper_menu">
         <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
         <div class="upper_menu_info">ROE</br> ${roe}%</div>
-        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${mpTicker}')">Most profitable</br>
+        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}')">Best performing</br>
             ${mpTicker}</br>
             ${mpProfit} PLN</br>
             ${mpReturn} %</div>
-        <div class="upper_menu_info" style="color:red">Najbliższa niedziela niehandlowa!</div>
+        <div class="upper_menu_info" id="profitable_chart" style="color:red">Worst performing</br>
+        ${wpTicker}</br>
+        ${wpProfit} PLN</br>
+        ${wpReturn} %</div>
     </div>
     <div id="content">
         <#if content == "show_wallet">
