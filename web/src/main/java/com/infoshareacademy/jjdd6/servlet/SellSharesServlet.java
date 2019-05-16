@@ -158,7 +158,7 @@ public class SellSharesServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
-            showSellSpecifiedShare(req, resp, "Price should be a number greater than 0 - format 0.00", ticker);
+            showSellSpecifiedShare(req, resp, "Price should be a number greater than 0 - format 0.0000", ticker);
             logger.info("Incorrect price = {}", amountStr);
             return;
         }
