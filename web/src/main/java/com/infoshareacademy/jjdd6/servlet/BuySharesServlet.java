@@ -96,7 +96,7 @@ public class BuySharesServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
+            showMenuWithBuyForm(req, resp,"Ticker " + ticker.toUpperCase() + " is not valid");
             logger.info("Ticker {} is not valid.", ticker);
             return;
         }
@@ -112,7 +112,7 @@ public class BuySharesServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
-            showMenuWithBuyForm(req, resp,"Price should be a number greater than 0 - format 0.00");
+            showMenuWithBuyForm(req, resp,"Price should be a number greater than 0 - format 0.0000");
             logger.info("Incorrect price = {}", priceStr);
            return;
         }
