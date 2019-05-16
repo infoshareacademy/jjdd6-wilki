@@ -114,7 +114,7 @@ public class ChartGenerator {
     }
 
     private void generateMiniChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
-        XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
+        XYChart chart = new XYChartBuilder().width(500).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
         chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);

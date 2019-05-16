@@ -25,11 +25,11 @@
     <div id="upper_menu">
         <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
         <div class="upper_menu_info">ROE</br> ${roe}%</div>
-        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}')">Best performing</br>
+        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: contain">Best performing</br>
             ${mpTicker}</br>
             ${mpProfit} PLN</br>
             ${mpReturn} %</div>
-        <div class="upper_menu_info" id="profitable_chart" style="color:red">Worst performing</br>
+        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: contain; color:red">Worst performing</br>
         ${wpTicker}</br>
         ${wpProfit} PLN</br>
         ${wpReturn} %</div>
