@@ -35,7 +35,13 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         HttpSession session = req.getSession();
 
-        if (!req.getRequestURI().equals("/login") && !req.getRequestURI().equals("/chart")) {
+        if (req.getRequestURI().equals("/")) {
+            logger.info("Redirecting to welcome screen");
+            resp.sendRedirect("/welcome");
+            return;
+        }
+
+        if (!req.getRequestURI().equals("/login") && !req.getRequestURI().equals("/chart") && !req.getRequestURI().equals("/privacypolicy") && !req.getRequestURI().contains("/welcome")) {
             if (session.getAttribute("user") == null || checkIfTokenExpired(session)) {
                 logger.info("User not logged in, trying to login");
                 forwardToLogin(req, resp, session);

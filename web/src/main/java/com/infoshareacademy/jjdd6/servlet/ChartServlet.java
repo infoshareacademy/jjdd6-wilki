@@ -1,21 +1,18 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
-
-import javax.inject.Inject;
-import javax.servlet.RequestDispatcher;
+import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +20,8 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
-    private static Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+
 
     @Inject
     private ChartGenerator chartGenerator;
