@@ -27,23 +27,24 @@ public class StatsService {
     @Inject
     private DownloadCurrentData downloadCurrentData;
 
-    public List<String> getMostBoughtStocks() {
+    public List<String[]> getMostBoughtStocks() {
         return statsDao.getMostBoughtStocks();
     }
 
-    public List<String> getMostSoldStocks() {
+    public List<String[]> getMostSoldStocks() {
         return statsDao.getMostSoldStocks();
     }
 
-    public List<String> getMostTradedOnWse() {
+    public List<String[]> getMostTradedOnWse() {
 
-        List<String> output = new ArrayList<>();
+        List<String[]> output = new ArrayList<>();
         try {
             List<DataFromFile> statsWSE = downloadCurrentData.getMostTradedVolume();
             for (int i = 25; i < statsWSE.size(); i++) {
-                output.add(statsWSE.get(i).getSymbol() + " ("
-                        + statsWSE.get(i).getVolume() + ") ["
-                        + statsWSE.get(i).getChange() + "]");
+                String[] mapping = new String[2];
+                mapping[1] = statsWSE.get(i).getVolume().toString();
+                mapping[0] = statsWSE.get(i).getSymbol();
+                output.add(mapping);
             }
         } catch (MalformedURLException e) {
             logger.info("Error while downloading WSE stats");
