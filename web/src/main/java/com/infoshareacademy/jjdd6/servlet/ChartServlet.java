@@ -20,14 +20,14 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChartServlet.class);
 
 
     @Inject
     private ChartGenerator chartGenerator;
 
     @Inject
-    Validators validators;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

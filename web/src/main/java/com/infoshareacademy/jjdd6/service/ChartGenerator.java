@@ -26,7 +26,7 @@ public class ChartGenerator {
     private DownloadCurrentData downloadCurrentData;
 
     @Inject
-    TickerService tickerService;
+    private TickerService tickerService;
 
     @Inject
     private WebAppProperties webAppProperties;
