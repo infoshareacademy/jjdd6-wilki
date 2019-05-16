@@ -9,7 +9,7 @@
         <input type="number" min="1" step="1" class="text-input" autocomplete="off" id="amount" required name="amount"/></div>
     <div class="input_area">
         PRICE IN PLN</br>
-        <input type="number" min="0.01" step="0.01" class="text-input" autocomplete="off" id="price" required name="price"/></div>
+        <input type="number" min="0.0001" step="0.0001" class="text-input" autocomplete="off" id="price" required name="price"/></div>
     </br>
     <input id="buy" type="submit" value="Report BUY"/>
 </form>
@@ -23,8 +23,8 @@
      <#if status == "Transaction success">style="color: lightgreen"</#if>
         <#if status == "Amount should be a whole number">style="color: red"</#if>
         <#if status == "Amount should be an integer greater than 0">style="color: red"</#if>
-        <#if status == "Price should have a numerical value - format 0.00">style="color: red"</#if>
-        <#if status == "Price should be a number greater than 0 - format 0.00">style="color: red"</#if>
+        <#if status == "Price should have a numerical value - format 0.0000">style="color: red"</#if>
+        <#if status == "Price should be a number greater than 0 - format 0.0000">style="color: red"</#if>
         <#if status == "You don't have enough money!">style="color: red"</#if>
         <#if status?ends_with("not valid") >style="color: red"</#if>
 >${status}</div>

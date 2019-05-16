@@ -26,7 +26,7 @@
     </div>
     <div class="sell_form">
         Price in PLN</br>
-        <input type="number" min="0.01" step="0.01" autocomplete="off" id="price" required name="price"/>
+        <input type="number" min="0.0001" step="0.0001" autocomplete="off" id="price" required name="price"/>
     </div>
     <div id="sell_calc_current">
         <span>Transaction</span></br>
@@ -40,7 +40,7 @@
 <div id="sell_status"
      <#if status == "Transaction success">style="color: lightgreen"</#if>
         <#if status == "Amount should be an integer greater than 0">style="color: red"</#if>
-        <#if status == "Price should be a number greater than 0 - format 0.00">style="color: red"</#if>
+        <#if status == "Price should be a number greater than 0 - format 0.0000">style="color: red"</#if>
         <#if status?ends_with("not valid") >style="color: red"</#if>
         <#if status == "You try to sell more shares than you have">style="color: red"</#if>
 >${status}</div>

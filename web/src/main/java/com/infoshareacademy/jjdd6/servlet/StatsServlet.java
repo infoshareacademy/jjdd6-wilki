@@ -1,9 +1,11 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.service.ChartGenerator;
 import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
 
 import javax.inject.Inject;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,26 +19,25 @@ import java.io.IOException;
 public class StatsServlet extends HttpServlet {
 
     @Inject
-    private StatsService statsService;
-
-    @Inject
-    private UserService userService;
+    private ChartGenerator chartGenerator;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.getWriter().println("Most traded shares in App (buy transactions):");
-        resp.getWriter().println(statsService.getMostBoughtStocks());
 
-        resp.getWriter().println("\nMost traded shares in App(sell transactions):");
-        resp.getWriter().println(statsService.getMostSoldStocks());
+        String chart = req.getParameter("chart");
 
-        resp.getWriter().println("\nMost 25 traded shares today on WSE (volume) [change]:");
-        resp.getWriter().println(statsService.getMostTradedOnWse());
-
-        resp.getWriter().println("\nMost profitable share in wallet:");
-        resp.getWriter().println(statsService.getMostProfitableShare(userService.loggedUser(req).getWallet()));
-
-        resp.getWriter().println("\nLeast profitable share in wallet:");
-        resp.getWriter().println(statsService.getLeastProfitableShare(userService.loggedUser(req).getWallet()));
+        if (chart != null && chart.equals("appbuy")) {
+            String forward = "/images/" + chartGenerator.getMostTradedBuyChart();
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
+            requestDispatcher.forward(req, resp);
+        } else if (chart != null && chart.equals("appsell")) {
+            String forward = "/images/" + chartGenerator.getMostTradedSellChart();
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
+            requestDispatcher.forward(req, resp);
+        } else {
+            String forward = "/images/" + chartGenerator.getMostTradedWSEChart();
+            RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
+            requestDispatcher.forward(req, resp);
+        }
     }
 }

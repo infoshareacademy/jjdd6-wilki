@@ -96,7 +96,7 @@ public class DownloadCurrentData {
                         collect(Collectors.toList());
     }
 
-    private List readFromURL(URL file) {
+    public List readFromURL(URL file) {
 
         List<String[]> allData = new ArrayList<>();
         try {
@@ -109,6 +109,7 @@ public class DownloadCurrentData {
     }
 
     public String loadAndScanTickers(String ticker) {
+
         try {
             URL tickersURL = new URL("https://raw.githubusercontent.com/stockwallet/tickers/master/tickers.csv");
             logger.info("Loading tickers from " + tickersURL);

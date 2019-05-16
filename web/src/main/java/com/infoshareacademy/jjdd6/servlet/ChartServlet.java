@@ -1,21 +1,18 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
-
-import javax.inject.Inject;
-import javax.servlet.RequestDispatcher;
+import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +20,8 @@ import java.time.format.DateTimeFormatter;
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
-    private static Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChartServlet.class);
+
 
     @Inject
     private ChartGenerator chartGenerator;
@@ -38,11 +36,20 @@ public class ChartServlet extends HttpServlet {
         String type = req.getParameter("type");
         String monthsStr = req.getParameter("months");
         String from = req.getParameter("from");
-        String to = req.getParameter("from");
+        String buyPriceStr = req.getParameter("buyprice");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         String mini = "mini";
         String full = "full";
+
+        Double buyPrice = 0.0;
+        if (buyPriceStr != null && !buyPriceStr.isEmpty()) {
+            try {
+                buyPrice = Double.parseDouble(buyPriceStr);
+            } catch (NumberFormatException e) {
+                logger.error("Error while parsing buy price, omitting");
+            }
+        }
 
         if (validators.isTickerNotValid(ticker)) {
             logger.info("Ticker = {} is not valid.", ticker);
@@ -66,7 +73,7 @@ public class ChartServlet extends HttpServlet {
                 try {
                     LocalDate fromDate = LocalDate.parse(from, df);
                     LocalDate toDate = LocalDate.now();
-                    forwardToChart(req, resp, ticker, fromDate, toDate);
+                    forwardToChart(req, resp, ticker, fromDate, toDate, buyPrice);
                 } catch (NumberFormatException e) {
                     resp.setStatus(400);
                     return;
@@ -77,7 +84,7 @@ public class ChartServlet extends HttpServlet {
                     Integer months = Integer.valueOf(req.getParameter("months"));
                     LocalDate fromDate = LocalDate.now().minusMonths(months);
                     LocalDate toDate = LocalDate.now();
-                    forwardToChart(req, resp, ticker, fromDate, toDate);
+                    forwardToChart(req, resp, ticker, fromDate, toDate, buyPrice);
                 } catch (NumberFormatException e) {
                     resp.setStatus(400);
                     return;
@@ -85,7 +92,7 @@ public class ChartServlet extends HttpServlet {
             } else {
                 LocalDate toDate = LocalDate.now();
                 LocalDate fromDate = toDate.minusMonths(6);
-                forwardToChart(req, resp, ticker, fromDate, toDate);
+                forwardToChart(req, resp, ticker, fromDate, toDate, buyPrice);
             }
 
         } else {
@@ -93,8 +100,8 @@ public class ChartServlet extends HttpServlet {
         }
     }
 
-    private void forwardToChart(HttpServletRequest req, HttpServletResponse resp, String ticker, LocalDate fromDate, LocalDate toDate) throws ServletException, IOException {
-        String forward = "/images/" + chartGenerator.getChart(ticker, fromDate, toDate);
+    private void forwardToChart(HttpServletRequest req, HttpServletResponse resp, String ticker, LocalDate fromDate, LocalDate toDate, Double buyPrice) throws ServletException, IOException {
+        String forward = "/images/" + chartGenerator.getChart(ticker, fromDate, toDate, buyPrice);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
         requestDispatcher.forward(req, resp);
     }
