@@ -4,7 +4,9 @@ import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.wilki.DataFromFile;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import org.knowm.xchart.*;
+import org.knowm.xchart.style.PieStyler;
 import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.Theme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.enterprise.context.RequestScoped;
@@ -29,6 +31,9 @@ public class ChartGenerator {
 
     @Inject
     private WebAppProperties webAppProperties;
+
+    @Inject
+    private StatsService statsService;
 
     private static Logger logger = LoggerFactory.getLogger(ChartGenerator.class);
 
@@ -157,4 +162,52 @@ public class ChartGenerator {
         int random = (int) (Math.random() * 1000000);
         return ticker + "_" + random + "_chart.png";
     }
+
+    public String getMostTradedBuyChart() {
+
+        String title = "Most Traded Stocks in App (buy)";
+        String filename = pathGenerator("most_traded_buy");
+        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        generatePieChart(title, path, statsService.getMostBoughtStocks());
+        return filename;
+    }
+
+    public String getMostTradedSellChart() {
+
+        String title = "Most Traded Stocks in App (sell)";
+        String filename = pathGenerator("most_traded_sell");
+        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        generatePieChart(title, path, statsService.getMostSoldStocks());
+        return filename;
+    }
+
+    public String getMostTradedWSEChart() {
+
+        String title = "Most Traded Today on WSE (volume)";
+        String filename = pathGenerator("most_traded_wse");
+        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        generatePieChart(title, path, statsService.getMostTradedOnWse());
+        return filename;
+    }
+
+    private void generatePieChart(String title, String path, List<String[]> data) {
+        PieChart chart = new PieChartBuilder().width(350).height(300).title(title).build();
+        chart.getStyler().setChartBackgroundColor(new Color(13, 15, 58));
+        chart.getStyler().setLegendVisible(false);
+        chart.getStyler().setAnnotationType(PieStyler.AnnotationType.Label);
+        chart.getStyler().setChartFontColor(Color.BLACK);
+        chart.getStyler().setChartTitleBoxVisible(true);
+        chart.getStyler().setChartTitleBoxBackgroundColor(Color.WHITE);
+        chart.getStyler().setPlotBorderColor(Color.WHITE);
+        for (int i = 0; i < data.size(); i++) {
+            chart.addSeries(data.get(i)[0], Double.parseDouble(data.get(i)[1]));
+        }
+
+        try {
+            BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
+        } catch (IOException e) {
+            logger.info("Writing chart file failed.");
+        }
+    }
+
 }
