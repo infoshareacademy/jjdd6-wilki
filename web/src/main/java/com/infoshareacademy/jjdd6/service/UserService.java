@@ -88,6 +88,10 @@ public class UserService {
         req.getSession().invalidate();
     }
 
+    public List<User> getAllUsers() {
+        return userDao.findAll();
+    }
+
     public List<User> findByFbUserId(FacebookUser facebookUser) {
         return userDao.findByFbUserId(facebookUser.getId());
     }
