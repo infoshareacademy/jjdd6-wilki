@@ -41,7 +41,7 @@ public class LoginFilter implements Filter {
             return;
         }
 
-        if (!req.getRequestURI().equals("/login") && !req.getRequestURI().equals("/chart") && !req.getRequestURI().equals("/privacypolicy") && !req.getRequestURI().contains("/welcome")) {
+        if (!req.getRequestURI().equals("/login") && !req.getRequestURI().equals("/chart") && !req.getRequestURI().equals("/privacypolicy") && !req.getRequestURI().contains("/welcome") && !req.getRequestURI().contains("/error/")) {
             if (session.getAttribute("user") == null || checkIfTokenExpired(session)) {
                 logger.info("User not logged in, trying to login");
                 forwardToLogin(req, resp, session);

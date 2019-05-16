@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 
         if (error != null && !error.isEmpty()) {
             logger.info("Unauthorized login attempt: {}", error);
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            resp.sendRedirect("/welcome");
             return;
         }
 
