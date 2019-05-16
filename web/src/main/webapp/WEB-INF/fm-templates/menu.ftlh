@@ -19,20 +19,18 @@
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
         USER</br>
-        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/>&nbsp;&nbsp;&nbsp;${userName}</div>
+        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
         <div class="menu_option">Log out</div></br>
     </div>
     <div id="upper_menu">
-        <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
-        <div class="upper_menu_info">ROE</br> ${roe}%</div>
-        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: contain">Best performing</br>
-            ${mpTicker}</br>
-            ${mpProfit} PLN</br>
-            ${mpReturn} %</div>
-        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: contain; color:red">Worst performing</br>
-        ${wpTicker}</br>
-        ${wpProfit} PLN</br>
-        ${wpReturn} %</div>
+        <div class="upper_menu_info">Free cash </br> <b>${freeCash?string["# ##0.00"]} PLN</b></div>
+        <div class="upper_menu_info">ROE</br> <b>${roe}%</b></div>
+        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center">Best performing</br>
+            </br><b>${mpTicker}</b></br>${mpReturn}%</br>
+            </div>
+        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${wpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center; color:red">Worst performing</br>
+            </br><b>${wpTicker}</b></br>${wpReturn}%</br>
+     </div>
     </div>
     <div id="content">
         <#if content == "show_wallet">

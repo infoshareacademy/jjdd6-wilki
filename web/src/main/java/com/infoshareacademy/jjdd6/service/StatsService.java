@@ -54,7 +54,7 @@ StatsService {
     }
 
     public Map<String, String> getMostProfitableShare(Wallet wallet) {
-        Optional<Share> result = wallet.walletToDisplay().stream().max(Comparator.comparing(Share::getTotalProfit));
+        Optional<Share> result = wallet.walletToDisplay().stream().max(Comparator.comparing(Share::getCurrentReturn));
         Map<String, String> output = new HashMap<>();
         mapResult(result, output);
         return output;
@@ -73,7 +73,7 @@ StatsService {
     }
 
     public Map<String, String> getLeastProfitableShare(Wallet wallet) {
-        Optional<Share> result = wallet.walletToDisplay().stream().min(Comparator.comparing(Share::getTotalProfit));
+        Optional<Share> result = wallet.walletToDisplay().stream().min(Comparator.comparing(Share::getCurrentReturn));
         Map<String, String> output = new HashMap<>();
         mapResult(result, output);
         return output;
