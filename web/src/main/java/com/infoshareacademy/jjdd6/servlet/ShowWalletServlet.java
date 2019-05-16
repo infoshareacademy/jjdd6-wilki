@@ -48,10 +48,8 @@ public class ShowWalletServlet extends HttpServlet {
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
         model.put("mpTicker", bestPerforming.get("ticker"));
-        model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
-        model.put("wpProfit", worstPerforming.get("profit"));
         model.put("wpReturn", worstPerforming.get("return"));
         model.put("shares", shares);
         model.put("roe", roe);

@@ -23,13 +23,13 @@
         <div class="menu_option">Log out</div></br>
     </div>
     <div id="upper_menu">
-        <div class="upper_menu_info">Free cash </br> <b>${freeCash?string["# ##0.00"]} PLN</b></div>
-        <div class="upper_menu_info">ROE</br> <b>${roe}%</b></div>
-        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center">Best performing</br>
-            </br><b>${mpTicker}</b></br>${mpReturn}%</br>
+        <div class="upper_menu_info">Free cash </br> <b>${freeCash?string["# ##0.00 PLN"]}</b></div>
+        <div class="upper_menu_info">Return on equity</br> <b>${roe}%</b></div>
+        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center">Best performing</br>
+            <b>${mpTicker}</b>    ${mpReturn}
             </div>
-        <div class="upper_menu_info" id="profitable_chart" style="background-image: url('/chart?type=mini&ticker=${wpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center; color:red">Worst performing</br>
-            </br><b>${wpTicker}</b></br>${wpReturn}%</br>
+        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${wpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center; color:red">Worst performing</br>
+            <b>${wpTicker}</b>    ${wpReturn}
      </div>
     </div>
     <div id="content">

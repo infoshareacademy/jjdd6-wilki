@@ -64,11 +64,11 @@ StatsService {
         if (result.isPresent()) {
             output.put("ticker", result.get().getTicker());
             output.put("profit", result.get().getTotalProfit().setScale(2, RoundingMode.HALF_UP).toString());
-            output.put("return", result.get().getCurrentReturn().setScale(2, RoundingMode.HALF_UP).toString());
+            output.put("return", result.get().getCurrentReturn().setScale(2, RoundingMode.HALF_UP).toString() + "%");
         } else {
-            output.put("ticker", "-");
-            output.put("profit", "-");
-            output.put("return", "-");
+            output.put("ticker", "No shares");
+            output.put("profit", "");
+            output.put("return", "");
         }
     }
 
