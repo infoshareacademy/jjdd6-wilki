@@ -9,7 +9,7 @@
 <div>
 
 
-    <form action="/admin" target="result2" method="get">
+    <form action="/admin" method="get">
         <p>Select user:</p>
         <select name="selectedUser" ">
             <#list users as user>
@@ -18,11 +18,9 @@
         </select>
         <p><input type="submit" value="Select"></p>
     </form>
-    <iframe name="result2" style="height:100px;width:200px;"></iframe>
 
 
 
-    <#--Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>-->
 </div>
 <#--<div id="status"-->
      <#--<#if status == "Transaction success">style="color: lightgreen"</#if>-->
@@ -36,3 +34,5 @@
 <#--</div>-->
 </body>
 </html>
+
+

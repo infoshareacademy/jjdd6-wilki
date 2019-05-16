@@ -35,30 +35,65 @@ public class AdminServlet extends HttpServlet {
 //            resp.setStatus(403);
 //            return;
 //        }
-        List<User> userList = userService.getAllUsers();
 
-        Map<String, Object> model = new HashMap<>();
-        model.put("users", userList);
+        String selectedUserStr = req.getParameter("selectedUser");
 
-        Template template = templateProvider.getTemplate(getServletContext(), "adminpanel.ftlh");
+        if (selectedUserStr != null && !selectedUserStr.isEmpty()) {
+            User selectedUser = userService.findById(Long.parseLong(selectedUserStr));
+            String profilePicURL = userService.userProfilePicURL(selectedUser);
+            Map<String, Object> model = new HashMap<>();
+            Integer admin = 0;
+            if (selectedUser.isAdmin()) { admin = 1;}
+            model.put("user", selectedUser);
+            model.put("profilePicURL", profilePicURL);
+            model.put("isAdmin", admin);
 
-        try {
-            template.process(model, resp.getWriter());
-        } catch (TemplateException e) {
-            resp.getWriter().println("Something went wrong");
+            resp.getWriter().println(selectedUser.isAdmin());
+
+            Template template = templateProvider.getTemplate(getServletContext(), "userDetailsPanel.ftlh");
+
+            try {
+                template.process(model, resp.getWriter());
+            } catch (TemplateException e) {
+                resp.getWriter().println("Something went wrong");
+            }
+        } else {
+
+            List<User> userList = userService.getAllUsers();
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("users", userList);
+
+
+            Template template = templateProvider.getTemplate(getServletContext(), "adminpanel.ftlh");
+
+            try {
+                template.process(model, resp.getWriter());
+            } catch (TemplateException e) {
+                resp.getWriter().println("Something went wrong");
+            }
         }
-
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        User user = userService.findById(Long.parseLong(req.getParameter("userId")));
+        user.setName(req.getParameter("name"));
+        user.setSurname(req.getParameter("surname"));
+        if (req.getParameter("isAdmin") != null && req.getParameter("isAdmin").equals("admin")) {
+            user.setIsAdmin(true);
+        } else {
+            user.setIsAdmin(false);
+        }
+        userService.updateUser(user);
+        resp.getWriter().println(user);
 
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+
+
     }
 
     @Override
