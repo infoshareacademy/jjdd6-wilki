@@ -47,7 +47,7 @@ public class ChartServlet extends HttpServlet {
             try {
                 buyPrice = Double.parseDouble(buyPriceStr);
             } catch (NumberFormatException e) {
-                logger.error("Error while parsing buy price");
+                logger.error("Error while parsing buy price, omitting");
             }
         }
 
