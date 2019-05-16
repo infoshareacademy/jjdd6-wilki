@@ -1,4 +1,4 @@
-FROM jboss/wildfly
+FROM jboss/wildfly:16.0.0.Final
 
 ADD target/web.war /opt/jboss/wildfly/standalone/deployments
 
