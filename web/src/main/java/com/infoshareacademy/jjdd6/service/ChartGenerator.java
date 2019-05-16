@@ -7,7 +7,6 @@ import org.knowm.xchart.*;
 import org.knowm.xchart.style.Styler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.awt.*;
@@ -33,17 +32,17 @@ public class ChartGenerator {
 
     private static Logger logger = LoggerFactory.getLogger(ChartGenerator.class);
 
-    public String getChart(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
+    public String getChart(String ticker, LocalDate fromDate, LocalDate toDate, Double buyPrice) throws MalformedURLException {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
         List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
         String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
-        generateChart(title, path, currentData, data);
+        generateChart(title, path, currentData, data, buyPrice);
         return filename;
     }
 
-    private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
+    private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data, Double buyPrice) {
         XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
         chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         chart.getStyler().setAxisTitlesVisible(false);
@@ -75,13 +74,28 @@ public class ChartGenerator {
                 .toInstant()));
         yAxis.add(currentData.get(0).getClosingPrice().doubleValue());
 
+
         chart.addSeries(title.toUpperCase(), xAxis, yAxis);
+
+        if (buyPrice > 0.0) {
+            List<Double> buyPriceData = generateAvgBuyPriceData(yAxis, buyPrice);
+            XYSeries buyPriceSeries = chart.addSeries("BuyPrice", xAxis, buyPriceData);
+            buyPriceSeries.setXYSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
+        }
 
         try {
             BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
         } catch (IOException e) {
             logger.info("Writing chart file failed.");
         }
+    }
+
+    private List<Double> generateAvgBuyPriceData(List<Double> data, Double avgBuyPrice) {
+        List<Double> avgBuyPriceList = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            avgBuyPriceList.add(avgBuyPrice);
+        }
+        return avgBuyPriceList;
     }
 
     public String getMiniChart(String ticker) throws MalformedURLException {
@@ -139,9 +153,8 @@ public class ChartGenerator {
         }
     }
 
-    public String pathGenerator(String ticker){
-        int random = (int)(Math.random()*1000000);
+    public String pathGenerator(String ticker) {
+        int random = (int) (Math.random() * 1000000);
         return ticker + "_" + random + "_chart.png";
     }
-
 }
