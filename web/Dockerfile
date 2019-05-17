@@ -1,6 +1,7 @@
 FROM jboss/wildfly
 
-ENV LANG='pl_PL.UTF-8' LANGUAGE='pl_PL:pl' LC_ALL='pl_PL.UTF-8'
+RUN locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 ADD target/web.war /opt/jboss/wildfly/standalone/deployments
 
