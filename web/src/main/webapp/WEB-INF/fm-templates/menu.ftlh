@@ -43,6 +43,8 @@
             <#include "sell-specified.ftlh">
         <#elseif content == "manage">
             <#include "manage-free-cash.ftlh">
+        <#elseif content == "specified_share">
+            <#include "specified-share.ftlh">
         </#if>
     </div>
 </div>

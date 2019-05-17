@@ -1,0 +1,9 @@
+<div class="specified_col1">${ticker}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${price}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${amount}</div>
+<div class="specified_col2">${amount}</div>
