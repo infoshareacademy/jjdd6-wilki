@@ -80,7 +80,9 @@ public class AdminServlet extends HttpServlet {
         User user = userService.findById(Long.parseLong(req.getParameter("userId")));
         user.setName(req.getParameter("name"));
         user.setSurname(req.getParameter("surname"));
-        user.setEmail(req.getParameter("email"));
+        if (req.getParameter("email") != null && !req.getParameter("email").equals("")) {
+            user.setEmail(req.getParameter("email"));
+        }
         if (req.getParameter("isAdmin") != null && req.getParameter("isAdmin").equals("admin")) {
             user.setIsAdmin(true);
         } else {
