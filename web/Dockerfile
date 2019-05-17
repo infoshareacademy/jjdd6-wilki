@@ -1,5 +1,7 @@
 FROM jboss/wildfly
 
+ENV LANG pl_PL.UTF-8
+
 ADD target/web.war /opt/jboss/wildfly/standalone/deployments
 
 ADD ssl/server.keystore /opt/jboss/wildfly/standalone/configuration/
