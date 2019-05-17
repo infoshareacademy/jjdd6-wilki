@@ -48,8 +48,6 @@ public class AdminServlet extends HttpServlet {
             model.put("profilePicURL", profilePicURL);
             model.put("isAdmin", admin);
 
-            resp.getWriter().println(selectedUser.isAdmin());
-
             Template template = templateProvider.getTemplate(getServletContext(), "userDetailsPanel.ftlh");
 
             try {
