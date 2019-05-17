@@ -19,14 +19,18 @@
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
         USER</br>
-        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/>&nbsp;&nbsp;&nbsp;${userName}</div>
+        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
         <div class="menu_option">Log out</div></br>
     </div>
     <div id="upper_menu">
-        <div class="upper_menu_info">Free Cash </br> #{freeCash} PLN</div>
-        <div class="upper_menu_info">ROE</br> ${roe}%</div>
-        <div class="upper_menu_info">Imieniny:<br>Jurand, Judyta</div>
-        <div class="upper_menu_info" style="color:red">Najbliższa niedziela niehandlowa!</div>
+        <div class="upper_menu_info">Free cash </br> <b>${freeCash?string["# ##0.00 PLN"]}</b></div>
+        <div class="upper_menu_info">Return on equity</br> <b>${roe}%</b></div>
+        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${mpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center">Best performing</br>
+            <b>${mpTicker}</b>    ${mpReturn}
+            </div>
+        <div class="upper_menu_info" style="background-image: url('/chart?type=mini&ticker=${wpTicker}');background-size: 312px;background-repeat: no-repeat;background-position: center; color:red">Worst performing</br>
+            <b>${wpTicker}</b>    ${wpReturn}
+     </div>
     </div>
     <div id="content">
         <#if content == "show_wallet">

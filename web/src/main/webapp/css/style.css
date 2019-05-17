@@ -516,5 +516,7 @@ a:active {
     color: white;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     letter-spacing: 2px;
-
+}
+#profitable_chart{
+    line-height: 35px;
 }

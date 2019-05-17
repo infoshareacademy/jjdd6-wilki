@@ -4,6 +4,7 @@ import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.*;
@@ -49,6 +50,9 @@ public class SellSharesServlet extends HttpServlet {
     @Inject
     private UserService userService;
 
+    @Inject
+    private StatsService statsService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -58,7 +62,6 @@ public class SellSharesServlet extends HttpServlet {
 
             User user = userService.loggedUser(req);
             Wallet userWallet = user.getWallet();
-            Share share = userWallet.scanWalletForShare(ticker);
 
             if(!(validators.isTickerNotValid(ticker)) && userWallet.checkIfShareIsPresent(ticker)) {
                 showSellSpecifiedShare(req, resp, "", ticker);
@@ -81,6 +84,14 @@ public class SellSharesServlet extends HttpServlet {
         String profilePicURL = userService.userProfilePicURL(user);
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
+        Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
+        Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        model.put("mpTicker", bestPerforming.get("ticker"));
+        model.put("mpProfit", bestPerforming.get("profit"));
+        model.put("mpReturn", bestPerforming.get("return"));
+        model.put("wpTicker", worstPerforming.get("ticker"));
+        model.put("wpProfit", worstPerforming.get("profit"));
+        model.put("wpReturn", worstPerforming.get("return"));
         model.put("roe", roe);
         model.put("freeCash", freeCash);
         model.put("ticker", share.getTicker());
@@ -113,6 +124,14 @@ public class SellSharesServlet extends HttpServlet {
         String profilePicURL = userService.userProfilePicURL(user);
         BigDecimal freeCash = userWallet.getFreeCash();
         DownloadCurrentData.updateWalletData(userWallet);
+        Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
+        Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        model.put("mpTicker", bestPerforming.get("ticker"));
+        model.put("mpProfit", bestPerforming.get("profit"));
+        model.put("mpReturn", bestPerforming.get("return"));
+        model.put("wpTicker", worstPerforming.get("ticker"));
+        model.put("wpProfit", worstPerforming.get("profit"));
+        model.put("wpReturn", worstPerforming.get("return"));
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);

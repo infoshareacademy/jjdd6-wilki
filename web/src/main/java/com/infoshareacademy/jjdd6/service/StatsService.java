@@ -17,7 +17,8 @@ import java.util.*;
 
 @RequestScoped
 @Transactional
-public class StatsService {
+public class
+StatsService {
 
     private static Logger logger = LoggerFactory.getLogger(StatsService.class);
 
@@ -53,7 +54,7 @@ public class StatsService {
     }
 
     public Map<String, String> getMostProfitableShare(Wallet wallet) {
-        Optional<Share> result = wallet.getShares().stream().max(Comparator.comparing(Share::getTotalProfit));
+        Optional<Share> result = wallet.walletToDisplay().stream().max(Comparator.comparing(Share::getCurrentReturn));
         Map<String, String> output = new HashMap<>();
         mapResult(result, output);
         return output;
@@ -63,16 +64,16 @@ public class StatsService {
         if (result.isPresent()) {
             output.put("ticker", result.get().getTicker());
             output.put("profit", result.get().getTotalProfit().setScale(2, RoundingMode.HALF_UP).toString());
-            output.put("return", result.get().getCurrentReturn().setScale(2, RoundingMode.HALF_UP).toString());
+            output.put("return", result.get().getCurrentReturn().setScale(2, RoundingMode.HALF_UP).toString() + "%");
         } else {
-            output.put("ticker", "-");
-            output.put("profit", "-");
-            output.put("return", "-");
+            output.put("ticker", "No shares");
+            output.put("profit", "");
+            output.put("return", "");
         }
     }
 
     public Map<String, String> getLeastProfitableShare(Wallet wallet) {
-        Optional<Share> result = wallet.getShares().stream().min(Comparator.comparing(Share::getTotalProfit));
+        Optional<Share> result = wallet.walletToDisplay().stream().min(Comparator.comparing(Share::getCurrentReturn));
         Map<String, String> output = new HashMap<>();
         mapResult(result, output);
         return output;

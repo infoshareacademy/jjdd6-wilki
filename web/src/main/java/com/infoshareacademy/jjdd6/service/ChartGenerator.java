@@ -115,27 +115,23 @@ public class ChartGenerator {
 
     private void generateMiniChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data) {
         XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
-        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
-        chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
-        List<Date> xAxis = new ArrayList<>();
-        List<Double> yAxis = new ArrayList<>();
+        chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setAntiAlias(true);
         chart.getStyler().setLegendVisible(false);
-        chart.getStyler().setChartBackgroundColor(Color.WHITE);
-        chart.getStyler().setChartFontColor(Color.BLACK);
         chart.getStyler().setAxisTicksVisible(false);
         chart.getStyler().setChartTitleVisible(false);
-        chart.getStyler().setChartTitlePadding(0);
-        chart.getStyler().setPlotBorderVisible(true);
-        chart.getStyler().setAxisTickLabelsColor(Color.WHITE);
-        chart.getStyler().setPlotBackgroundColor(Color.WHITE);
         chart.getStyler().setPlotBorderVisible(false);
         chart.getStyler().setPlotGridLinesVisible(false);
-        chart.getStyler().setPlotGridLinesColor(new Color(114, 115, 125));
-        chart.getStyler().setDatePattern("dd-MM-YYYY");
         chart.getStyler().setXAxisLogarithmic(true);
         chart.getStyler().setMarkerSize(0);
+        chart.getStyler().setChartBackgroundColor(Color.WHITE);
+        chart.getStyler().setPlotBackgroundColor(Color.WHITE);
+        chart.getStyler().setSeriesColors(new Color[]{Color.GRAY});
+        chart.getStyler().setChartFontColor(Color.BLACK);
+
+        List<Date> xAxis = new ArrayList<>();
+        List<Double> yAxis = new ArrayList<>();
 
         for (DataFromFile datum : data) {
             xAxis.add(Date.from(datum.getDate().atStartOfDay()
@@ -149,7 +145,9 @@ public class ChartGenerator {
                 .toInstant()));
         yAxis.add(currentData.get(0).getClosingPrice().doubleValue());
 
-        chart.addSeries(title.toUpperCase(), xAxis, yAxis);
+        XYSeries series = chart.addSeries(title.toUpperCase(), xAxis, yAxis);
+        series.setFillColor(new Color(114,115,125));
+        series.setLineColor(new Color(61,62,69));
 
         try {
             BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
