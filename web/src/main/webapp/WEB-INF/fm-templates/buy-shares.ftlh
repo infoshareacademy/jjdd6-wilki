@@ -23,7 +23,7 @@
      <#if status == "Transaction success">style="color: lightgreen"</#if>
         <#if status == "Amount should be a whole number">style="color: red"</#if>
         <#if status == "Amount should be an integer greater than 0">style="color: red"</#if>
-        <#if status == "Price should have a numerical value - format 0.00">style="color: red"</#if>
+        <#if status == "Price should have a numerical value - format 0.0000">style="color: red"</#if>
         <#if status == "Price should be a number greater than 0 - format 0.0000">style="color: red"</#if>
         <#if status == "You don't have enough money!">style="color: red"</#if>
         <#if status?ends_with("not valid") >style="color: red"</#if>

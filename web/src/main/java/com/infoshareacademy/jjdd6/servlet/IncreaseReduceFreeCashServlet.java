@@ -2,6 +2,7 @@ package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.User;
@@ -41,6 +42,9 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
     @Inject
     private TemplateProvider templateProvider;
 
+    @Inject
+    private StatsService statsService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
@@ -73,6 +77,14 @@ public class IncreaseReduceFreeCashServlet extends HttpServlet {
         if (null != status) {
             model.put("status", status);
         }
+        Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
+        Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        model.put("mpTicker", bestPerforming.get("ticker"));
+        model.put("mpProfit", bestPerforming.get("profit"));
+        model.put("mpReturn", bestPerforming.get("return"));
+        model.put("wpTicker", worstPerforming.get("ticker"));
+        model.put("wpProfit", worstPerforming.get("profit"));
+        model.put("wpReturn", worstPerforming.get("return"));
         model.put("roe", roe);
         model.put("freeCash", freeCash);
         model.put("content", "manage");
