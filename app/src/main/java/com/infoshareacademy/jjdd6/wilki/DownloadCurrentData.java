@@ -84,7 +84,9 @@ public class DownloadCurrentData {
     }
 
     public List<DataFromFile> parseHistory(URL file) {
+        logger.info("parse history from " + file.toString());
         List<String[]> dataLoaded = readFromURL(file);
+        logger.info("downloaded " + dataLoaded.size() + " entires, parsing...");
         return dataLoaded.stream()
                 .skip(1)
                 .map(a -> {
@@ -102,6 +104,14 @@ public class DownloadCurrentData {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(file.openStream()));
             allData = new CSVReader(in).readAll();
+            logger.info("Read " + allData.size() + " entries from " + file.toString());
+            allData.stream().forEach(tab -> {
+                if (tab != null) {
+                    for (String e : tab) {
+                        logger.info(e);
+                    }
+                }
+            });
         } catch (IOException e) {
             logger.error("Unable to read from URL " + file);
         }
