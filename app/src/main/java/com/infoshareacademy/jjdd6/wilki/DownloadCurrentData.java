@@ -104,7 +104,14 @@ public class DownloadCurrentData {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(file.openStream()));
             allData = new CSVReader(in).readAll();
-            logger.info("Read " + allData.size() + " entires from " + file.toString());
+            logger.info("Read " + allData.size() + " entries from " + file.toString());
+            allData.stream().forEach(tab -> {
+                if (tab != null) {
+                    for (String e : tab) {
+                        logger.info(e);
+                    }
+                }
+            });
         } catch (IOException e) {
             logger.error("Unable to read from URL " + file);
         }
