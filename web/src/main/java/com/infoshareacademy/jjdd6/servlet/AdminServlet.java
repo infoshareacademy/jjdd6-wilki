@@ -31,10 +31,10 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = userService.loggedUser(req);
-//        if (!user.isAdmin()) {
-//            resp.setStatus(403);
-//            return;
-//        }
+        if (!user.isAdmin()) {
+            resp.setStatus(403);
+            return;
+        }
 
         String selectedUserStr = req.getParameter("selectedUser");
 
