@@ -84,8 +84,7 @@ public class AdminServlet extends HttpServlet {
             user.setIsAdmin(false);
         }
         userService.updateUser(user);
-        resp.getWriter().println(user);
-
+        resp.sendRedirect("/admin");
     }
 
     @Override
