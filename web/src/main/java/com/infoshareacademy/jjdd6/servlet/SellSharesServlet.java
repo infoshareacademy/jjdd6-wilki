@@ -86,6 +86,11 @@ public class SellSharesServlet extends HttpServlet {
         BigDecimal freeCash = userWallet.getFreeCash();
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
@@ -126,6 +131,11 @@ public class SellSharesServlet extends HttpServlet {
         DownloadCurrentData.updateWalletData(userWallet);
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));

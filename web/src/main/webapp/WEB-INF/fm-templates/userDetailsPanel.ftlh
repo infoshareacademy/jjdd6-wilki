@@ -15,14 +15,16 @@
         <input type="text" name="name" value="${user.name}"><br>
         Last name:
         <input type="text" name="surname" value="${user.surname}"><br>
+        E-Mail:
+        <input type="text" name="email" value="${(user.email)!""}"><br>
         User has admin rights
         <input type="checkbox" name="isAdmin" value="admin"
                 <#if isAdmin == 1>
         checked
                 </#if>><br><br>
-        <input type="submit" value="Submit">
-
+        <input type="submit" value="Apply changes">
     </form>
+    <a href="/wallet">GO BACK TO WALLET</a>
 </div>
 </body>
 </html>

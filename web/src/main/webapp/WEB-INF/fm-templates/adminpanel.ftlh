@@ -18,6 +18,7 @@
         </select>
         <p><input type="submit" value="Select"></p>
     </form>
+    <a href="/wallet">GO BACK TO WALLET</a>
 
 
 

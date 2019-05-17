@@ -32,7 +32,7 @@ public class AdminServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = userService.loggedUser(req);
         if (!user.isAdmin()) {
-            resp.setStatus(403);
+            resp.sendRedirect("/wallet");
             return;
         }
 
@@ -43,7 +43,9 @@ public class AdminServlet extends HttpServlet {
             String profilePicURL = userService.userProfilePicURL(selectedUser);
             Map<String, Object> model = new HashMap<>();
             Integer admin = 0;
-            if (selectedUser.isAdmin()) { admin = 1;}
+            if (selectedUser.isAdmin()) {
+                admin = 1;
+            }
             model.put("user", selectedUser);
             model.put("profilePicURL", profilePicURL);
             model.put("isAdmin", admin);
@@ -78,13 +80,14 @@ public class AdminServlet extends HttpServlet {
         User user = userService.findById(Long.parseLong(req.getParameter("userId")));
         user.setName(req.getParameter("name"));
         user.setSurname(req.getParameter("surname"));
+        user.setEmail(req.getParameter("email"));
         if (req.getParameter("isAdmin") != null && req.getParameter("isAdmin").equals("admin")) {
             user.setIsAdmin(true);
         } else {
             user.setIsAdmin(false);
         }
         userService.updateUser(user);
-        resp.sendRedirect("/admin");
+        doGet(req, resp);
     }
 
     @Override
