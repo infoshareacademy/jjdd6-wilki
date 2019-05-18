@@ -49,16 +49,27 @@ public class SpecifiedShareViewServlet extends HttpServlet {
                 showSpecifiedShare(req, resp, ticker);
             }
             else{
-                resp.sendRedirect("/share-sell");
+                resp.sendRedirect("/wallet");
             }
+        }else{
+            resp.sendRedirect("/wallet");
         }
-        showSpecifiedShare(req, resp, ticker);
     }
 
     private void showSpecifiedShare(HttpServletRequest req, HttpServletResponse resp, String ticker) throws IOException {
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
         Share share = userWallet.scanWalletForShare(ticker);
+        String tickerFromWallet = share.getTicker();
+        Integer amount = share.getSharesTotalAmount();
+        BigDecimal avgBuyPrice = share.getAvgBuyPrice();
+        BigDecimal value = share.getBaseValue();
+        BigDecimal currentPrice = share.getCurrentPrice();
+        BigDecimal currentValue = share.getCurrentValue();
+        BigDecimal currentReturn = share.getCurrentReturn();
+        BigDecimal stopLoss = share.getStopLossPrice();
+        BigDecimal takeProfit = share.getTakeProfitPrice();
+        String fullName = share.getFullCompanyName();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
@@ -66,6 +77,16 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         Map<String, Object> model = new HashMap<>();
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        model.put("ticker", tickerFromWallet);
+        model.put("amount", amount);
+        model.put("avgBuyPrice", avgBuyPrice);
+        model.put("value", value);
+        model.put("currentPrice", currentPrice);
+        model.put("currentValue", currentValue);
+        model.put("return", currentReturn);
+        model.put("stopLoss", stopLoss);
+        model.put("takeProfit", takeProfit);
+        model.put("fullName", fullName);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
