@@ -17,7 +17,8 @@
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Most popular?</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Most profitable?</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
-        <div class="menu_option" <#if content == ""> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
+        <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>>Transactions list</div></a></br>
+        </br></br></br></br>
         USER</br>
         <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
         <div class="menu_option">Log out</div></br>
@@ -43,6 +44,8 @@
             <#include "sell-specified.ftlh">
         <#elseif content == "manage">
             <#include "manage-free-cash.ftlh">
+        <#elseif content == "transaction">
+            <#include "transaction.ftlh">
         </#if>
     </div>
 </div>

@@ -16,7 +16,10 @@ import static com.infoshareacademy.jjdd6.wilki.TransactionType.*;
 @Table(name = "TRANSACTION")
 @NamedQueries({@NamedQuery(
         name = "Transaction.findAll",
-        query = "SELECT t FROM Transaction t")
+        query = "SELECT t FROM Transaction t"),
+        @NamedQuery(
+                name = "Transaction.findAllByWalletId",
+                query = "SELECT t FROM Transaction t WHERE t.wallet.id = :walletId")
 })
 public class Transaction implements Serializable {
     public static BigDecimal transactionFee = new BigDecimal(0.0039);
