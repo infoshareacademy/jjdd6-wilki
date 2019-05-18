@@ -58,6 +58,11 @@ public class TransactionsServlet extends HttpServlet {
         Map<String, Object> model = new HashMap<>();
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
@@ -71,10 +76,12 @@ public class TransactionsServlet extends HttpServlet {
         model.put("userName", user.getName());
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
+        logger.info("Template loaded.");
 
         try {
             template.process(model, resp.getWriter());
         } catch (TemplateException e) {
+            logger.info("Something went wrong");
             resp.getWriter().println("Something went wrong");
         }
 
