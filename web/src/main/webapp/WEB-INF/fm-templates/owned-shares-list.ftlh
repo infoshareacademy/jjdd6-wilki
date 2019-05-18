@@ -12,13 +12,13 @@
 <div id="table_content">
     <#list shares>
         <#items as share>
-            <div class="ticker">${share.ticker}</div>
+            <a href="/details?ticker=${share.ticker}"><div class="ticker">${share.ticker}</div>
             <div class="amount">${share.sharesTotalAmount?string["0"]}</div>
             <div class="avg-buy-price">${share.avgBuyPrice?string["###0.00##"]} PLN</div>
             <div class="value">${share.baseValue?string["###0.00"]} PLN</div>
             <div class="current-price">${share.currentPrice?string["###0.00##"]} PLN</div>
             <div class="current-value">${share.currentValue?string["###0.00"]} PLN</div>
-            <div class="return">${share.currentReturn?string["###0.00"]} %</div>
+            <div class="return">${share.currentReturn?string["###0.00"]} %</div></a>
             <div class="sl-price">${share.stopLossPrice?string["###0.00##"]} PLN</div>
             <div class="tp-price">${share.takeProfitPrice?string["###0.00##"]} PLN</div>
         </#items>

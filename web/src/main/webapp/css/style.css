@@ -520,3 +520,18 @@ a:active {
 #profitable_chart{
     line-height: 35px;
 }
+#specified_share_view{
+    width: 100%;
+    height: 400px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 18px;
+}
+table, td {
+    border: 1px solid white;
+}
+table th {
+    border: 2px solid white;
+
+    font-weight: 800;
+}
