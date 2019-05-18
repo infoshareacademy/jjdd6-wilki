@@ -30,20 +30,6 @@ public class DownloadCurrentData {
         return parse(new URL("https://stooq.pl/q/l/?s=_stat_plws_tr_+_stat_plws_nt_&f=sd2t2ohlcm2vr&h&e=csv"));
     }
 
-    public List<DataFromFile> getHistoricalData(String ticker) throws MalformedURLException {
-        LocalDate toDate = LocalDate.now();
-        LocalDate fromDate = toDate.minusMonths(6);
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMdd");
-        logger.info("Downloading historical data from " + df.format(fromDate) + " to " + df.format(toDate));
-        return parseHistory(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
-    }
-
-    public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyyMMdd");
-        logger.info("Downloading historical data from " + df.format(fromDate) + " to " + df.format(toDate));
-        return parseHistory(new URL("https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&d1=" + df.format(fromDate) + "&d2=" + df.format(toDate) + "&i=d"));
-    }
-
     public List<DataFromFile> get(String ticker) throws MalformedURLException {
 
         logger.info("Downloading current " + ticker + " data...");
@@ -92,7 +78,11 @@ public class DownloadCurrentData {
                 .map(a -> {
                     DataFromFile dataFromFile = new DataFromFile();
                     dataFromFile.setDate(LocalDate.parse(a[0]));
+                    dataFromFile.setOpeningPrice(new BigDecimal((a[1])));
+                    dataFromFile.setHighestPrice(new BigDecimal((a[2])));
+                    dataFromFile.setLowestPrice(new BigDecimal((a[3])));
                     dataFromFile.setClosingPrice(new BigDecimal(a[4]));
+                    dataFromFile.setVolume(Long.parseLong(a[5]));
                     return dataFromFile;
                 }).
                         collect(Collectors.toList());
@@ -105,13 +95,6 @@ public class DownloadCurrentData {
             BufferedReader in = new BufferedReader(new InputStreamReader(file.openStream()));
             allData = new CSVReader(in).readAll();
             logger.info("Read " + allData.size() + " entries from " + file.toString());
-            allData.stream().forEach(tab -> {
-                if (tab != null) {
-                    for (String e : tab) {
-                        logger.info(e);
-                    }
-                }
-            });
         } catch (IOException e) {
             logger.error("Unable to read from URL " + file);
         }

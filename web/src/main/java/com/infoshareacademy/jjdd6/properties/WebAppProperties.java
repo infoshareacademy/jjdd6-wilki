@@ -18,7 +18,7 @@ public class WebAppProperties {
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
     }
 
-    private Properties chartSaveDir() {
+    private Properties saveDir() {
 
         String CONFIG_PROPERTIES_FILENAME = "directory.properties";
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
@@ -44,7 +44,8 @@ public class WebAppProperties {
         return setupFacebookLogon().getProperty(property);
     }
 
-    public String getChartSaveDir(String property) {
-        return chartSaveDir().getProperty(property);
+    public String getSaveDir(String property) {
+        return saveDir().getProperty(property);
     }
+
 }

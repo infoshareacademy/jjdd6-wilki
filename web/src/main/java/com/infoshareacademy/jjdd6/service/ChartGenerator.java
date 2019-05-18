@@ -6,9 +6,9 @@ import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.PieStyler;
 import org.knowm.xchart.style.Styler;
-import org.knowm.xchart.style.Theme;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.awt.*;
@@ -27,6 +27,9 @@ public class ChartGenerator {
     private DownloadCurrentData downloadCurrentData;
 
     @Inject
+    private DownloaderService downloaderService;
+
+    @Inject
     private TickerService tickerService;
 
     @Inject
@@ -39,10 +42,10 @@ public class ChartGenerator {
 
     public String getChart(String ticker, LocalDate fromDate, LocalDate toDate, Double buyPrice) throws MalformedURLException {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
-        List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker, fromDate, toDate);
+        List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
         generateChart(title, path, currentData, data, buyPrice);
         return filename;
     }
@@ -103,12 +106,18 @@ public class ChartGenerator {
         return avgBuyPriceList;
     }
 
-    public String getMiniChart(String ticker) throws MalformedURLException {
+    public String getMiniChart(String ticker, LocalDate fromDate) throws MalformedURLException {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
-        List<DataFromFile> data = downloadCurrentData.getHistoricalData(ticker);
+        LocalDate toDate = LocalDate.now();
+        List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
+        int i = 1;
+        while (data.size() < 2) {
+            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i), toDate);
+            i++;
+        }
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
         generateMiniChart(title, path, currentData, data);
         return filename;
     }
@@ -146,8 +155,8 @@ public class ChartGenerator {
         yAxis.add(currentData.get(0).getClosingPrice().doubleValue());
 
         XYSeries series = chart.addSeries(title.toUpperCase(), xAxis, yAxis);
-        series.setFillColor(new Color(114,115,125));
-        series.setLineColor(new Color(61,62,69));
+        series.setFillColor(new Color(114, 115, 125));
+        series.setLineColor(new Color(61, 62, 69));
 
         try {
             BitmapEncoder.saveBitmapWithDPI(chart, path, BitmapEncoder.BitmapFormat.PNG, 150);
@@ -165,7 +174,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Stocks in App (buy)";
         String filename = pathGenerator("most_traded_buy");
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostBoughtStocks());
         return filename;
     }
@@ -174,7 +183,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Stocks in App (sell)";
         String filename = pathGenerator("most_traded_sell");
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostSoldStocks());
         return filename;
     }
@@ -183,7 +192,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Today on WSE (volume)";
         String filename = pathGenerator("most_traded_wse");
-        String path = webAppProperties.getChartSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostTradedOnWse());
         return filename;
     }
