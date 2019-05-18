@@ -72,6 +72,11 @@ public class BuySharesServlet extends HttpServlet {
         String profilePicURL = userService.userProfilePicURL(user);
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
@@ -107,7 +112,7 @@ public class BuySharesServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
+            showMenuWithBuyForm(req, resp,"Ticker " + ticker.toUpperCase() + " is not valid");
             logger.info("Ticker {} is not valid.", ticker);
             return;
         }
