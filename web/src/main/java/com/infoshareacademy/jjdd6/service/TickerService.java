@@ -53,4 +53,8 @@ public class TickerService {
         checkDataInDatabase();
         return tickerDao.findById(ticker) != null;
     }
+
+    public List<Ticker> getAll(){
+        return tickerDao.findAll();
+    }
 }
