@@ -13,13 +13,13 @@
     <tr>
         <td>${ticker}</td>
         <td>${amount}</td>
-        <td>${avgBuyPrice}</td>
-        <td>${value}</td>
-        <td>${currentPrice}</td>
-        <td>${currentValue}</td>
-        <td>${currentReturn}</td>
-        <td>${stopLoss}</td>
-        <td>${takeProfit}</td>
+        <td>${avgBuyPrice} PLN</td>
+        <td>${value} PLN</td>
+        <td>${currentPrice} PLN</td>
+        <td>${currentValue} PLN</td>
+        <td>${currentReturn}%</td>
+        <td>${stopLoss} PLN</td>
+        <td>${takeProfit} PLN</td>
     </tr>
     <tr>
         <td colspan="9">${fullName}</td>
@@ -31,35 +31,35 @@
     </tr>
     <tr>
         <td>Price</td>
-        <td>${currentPrice}</td>
+        <td>${currentPrice} PLN</td>
         <td></td>
         <td>Price</td>
-        <td>${takeProfit}</td>
+        <td>${takeProfit} PLN</td>
         <td>?</td>
         <td>Price</td>
-        <td>${stopLoss}</td>
+        <td>${stopLoss} PLN</td>
         <td>?</td>
     </tr>
     <tr>
         <td>Value</td>
-        <td>${currentValue}</td>
+        <td>${currentValue} PLN</td>
         <td></td>
         <td>Value</td>
-        <td>${takeProfitValue}</td>
+        <td>${takeProfitValue} PLN</td>
         <td></td>
         <td>Value</td>
-        <td>${stopLossValue}</td>
+        <td>${stopLossValue} PLN</td>
         <td></td>
     </tr>
     <tr>
         <td>Return</td>
-        <td>${currentReturn}</td>
+        <td>${currentReturn}%</td>
         <td></td>
         <td>Return</td>
-        <td>?</td>
+        <td>?%</td>
         <td></td>
         <td>Return</td>
-        <td>?</td>
+        <td>?%</td>
         <td></td>
     </tr>
     <tr>

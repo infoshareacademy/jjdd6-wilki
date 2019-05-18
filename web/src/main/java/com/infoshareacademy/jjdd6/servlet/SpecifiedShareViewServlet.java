@@ -81,7 +81,6 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         Double riskReward = share.getRiskRewardRatio();
         Long volume = share.getVolume();
 
-
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);

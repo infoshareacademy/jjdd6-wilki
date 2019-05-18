@@ -14,7 +14,7 @@
     <input id="buy" type="submit" value="Report BUY"/>
 </form>
 <div id="info">
-    Total price has fee included!</br>
+    <span id="fee">Total price has fee included!</span></br>
     Available money: ${"${freeCash}"?replace(","," ")} PLN</br>
     Transaction: 0 PLN</br>
     <span>Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>
@@ -39,19 +39,19 @@
         var moneyLeft = money - totalPriceFeeIncluded;
         if (!isNaN(totalPrice)) {
             if(moneyLeft >= 0)
-            document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+            document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                 "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
                 "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
                     "<span>Money left: " + moneyLeft.toFixed(2) + " PLN</span>";
             else{
-                document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+                document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                     "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
                     "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
                     "<span style='color:red;'>Money left: " + moneyLeft.toFixed(2)+ " PLN</span>";
             }
         }
         else{
-            document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+            document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                 "    Available money: ${"${freeCash}"?replace(","," ")} PLN </br> " +
                 "    Transaction: 0 PLN</br>" +
                 "    <span>Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>"

@@ -227,8 +227,7 @@ a:active {
     text-align: center;
 }
 #info{
-    float: left;
-    width: 36%;
+    width: 550px;
     color: white;
     height: 61%;
     font-size: 30px;
@@ -236,6 +235,15 @@ a:active {
     font-weight: 900;
     line-height: 90px;
     padding-top: 4%;
+    position: absolute;
+    margin-left: 850px;
+    margin-top: 50px;
+}
+#fee{
+    line-height: 10px;
+    opacity: 0.6;
+    font-size: 20px;
+    text-decoration: underline;
 }
 #sell_btn{
     margin-top: 8px;
@@ -534,4 +542,13 @@ table th {
     border: 2px solid white;
 
     font-weight: 800;
+}
+#select_share{
+    color: black;
+    opacity: 0.9;
+    transition-duration: 0.1s;
+}
+#select_share:hover{
+    opacity: 1;
+    transition-duration: 0.1s;
 }
