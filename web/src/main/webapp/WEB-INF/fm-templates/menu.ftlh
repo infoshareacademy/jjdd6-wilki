@@ -22,6 +22,8 @@
         USER</br>
         <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
         <div class="menu_option">Log out</div></br>
+        <#if isAdmin == 1><a href="/admin"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Admin panel</div></a></br></br></br></br></#if>
+
     </div>
     <div id="upper_menu">
         <div class="upper_menu_info">Free cash </br> <b>${freeCash?string["# ##0.00 PLN"]}</b></div>

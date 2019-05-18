@@ -9,6 +9,7 @@ import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,6 +48,11 @@ public class ShowWalletServlet extends HttpServlet {
         Map<String, Object> model = new HashMap<>();
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));

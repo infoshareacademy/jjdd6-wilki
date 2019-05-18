@@ -9,6 +9,7 @@ import com.infoshareacademy.jjdd6.wilki.User;
 import com.infoshareacademy.jjdd6.wilki.Wallet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -87,6 +88,23 @@ public class UserService {
     public void logoutUser(HttpServletRequest req) {
         req.getSession().invalidate();
     }
+
+    public User findById(Long id) {
+        return userDao.findById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userDao.findAll();
+    }
+
+    public void saveUser(User user) {
+        userDao.save(user);
+    }
+
+    public User updateUser(User user) {
+        return userDao.update(user);
+    }
+
 
     public List<User> findByFbUserId(FacebookUser facebookUser) {
         return userDao.findByFbUserId(facebookUser.getId());
