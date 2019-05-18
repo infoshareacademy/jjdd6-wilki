@@ -15,10 +15,9 @@
             <div class="full_company_name">${transaction.getShare().getFullCompanyName()}</div>
             <div class="amount_transaction">${transaction.amount?string["0"]}</div>
             <div class="date">${transaction.date}</div>
-            <div class="purchase_price">${transaction.price?string["###0.00##"]} PLN</div>-->
-            <div class="profit">${transaction.profit?string["###0.00##"]} PLN</div>-->
-            <div class="fee">${transaction.transactionFeeValue?string["###0.00##"]} PLN</div>-->
-
+            <div class="purchase_price">${transaction.price?string["###0.00##"]} PLN</div>
+            <div class="profit">${transaction.profit?string["###0.00##"]} PLN</div>
+            <div class="fee">${transaction.transactionFeeValue?string["###0.00##"]} PLN</div>
         </#items>
     </#list>
 </div>

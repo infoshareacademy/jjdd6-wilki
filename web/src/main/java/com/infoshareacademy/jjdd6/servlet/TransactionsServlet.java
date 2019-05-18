@@ -51,7 +51,6 @@ public class TransactionsServlet extends HttpServlet {
         Wallet userWallet = user.getWallet();
         List<Transaction> transactionList = transactionDao.findAllByWalletId(userWallet.getId());
         List<Share> shares = shareDao.findAll();
-        String s = transactionList.get(0).getShare().getTicker();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
