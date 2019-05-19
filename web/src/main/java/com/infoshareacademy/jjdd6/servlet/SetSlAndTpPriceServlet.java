@@ -59,7 +59,8 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = getAction(req, resp);
+        final String action = req.getParameter("action");
+        logger.info("Requested action: {}", action);
         if (action == null) {
             return;
         }
@@ -68,7 +69,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         } else if (action.equals("tp")) {
             setTakeProfit(req, resp);
         } else {
-            resp.getWriter().write("Unknown action.");
+            showManageTpAndSl(req, resp, "Unknown action.");
         }
     }
 
@@ -112,36 +113,29 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
 
     }
 
-    private String getAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null || action.isEmpty()) {
-            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
-        }
-        return action;
-    }
-
     private void setStopLoos(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String stringWalletId = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
-            showManageTpAndSl(req, resp, "Wallet id should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", stringWalletId);
-            return;
-        }
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        Long id = userWallet.getId();
+//        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
+//            showManageTpAndSl(req, resp, "Wallet id should be an integer greater than 0");
+//            logger.info("Incorrect wallet walletId = {}", stringWalletId);
+//            return;
+//        }
 
-        if (validators.isWalletNotPresent(stringWalletId)) {
-            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
-            return;
-        }
+//        if (validators.isWalletNotPresent(stringWalletId)) {
+//            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
+//            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
+//            return;
+//        }
 
         String userId = String.valueOf(req.getSession().getAttribute("user"));
-
-        if (validators.isUserNotAllowedToWalletModification(userId, stringWalletId)) {
+//        String stringWalletId = String.valueOf(user.getWallet().getId());
+        if (validators.isUserNotAllowedToWalletModification(userId, id.toString())) {
             showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user wit id = {}", stringWalletId, userId);
+            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id.toString(), userId);
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -161,9 +155,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
             logger.info("Incorrect price = {}", priceStr);
             return;
         }
-
-        final Long walletId = Long.valueOf(stringWalletId);
-        final Wallet existingWallet = walletDao.findById(walletId);
+        final Wallet existingWallet = walletDao.findById(id);
 
         List<Share> listFromExistingWallet = existingWallet.getShares();
 
@@ -175,30 +167,32 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
                 logger.info("Share with id: {} updated!", share.getId());
             }
         }
-        showManageTpAndSl(req, resp, "Stop-loss price is now set to: " + priceStr +" PLN");
+        showManageTpAndSl(req, resp, "Stop-loss price is now set to: " + priceStr + " PLN");
     }
 
     private void setTakeProfit(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String stringWalletId = req.getParameter("wallet_id");
-        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
-            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
-            logger.info("Incorrect wallet walletId = {}", stringWalletId);
-            return;
-        }
+        User user = userService.loggedUser(req);
+        Wallet userWallet = user.getWallet();
+        Long id = userWallet.getId();
+//        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
+//            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
+//            logger.info("Incorrect wallet walletId = {}", stringWalletId);
+//            return;
+//        }
 
-        if (validators.isWalletNotPresent(stringWalletId)) {
-            showManageTpAndSl(req, resp, "No wallet found for walletId = {" + stringWalletId + "}");
-            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
-            return;
-        }
+//        if (validators.isWalletNotPresent(id.toString())) {
+//            showManageTpAndSl(req, resp, "No wallet found for walletId = {" + id.toString() + "}");
+//            logger.info("No wallet found for walletId = {}, nothing to be updated", id.toString());
+//            return;
+//        }
 
         String userId = String.valueOf(req.getSession().getAttribute("user"));
 
-        if (validators.isUserNotAllowedToWalletModification(userId, stringWalletId)) {
+        if (validators.isUserNotAllowedToWalletModification(userId, id.toString())) {
             showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", stringWalletId, userId);
+            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id, userId);
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -219,8 +213,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
             return;
         }
 
-        final Long walletId = Long.valueOf(stringWalletId);
-        final Wallet existingWallet = walletDao.findById(walletId);
+        final Wallet existingWallet = walletDao.findById(id);
 
         List<Share> listFromExistingWallet = existingWallet.getShares();
 
@@ -232,6 +225,6 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
                 logger.info("Share with id: {} updated!", share.getId());
             }
         }
-        showManageTpAndSl(req, resp, "Take-profit price is now set to: " + priceStr +" PLN");
+        showManageTpAndSl(req, resp, "Take-profit price is now set to: " + priceStr + " PLN");
     }
 }
