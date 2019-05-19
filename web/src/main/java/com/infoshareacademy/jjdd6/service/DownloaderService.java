@@ -47,7 +47,7 @@ public class DownloaderService {
     }
 
     public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromdate, LocalDate toDate) throws MalformedURLException {
-        logger.info("Downloading and parsing historical data for " + ticker);
+        logger.info("Downloading and parsing historical data for " + ticker.toUpperCase());
         try {
             downloader(ticker);
         } catch (IOException e) {
