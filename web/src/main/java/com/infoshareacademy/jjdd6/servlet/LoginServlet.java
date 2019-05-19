@@ -41,9 +41,9 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         HttpSession session = req.getSession();
-        final String STATE = webAppProperties.getProperty("STATE");
-        final String APP_ID = webAppProperties.getProperty("APP_ID");
-        final String APP_SECRET = webAppProperties.getProperty("APP_SECRET");
+        final String STATE = webAppProperties.facebookLogonSettings("STATE");
+        final String APP_ID = webAppProperties.facebookLogonSettings("APP_ID");
+        final String APP_SECRET = webAppProperties.facebookLogonSettings("APP_SECRET");
         String REDIRECT_URL = req.getRequestURL().toString();
 
         String error = req.getParameter("error");

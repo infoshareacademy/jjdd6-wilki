@@ -1,6 +1,7 @@
 package com.infoshareacademy.jjdd6.service;
 
 import com.infoshareacademy.jjdd6.dao.TickerDao;
+import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.wilki.Ticker;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
 import org.slf4j.Logger;
@@ -25,9 +26,12 @@ public class TickerService {
     @Inject
     private DownloadCurrentData downloadCurrentData;
 
+    @Inject
+    private WebAppProperties webAppProperties;
+
     private void downloadTickers() {
         try {
-            URL tickersURL = new URL("https://raw.githubusercontent.com/stockwallet/tickers/master/tickers.csv");
+            URL tickersURL = new URL(webAppProperties.getSetting("TICKERS_URL"));
             logger.info("Loading tickers from " + tickersURL);
             List<String[]> dataLoaded = downloadCurrentData.readFromURL(tickersURL);
             logger.info("Adding tickers to database");
@@ -52,5 +56,9 @@ public class TickerService {
     public Boolean validateTicker(String ticker) {
         checkDataInDatabase();
         return tickerDao.findById(ticker) != null;
+    }
+
+    public List<Ticker> getAll(){
+        return tickerDao.findAll();
     }
 }

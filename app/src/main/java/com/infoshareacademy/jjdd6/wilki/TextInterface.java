@@ -157,6 +157,7 @@ public class TextInterface {
             System.out.println("Your current balance: " + wallet.getFreeCash() + " pln\n");
         } else {
             wallet.buyShare(ticker.toUpperCase(), amount, price);
+            wallet.scanWalletForShare(ticker).setFullCompanyName(new DownloadCurrentData().loadAndScanTickers(ticker));
             clearScreen();
             System.out.println("BUY: " + ticker.toUpperCase() + " amount: " + amount + " price: " + price);
 

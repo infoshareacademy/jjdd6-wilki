@@ -1,10 +1,13 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
+import com.infoshareacademy.jjdd6.service.DownloaderService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.wilki.User;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -22,18 +25,31 @@ import java.util.Map;
 @WebServlet("/admin")
 public class AdminServlet extends HttpServlet {
 
+    private static Logger logger = LoggerFactory.getLogger(AdminServlet.class);
+
+
     @Inject
     private UserService userService;
 
     @Inject
     private TemplateProvider templateProvider;
 
+    @Inject
+    private DownloaderService downloaderService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = userService.loggedUser(req);
         if (!user.isAdmin()) {
+            logger.warn("User id: " + req.getSession().getAttribute("user") + "tried to open admin panel with no admin rights");
             resp.sendRedirect("/wallet");
             return;
+        }
+
+        if (req.getParameter("database").equals("fill")) {
+            logger.info("Starting downloader service to fill database with historical data...");
+            downloaderService.downloadAllFiles();
+            logger.info("Downloading finished");
         }
 
         String selectedUserStr = req.getParameter("selectedUser");
@@ -58,7 +74,7 @@ public class AdminServlet extends HttpServlet {
                 resp.getWriter().println("Something went wrong");
             }
         } else {
-
+            logger.info("User id: " + req.getSession().getAttribute("user") + "logged to admin panel");
             List<User> userList = userService.getAllUsers();
 
             Map<String, Object> model = new HashMap<>();
@@ -78,6 +94,7 @@ public class AdminServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = userService.findById(Long.parseLong(req.getParameter("userId")));
+        logger.warn("User id: " + req.getSession().getAttribute("user") + "changed data of user id: " + user.getId());
         user.setName(req.getParameter("name"));
         user.setSurname(req.getParameter("surname"));
         if (req.getParameter("email") != null && !req.getParameter("email").equals("")) {

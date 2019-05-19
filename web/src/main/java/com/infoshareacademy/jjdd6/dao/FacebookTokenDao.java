@@ -1,13 +1,14 @@
 package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.FacebookToken;
-import javax.enterprise.context.RequestScoped;
+
+import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-@RequestScoped
+@Singleton
 public class FacebookTokenDao {
 
     @PersistenceContext
