@@ -70,9 +70,9 @@ public class DownloadCurrentData {
     }
 
     public List<DataFromFile> parseHistory(URL file) {
-        logger.info("parse history from " + file.toString());
+        logger.info("Parse history from " + file.toString());
         List<String[]> dataLoaded = readFromURL(file);
-        logger.info("downloaded " + dataLoaded.size() + " entires, parsing...");
+        logger.info("Read " + dataLoaded.size() + " entries, parsing...");
         return dataLoaded.stream()
                 .skip(1)
                 .map(a -> {
