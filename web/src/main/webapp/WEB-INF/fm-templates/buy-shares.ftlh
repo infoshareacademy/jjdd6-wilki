@@ -1,9 +1,19 @@
-<?php
 <div>
 <form class="buy_form" method="POST" action="/share-buy">
     <div class="input_area">
         TICKER</br>
-        <input type="text" class="text-input" autocomplete="off" name="ticker" required placeholder="e.g. KGH"/></div>
+<#--        <input type="text"   name="ticker"  placeholder="e.g. KGH"/></div>-->
+
+    <input type="text" class="text-input" autocomplete="off" required name="ticker" placeholder="Search by ticker or company name..." list="tickersList"/>
+
+    <datalist id="tickersList">
+            <#list tickers>
+                <#items as ticker>
+                    <option value="${ticker.tickerName}">${ticker.tickerName} - ${ticker.fullName}</option>
+                </#items>
+            </#list>
+    </datalist>
+    </div>
     <div class="input_area">
         AMOUNT</br>
         <input type="number" min="1" step="1" class="text-input" autocomplete="off" id="amount" required name="amount"/></div>
