@@ -13,7 +13,6 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -54,7 +53,7 @@ public class DownloaderService {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        return downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSaveDir("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
+        return downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
                 .stream()
                 .filter(o -> o.getDate().isAfter(fromdate))
                 .filter(o -> o.getDate().isBefore(toDate))
@@ -62,7 +61,7 @@ public class DownloaderService {
     }
 
     public void downloader(String ticker) throws IOException {
-        String filename = webAppProperties.getSaveDir("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv";
+        String filename = webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv";
         LocalDate fileDate = LocalDate.ofInstant(Files.getLastModifiedTime(Path.of(filename)).toInstant(), ZoneId.systemDefault());
         if (!fileDate.equals(LocalDate.now())) {
 

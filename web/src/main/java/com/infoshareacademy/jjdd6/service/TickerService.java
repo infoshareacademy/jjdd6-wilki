@@ -31,7 +31,7 @@ public class TickerService {
 
     private void downloadTickers() {
         try {
-            URL tickersURL = new URL(webAppProperties.getSaveDir("TICKERS_URL"));
+            URL tickersURL = new URL(webAppProperties.getSetting("TICKERS_URL"));
             logger.info("Loading tickers from " + tickersURL);
             List<String[]> dataLoaded = downloadCurrentData.readFromURL(tickersURL);
             logger.info("Adding tickers to database");

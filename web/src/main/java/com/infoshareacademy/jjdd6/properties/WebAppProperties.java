@@ -18,9 +18,9 @@ public class WebAppProperties {
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
     }
 
-    private Properties saveDir() {
+    private Properties settingsFile() {
 
-        String CONFIG_PROPERTIES_FILENAME = "directory.properties";
+        String CONFIG_PROPERTIES_FILENAME = "settings.properties";
         return loadProperties(CONFIG_PROPERTIES_FILENAME);
     }
 
@@ -38,12 +38,12 @@ public class WebAppProperties {
         }
     }
 
-    public String getProperty(String property) {
+    public String facebookLogonSettings(String property) {
         return setupFacebookLogon().getProperty(property);
     }
 
-    public String getSaveDir(String property) {
-        return saveDir().getProperty(property);
+    public String getSetting(String property) {
+        return settingsFile().getProperty(property);
     }
 
 }

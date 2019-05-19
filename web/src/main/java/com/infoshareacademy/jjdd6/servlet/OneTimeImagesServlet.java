@@ -23,7 +23,7 @@ public class OneTimeImagesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String filename = URLDecoder.decode(req.getPathInfo().substring(1), "UTF-8");
-        File file = new File(webAppProperties.getSaveDir("CHART_LOCATION"), filename);
+        File file = new File(webAppProperties.getSetting("CHART_LOCATION"), filename);
         resp.setHeader("Content-Type", Files.probeContentType(file.toPath()));
         resp.setHeader("Content-Length", String.valueOf(file.length()));
         resp.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");

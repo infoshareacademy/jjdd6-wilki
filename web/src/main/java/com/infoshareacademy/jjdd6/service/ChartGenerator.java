@@ -45,7 +45,7 @@ public class ChartGenerator {
         List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
-        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generateChart(title, path, currentData, data, buyPrice);
         return filename;
     }
@@ -110,14 +110,15 @@ public class ChartGenerator {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
         LocalDate toDate = LocalDate.now();
         List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
-        int i = 1;
+        int i = 0;
+        int offset = Integer.parseInt(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"));
         while (data.size() < 2) {
-            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i), toDate);
+            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i + offset), toDate);
             i++;
         }
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
-        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generateMiniChart(title, path, currentData, data);
         return filename;
     }
@@ -174,7 +175,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Stocks in App (buy)";
         String filename = pathGenerator("most_traded_buy");
-        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostBoughtStocks());
         return filename;
     }
@@ -183,7 +184,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Stocks in App (sell)";
         String filename = pathGenerator("most_traded_sell");
-        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostSoldStocks());
         return filename;
     }
@@ -192,7 +193,7 @@ public class ChartGenerator {
 
         String title = "Most Traded Today on WSE (volume)";
         String filename = pathGenerator("most_traded_wse");
-        String path = webAppProperties.getSaveDir("CHART_LOCATION") + "/" + filename;
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostTradedOnWse());
         return filename;
     }
