@@ -17,7 +17,7 @@
         <td>${value} PLN</td>
         <td>${currentPrice} PLN</td>
         <td>${currentValue} PLN</td>
-        <td>${currentReturn}%</td>
+        <td>${currentReturn} %</td>
         <td>${stopLoss} PLN</td>
         <td>${takeProfit} PLN</td>
     </tr>
@@ -53,7 +53,7 @@
     </tr>
     <tr>
         <td id="to_left">Return</td>
-        <td>${currentReturn}%</td>
+        <td>${currentReturn} %</td>
         <td></td>
         <td id="to_left">Return</td>
         <td>?%</td>
