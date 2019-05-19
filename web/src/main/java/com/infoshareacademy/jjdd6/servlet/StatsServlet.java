@@ -33,13 +33,13 @@ public class StatsServlet extends HttpServlet {
     private ChartGenerator chartGenerator;
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Inject
-    StatsService statsService;
+    private StatsService statsService;
 
     @Inject
-    TemplateProvider templateProvider;
+    private TemplateProvider templateProvider;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
