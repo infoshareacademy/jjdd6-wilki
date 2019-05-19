@@ -128,29 +128,33 @@ body{
     background-color: #e8e8e8;
     width: 20%;
 }
-.full_company_name{
+.transaction_ticker{
+    background-color: #c7c7c7;
+    width: 15%;
+}
+.transaction_type{
     background-color: #e8e8e8;
-    width: 38%;
+    width: 15%;
 }
 .amount_transaction{
     background-color: #c7c7c7;
-    width: 6%;
+    width: 10%;
 }
 .date{
     background-color: #e8e8e8;
-    width: 12%;
+    width: 15%;
 }
 .purchase_price{
-    background-color: #c7c7c7;
-    width: 12%;
+    background-color: #e8e8e8;
+    width: 15%;
 }
 .profit{
-    background-color: #e8e8e8;
-    width: 12%;
+    background-color: #c7c7c7;
+    width: 15%;
 }
 .fee{
-    background-color: #c7c7c7;
-    width: 12%;
+    background-color: #e8e8e8;
+    width: 15%;
 }
 #table_header div{
     height: 70px;
