@@ -73,7 +73,7 @@ public class DownloaderService {
                 logger.error(e.getMessage());
             }
         } else {
-            logger.info("Historical data for " + ticker.toUpperCase() + " is actual, skipping download");
+            logger.info("Historical data for " + ticker.toUpperCase() + " is actual as of " + fileDate + ", skipping download");
         }
     }
 

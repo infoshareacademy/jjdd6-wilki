@@ -26,13 +26,11 @@ public class WebAppProperties {
 
     private Properties loadProperties(String CONFIG_PROPERTIES_FILENAME) {
         String propertyFilePath = Thread.currentThread().getContextClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath();
-        logger.info(propertyFilePath);
 
         try {
             Properties properties = new Properties();
             logger.info("Loading config: " + getClass().getClassLoader().getResource(CONFIG_PROPERTIES_FILENAME).getPath());
             properties.load(getClass().getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_FILENAME));
-            logger.info("Facebook logon config loaded successfully");
             return properties;
         } catch (IOException e) {
             logger.error("Error while loading Facebook logon config: " + e.getMessage());
