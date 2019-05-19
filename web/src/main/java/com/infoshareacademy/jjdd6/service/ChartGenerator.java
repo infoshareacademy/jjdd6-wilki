@@ -198,6 +198,15 @@ public class ChartGenerator {
         return filename;
     }
 
+    public String getSharesWithLosses(User user) {
+
+        String title = "Your shares with most losses";
+        String filename = pathGenerator("most_losses_wallet");
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
+        generatePieChart(title, path, statsService.getSharesWithLosses(user));
+        return filename;
+    }
+
     public String getMostTradedWSEChart() {
 
         String title = "Most Traded Today on WSE (volume)";
