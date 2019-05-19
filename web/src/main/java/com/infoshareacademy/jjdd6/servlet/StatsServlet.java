@@ -21,6 +21,9 @@ public class StatsServlet extends HttpServlet {
     @Inject
     private ChartGenerator chartGenerator;
 
+    @Inject
+    UserService userService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -34,6 +37,10 @@ public class StatsServlet extends HttpServlet {
             String forward = "/images/" + chartGenerator.getMostTradedSellChart();
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
+        } else if (chart != null && chart.equals("mostprofitable")) {
+                String forward = "/images/" + chartGenerator.getMostProfitable(userService.loggedUser(req));
+                RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
+                requestDispatcher.forward(req, resp);
         } else {
             String forward = "/images/" + chartGenerator.getMostTradedWSEChart();
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);

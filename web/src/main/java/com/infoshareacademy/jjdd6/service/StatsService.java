@@ -1,16 +1,14 @@
 package com.infoshareacademy.jjdd6.service;
 
 import com.infoshareacademy.jjdd6.dao.StatsDao;
-import com.infoshareacademy.jjdd6.wilki.DataFromFile;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
-import com.infoshareacademy.jjdd6.wilki.Share;
-import com.infoshareacademy.jjdd6.wilki.Wallet;
+import com.infoshareacademy.jjdd6.wilki.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -34,6 +32,34 @@ StatsService {
 
     public List<String[]> getMostSoldStocks() {
         return statsDao.getMostSoldStocks();
+    }
+
+    public List<String[]> getMostProfitableStocks(User user){
+        List<String[]> output = new ArrayList<>();
+        user.getWallet().getShares().forEach(o -> {
+            if (o.getTotalProfit().compareTo(BigDecimal.ZERO) > 0) {
+
+                String[] mapping = new String[2];
+                mapping[0] = o.getTicker();
+                mapping[1] = o.getTotalProfit().setScale(2, RoundingMode.HALF_UP).toString();
+                output.add(mapping);
+            }
+        });
+        return output;
+    }
+
+    public List<String[]> getSharesWithLosses(User user){
+        List<String[]> output = new ArrayList<>();
+        user.getWallet().getShares().forEach(o -> {
+            if (o.getTotalProfit().compareTo(BigDecimal.ZERO) < 0) {
+
+                String[] mapping = new String[2];
+                mapping[0] = o.getTicker();
+                mapping[1] = o.getTotalProfit().setScale(2, RoundingMode.HALF_UP).toString();
+                output.add(mapping);
+            }
+        });
+        return output;
     }
 
     public List<String[]> getMostTradedOnWse() {

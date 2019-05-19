@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.service;
 import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.wilki.DataFromFile;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import com.infoshareacademy.jjdd6.wilki.User;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.PieStyler;
 import org.knowm.xchart.style.Styler;
@@ -185,6 +186,15 @@ public class ChartGenerator {
         String filename = pathGenerator("most_traded_sell");
         String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostSoldStocks());
+        return filename;
+    }
+
+    public String getMostProfitable(User user) {
+
+        String title = "Your most profitable shares";
+        String filename = pathGenerator("most_profitable_wallet");
+        String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
+        generatePieChart(title, path, statsService.getMostProfitableStocks(user));
         return filename;
     }
 
