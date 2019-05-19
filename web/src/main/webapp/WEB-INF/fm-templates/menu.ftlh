@@ -11,16 +11,16 @@
 <body>
 <div id="container">
     <div id="left_menu">
-        <img src="" width="20px" height="20px"> DASHBOARD</br>
-        <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>><img src="" width="20px" height="20px"> Show wallet</div></a></br>
-        <a href="/share-buy"><div class="menu_option" <#if content == "buy_shares"> id="selected" </#if>><img src="" width="20px" height="20px"> Report BUY</div></a></br>
-        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell"> id="selected" </#if><#if content == "sell_specified"> id="selected" </#if>><img src="" width="20px" height="20px"> Report SELL</div></a></br>
-        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>><img src="" width="20px" height="20px"> Manage free cash</div></a></br></br></br></br>
-        <img src="" width="20px" height="20px"> ANALYTICS</br>
-        <div class="menu_option" <#if content == ""> id="selected" </#if>>Most popular?</div></br>
-        <div class="menu_option" <#if content == ""> id="selected" </#if>>Most profitable?</div></br>
-        <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
-        <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>><img src="" width="20px" height="20px"> Transactions list</div></a></br>
+        DASHBOARD</br>
+        <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>>Show wallet</div></a></br>
+        <a href="/share-buy"><div class="menu_option" <#if content == "buy_shares"> id="selected" </#if>>Report BUY</div></a></br>
+        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell"> id="selected" </#if><#if content == "sell_specified"> id="selected" </#if>>Report SELL</div></a></br>
+        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Manage free cash</div></a></br></br></br></br>
+        ANALYTICS</br>
+        <a href="/stats?view=wallet"><div class="menu_option" <#if content == "wallet_stats"> id="selected" </#if>>Wallet stats</div></a></br>
+        <a href="/stats?view=app"><div class="menu_option" <#if content == "app_stats"> id="selected" </#if>>App stats</div></a></br>
+        <a href="/stats?view=wse"><div class="menu_option" <#if content == "wse_stats"> id="selected" </#if>>WSE stats</div></a></br>
+        <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>>Transactions list</div></a></br>
         </br></br></br></br>
         <img src="" width="20px" height="20px"> USER</br>
         <div id="menu_option_user"><img src="${profilePicURL}"/> <span>${userName}</span></div>
@@ -53,6 +53,12 @@
             <#include "specified-share.ftlh">
         <#elseif content == "transaction">
             <#include "transaction.ftlh">
+        <#elseif content == "app_stats">
+            <#include "appStats.ftlh">
+        <#elseif content == "wallet_stats">
+            <#include "walletStats.ftlh">
+        <#elseif content == "wse_stats">
+            <#include "wseStats.ftlh">
         </#if>
     </div>
 </div>
