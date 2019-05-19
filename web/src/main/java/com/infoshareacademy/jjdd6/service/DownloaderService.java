@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,11 +63,17 @@ public class DownloaderService {
 
     public void downloader(String ticker) throws IOException {
         String filename = webAppProperties.getSaveDir("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv";
-        String url = "https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&i=d";
-        try {
-            downloadFileWithResume(url, filename);
-        } catch (URISyntaxException e) {
-            logger.error(e.getMessage());
+        LocalDate fileDate = LocalDate.ofInstant(Files.getLastModifiedTime(Path.of(filename)).toInstant(), ZoneId.systemDefault());
+        if (!fileDate.equals(LocalDate.now())) {
+
+            String url = "https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&i=d";
+            try {
+                downloadFileWithResume(url, filename);
+            } catch (URISyntaxException e) {
+                logger.error(e.getMessage());
+            }
+        } else {
+            logger.info("Historical data for " + ticker.toUpperCase() + " is actual, skipping download");
         }
     }
 

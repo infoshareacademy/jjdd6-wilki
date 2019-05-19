@@ -57,6 +57,10 @@ public class ChartServlet extends HttpServlet {
             }
         }
 
+        if (ticker.equals("no shares")) {
+            return;
+        }
+
         if (validators.isTickerNotValid(ticker)) {
             logger.info("Ticker = {} is not valid.", ticker);
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
