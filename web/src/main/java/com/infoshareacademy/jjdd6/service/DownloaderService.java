@@ -62,7 +62,10 @@ public class DownloaderService {
 
     public void downloader(String ticker) throws IOException {
         String filename = webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv";
-        LocalDate fileDate = LocalDate.ofInstant(Files.getLastModifiedTime(Path.of(filename)).toInstant(), ZoneId.systemDefault());
+        LocalDate fileDate = LocalDate.MIN;
+        if (new File(filename).exists()) {
+            fileDate = LocalDate.ofInstant(Files.getLastModifiedTime(Path.of(filename)).toInstant(), ZoneId.systemDefault());
+        }
         if (!fileDate.equals(LocalDate.now())) {
 
             String url = "https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&i=d";
