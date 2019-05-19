@@ -111,9 +111,8 @@ public class ChartGenerator {
         LocalDate toDate = LocalDate.now();
         List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
         int i = 0;
-        int offset = Integer.parseInt(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"));
-        while (data.size() < 2) {
-            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i + offset), toDate);
+        while (data.size() < Integer.parseInt(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"))) {
+            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i), toDate);
             i++;
         }
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
