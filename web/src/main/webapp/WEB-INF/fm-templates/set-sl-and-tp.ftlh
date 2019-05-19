@@ -5,7 +5,7 @@
     TICKER</br>
     <input type="text" class="text-input" autocomplete="off" name="ticker" required placeholder="e.g. KGH"/></br></div>
 <div id="increase">
-    <form class= "buy_form" action="/sl-and-tp" method="POST">
+    <form class= "buy_form" method="POST">
         <div class="input_area">
             STOP-LOSS PRICE</br>
         <input type="number" min="0.01" step="0.01" autocomplete="off" placeholder="Enter price in PLN" required name="price"/></br></div>
@@ -14,7 +14,7 @@
     </form>
 </div>
 <div id="reduce">
-    <form class="buy_form" action="/sl-and-tp" method="POST">
+    <form class="buy_form" method="POST">
         <div class="input_area">
             TAKE-PROFIT PRICE</br>
             <input type="number" min="0.01" step="0.01" autocomplete="off" placeholder="Enter price in PLN" required name="price"/></br></div>
