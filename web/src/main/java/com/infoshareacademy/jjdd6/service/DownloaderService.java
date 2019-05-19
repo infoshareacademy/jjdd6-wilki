@@ -26,10 +26,10 @@ public class DownloaderService {
     private WebAppProperties webAppProperties;
 
     @Inject
-    TickerService tickerService;
+    private TickerService tickerService;
 
     @Inject
-    DownloadCurrentData downloadCurrentData;
+    private DownloadCurrentData downloadCurrentData;
 
     public void downloadAllFiles() {
         List<Ticker> tickerList = tickerService.getAll();

@@ -27,7 +27,7 @@ public class TickerService {
     private DownloadCurrentData downloadCurrentData;
 
     @Inject
-    WebAppProperties webAppProperties;
+    private WebAppProperties webAppProperties;
 
     private void downloadTickers() {
         try {

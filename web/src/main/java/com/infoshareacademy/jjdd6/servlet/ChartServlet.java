@@ -33,7 +33,7 @@ public class ChartServlet extends HttpServlet {
     private Validators validators;
 
     @Inject
-    UserService userService;
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
