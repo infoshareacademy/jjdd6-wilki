@@ -12,7 +12,8 @@
         <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>>Show wallet</div></a></br>
         <a href="/share-buy"><div class="menu_option" <#if content == "buy_shares"> id="selected" </#if>>Report BUY</div></a></br>
         <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell"> id="selected" </#if><#if content == "sell_specified"> id="selected" </#if>>Report SELL</div></a></br>
-        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Manage free cash</div></a></br></br></br></br>
+        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Manage free cash</div></a></br>
+        <a href="/sl-and-tp"><div class="menu_option" <#if content == "setTpSl"> id="selected" </#if>>Set stop-loss and take-profit price</div></a></br></br></br></br>
         ANALYTICS</br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Most popular?</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Most profitable?</div></br>
@@ -48,6 +49,8 @@
             <#include "manage-free-cash.ftlh">
         <#elseif content == "transaction">
             <#include "transaction.ftlh">
+        <#elseif content == "setTpSl">
+            <#include "set-sl-and-tp.ftlh">
         </#if>
     </div>
 </div>
