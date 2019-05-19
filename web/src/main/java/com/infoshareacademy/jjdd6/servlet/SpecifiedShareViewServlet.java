@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
@@ -18,6 +19,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet("/details")
@@ -35,6 +37,9 @@ public class SpecifiedShareViewServlet extends HttpServlet {
 
     @Inject
     private Validators validators;
+
+    @Inject
+    private TransactionDao transactionDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,6 +67,7 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
         Share share = userWallet.scanWalletForShare(ticker);
+        List<Transaction> transactionList = userWallet.scanWalletForShare(ticker).getTransactionHistory();
 
         String tickerFromWallet = share.getTicker();
         Integer amount = share.getSharesTotalAmount();
@@ -92,6 +98,12 @@ public class SpecifiedShareViewServlet extends HttpServlet {
 
         Map<String, Object> model = new HashMap<>();
 
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
+        model.put("transactions", transactionList);
         model.put("takeProfitValue", takeProfitValue);
         model.put("stopLossValue", stopLossValue);
         model.put("currentPE", currentPE);

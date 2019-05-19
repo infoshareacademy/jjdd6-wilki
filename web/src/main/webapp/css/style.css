@@ -562,10 +562,11 @@ a:active {
 }
 table, td {
     border: 1px solid white;
+    text-align: right;
 }
 table th {
     border: 2px solid white;
-
+    text-align: center;
     font-weight: 800;
 }
 #select_share{
@@ -597,4 +598,17 @@ table th {
     position: absolute;
     margin-top: 15px;
     width: 100px;
+}
+#specified_transaction_view{
+    color: white;
+    margin-top: 20px;
+    width: 900px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 19px;
+}
+#to_left{
+    text-align: left;
+}
+#center{
+    text-align: center;
 }
