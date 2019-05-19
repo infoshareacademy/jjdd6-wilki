@@ -128,6 +128,30 @@ body{
     background-color: #e8e8e8;
     width: 20%;
 }
+.full_company_name{
+    background-color: #e8e8e8;
+    width: 38%;
+}
+.amount_transaction{
+    background-color: #c7c7c7;
+    width: 6%;
+}
+.date{
+    background-color: #e8e8e8;
+    width: 12%;
+}
+.purchase_price{
+    background-color: #c7c7c7;
+    width: 12%;
+}
+.profit{
+    background-color: #e8e8e8;
+    width: 12%;
+}
+.fee{
+    background-color: #c7c7c7;
+    width: 12%;
+}
 #table_header div{
     height: 70px;
     background-color: #72737D;
