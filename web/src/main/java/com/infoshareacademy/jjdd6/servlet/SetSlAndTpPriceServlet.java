@@ -108,7 +108,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         try {
             template.process(model, resp.getWriter());
         } catch (TemplateException e) {
-            showManageTpAndSl(req, resp, "Something went wrong");
+            resp.getWriter().println("Something went wrong");
         }
 
     }
@@ -119,20 +119,14 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
         Long id = userWallet.getId();
-//        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
-//            showManageTpAndSl(req, resp, "Wallet id should be an integer greater than 0");
-//            logger.info("Incorrect wallet walletId = {}", stringWalletId);
-//            return;
-//        }
 
-//        if (validators.isWalletNotPresent(stringWalletId)) {
-//            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
-//            logger.info("No wallet found for walletId = {}, nothing to be updated", stringWalletId);
-//            return;
-//        }
+        if (validators.isWalletNotPresent(id.toString())) {
+            showManageTpAndSl(req, resp, "There is no wallet with id " + id);
+            logger.info("No wallet found for walletId = {}, nothing to be updated", id.toString());
+            return;
+        }
 
         String userId = String.valueOf(req.getSession().getAttribute("user"));
-//        String stringWalletId = String.valueOf(user.getWallet().getId());
         if (validators.isUserNotAllowedToWalletModification(userId, id.toString())) {
             showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
             logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id.toString(), userId);
@@ -176,17 +170,6 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
         Long id = userWallet.getId();
-//        if (validators.isNotIntegerOrIsSmallerThanZero(stringWalletId)) {
-//            showManageTpAndSl(req, resp, "Wallet ID should be an integer greater than 0");
-//            logger.info("Incorrect wallet walletId = {}", stringWalletId);
-//            return;
-//        }
-
-//        if (validators.isWalletNotPresent(id.toString())) {
-//            showManageTpAndSl(req, resp, "No wallet found for walletId = {" + id.toString() + "}");
-//            logger.info("No wallet found for walletId = {}, nothing to be updated", id.toString());
-//            return;
-//        }
 
         String userId = String.valueOf(req.getSession().getAttribute("user"));
 
