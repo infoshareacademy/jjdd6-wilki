@@ -19,7 +19,7 @@
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Profit chart</div></br>
         <div class="menu_option" <#if content == ""> id="selected" </#if>>Show available companies</div></br></br></br></br></br>
         USER</br>
-        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
+        <div id="menu_option_user"><img src="${profilePicURL}"/> <span>${userName}</span></div>
         <div class="menu_option">Log out</div></br>
     </div>
     <div id="upper_menu">
