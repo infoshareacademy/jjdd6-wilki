@@ -191,7 +191,7 @@ public class ChartGenerator {
 
     public String getMostProfitable(User user) {
 
-        String title = "Your most profitable shares";
+        String title = "Shares contributing to profit";
         String filename = pathGenerator("most_profitable_wallet");
         String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getMostProfitableStocks(user));
@@ -200,7 +200,7 @@ public class ChartGenerator {
 
     public String getSharesWithLosses(User user) {
 
-        String title = "Your shares with most losses";
+        String title = "Shares contributing to loss";
         String filename = pathGenerator("most_losses_wallet");
         String path = webAppProperties.getSetting("CHART_LOCATION") + "/" + filename;
         generatePieChart(title, path, statsService.getSharesWithLosses(user));
