@@ -3,6 +3,7 @@ package com.infoshareacademy.jjdd6.service;
 import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.wilki.DataFromFile;
 import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
+import org.apache.logging.log4j.core.layout.HtmlLayout;
 import org.knowm.xchart.*;
 import org.knowm.xchart.style.PieStyler;
 import org.knowm.xchart.style.Styler;
@@ -51,7 +52,7 @@ public class ChartGenerator {
     }
 
     private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data, Double buyPrice) {
-        XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
+        XYChart chart = new XYChartBuilder().width(600).height(150).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
         chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);

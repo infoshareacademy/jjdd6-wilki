@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,18 +47,17 @@ public class SpecifiedShareViewServlet extends HttpServlet {
 
         String ticker = req.getParameter("ticker");
 
-        if(null != ticker){
+        if (null != ticker) {
 
             User user = userService.loggedUser(req);
             Wallet userWallet = user.getWallet();
 
-            if(!(validators.isTickerNotValid(ticker)) && userWallet.checkIfShareIsPresent(ticker)) {
+            if (!(validators.isTickerNotValid(ticker)) && userWallet.checkIfShareIsPresent(ticker)) {
                 showSpecifiedShare(req, resp, ticker);
-            }
-            else{
+            } else {
                 resp.sendRedirect("/wallet");
             }
-        }else{
+        } else {
             resp.sendRedirect("/wallet");
         }
     }
@@ -76,6 +76,8 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         BigDecimal currentPrice = share.getCurrentPrice();
         BigDecimal currentValue = share.getCurrentValue();
         BigDecimal currentReturn = share.getCurrentReturn();
+        BigDecimal targetReturn = (share.getTakeProfitValue().divide(share.getBaseValue().setScale(2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)).multiply(BigDecimal.valueOf(100));
+        BigDecimal stopLossReturn = (share.getStopLossValue().divide(share.getBaseValue().setScale(2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)).multiply(BigDecimal.valueOf(100));
         BigDecimal stopLoss = share.getStopLossPrice();
         BigDecimal takeProfit = share.getTakeProfitPrice();
         String fullName = share.getFullCompanyName();
@@ -86,7 +88,10 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         BigDecimal feeAmount = share.getFeeAmount();
         Double riskReward = share.getRiskRewardRatio();
         Long volume = share.getVolume();
-
+        BigDecimal targetProfit = share.getTakeProfitValue().subtract(share.getBaseValue());
+        BigDecimal stopLossProfit = share.getStopLossValue().subtract(share.getBaseValue());
+        BigDecimal currentProfit = share.getCurrentValue().subtract(share.getBaseValue());
+        BigDecimal totalProfit = share.getTotalProfit();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
@@ -105,7 +110,12 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         model.put("isAdmin", userAdmin);
         model.put("transactions", transactionList);
         model.put("takeProfitValue", takeProfitValue);
+        model.put("targetProfit", targetProfit);
         model.put("stopLossValue", stopLossValue);
+        model.put("stopLossProfit", stopLossProfit);
+        model.put("totalProfit", totalProfit);
+        model.put("targetReturn", targetReturn);
+        model.put("stopLossReturn", stopLossReturn);
         model.put("currentPE", currentPE);
         model.put("targetPE", targetPE);
         model.put("feeAmount", feeAmount);
@@ -118,6 +128,7 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         model.put("currentPrice", currentPrice);
         model.put("currentValue", currentValue);
         model.put("currentReturn", currentReturn);
+        model.put("currentProfit", currentProfit);
         model.put("stopLoss", stopLoss);
         model.put("takeProfit", takeProfit);
         model.put("fullName", fullName);
