@@ -13,10 +13,13 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
+@Transactional
 @WebServlet("/chart")
 public class ChartServlet extends HttpServlet {
 
@@ -28,6 +31,9 @@ public class ChartServlet extends HttpServlet {
 
     @Inject
     private Validators validators;
+
+    @Inject
+    private UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,6 +57,10 @@ public class ChartServlet extends HttpServlet {
             }
         }
 
+        if (ticker.equals("no shares")) {
+            return;
+        }
+
         if (validators.isTickerNotValid(ticker)) {
             logger.info("Ticker = {} is not valid.", ticker);
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -64,7 +74,21 @@ public class ChartServlet extends HttpServlet {
         }
 
         if (type.equals(mini)) {
-            String forward = "/images/" + chartGenerator.getMiniChart(ticker);
+            Optional<LocalDate> fromDateOpt = userService.loggedUser(req)
+                    .getWallet()
+                    .scanWalletForShare(ticker)
+                    .getTransactionHistory().stream()
+                    .filter(o -> o.getAmountForCalc() > 0)
+                    .limit(1)
+                    .map(o -> o.getDate())
+                    .findFirst();
+            LocalDate fromDate;
+            if (fromDateOpt.isPresent()) {
+                fromDate = fromDateOpt.get();
+            } else {
+                fromDate = LocalDate.now().minusMonths(3);
+            }
+            String forward = "/images/" + chartGenerator.getMiniChart(ticker, fromDate);
             RequestDispatcher requestDispatcher = req.getRequestDispatcher(forward);
             requestDispatcher.forward(req, resp);
         } else if (type.equals(full)) {

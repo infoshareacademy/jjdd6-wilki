@@ -5,6 +5,7 @@ import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.StatsService;
+import com.infoshareacademy.jjdd6.service.TickerService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.Share;
@@ -55,6 +56,9 @@ public class BuySharesServlet extends HttpServlet {
     @Inject
     private StatsService statsService;
 
+    @Inject
+    private TickerService tickerService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
@@ -72,6 +76,11 @@ public class BuySharesServlet extends HttpServlet {
         String profilePicURL = userService.userProfilePicURL(user);
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        int userAdmin = 0;
+        if (user.isAdmin()) {
+            userAdmin = 1;
+        }
+        model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
@@ -107,7 +116,7 @@ public class BuySharesServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            showMenuWithBuyForm(req, resp,"Ticker = {" + ticker + "} is not valid");
+            showMenuWithBuyForm(req, resp,"Ticker " + ticker.toUpperCase() + " is not valid");
             logger.info("Ticker {} is not valid.", ticker);
             return;
         }
@@ -142,6 +151,7 @@ public class BuySharesServlet extends HttpServlet {
         existingWallet.buyShare(ticker, amount, price);
         Transaction transaction = existingWallet.scanWalletForShare(ticker).getTransactionHistory().get(existingWallet.scanWalletForShare(ticker).getTransactionHistory().size() - 1);
         Share share = existingWallet.scanWalletForShare(ticker);
+        share.setFullCompanyName(tickerService.scanTickers(ticker));
         transaction.setShare(share);
         transaction.setWallet(existingWallet);
 

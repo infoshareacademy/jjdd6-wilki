@@ -4,7 +4,6 @@ package com.infoshareacademy.jjdd6.wilki;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,7 +13,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,7 +85,6 @@ public class Share implements Serializable {
         this.ticker = ticker;
     }
 
-
     public Double getRiskRewardRatio() {
         if ((getTakeProfitPrice().subtract(getStopLossPrice())).setScale(4, RoundingMode.HALF_UP).doubleValue() <= 0) {
             return 0.0;
@@ -158,7 +155,6 @@ public class Share implements Serializable {
             this.currentPE = 0.0;
         }
 
-        this.fullCompanyName = new DownloadCurrentData().loadAndScanTickers(getTicker());
 
     }
 

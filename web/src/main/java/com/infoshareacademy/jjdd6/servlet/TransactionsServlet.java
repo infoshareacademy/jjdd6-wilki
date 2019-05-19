@@ -1,14 +1,15 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.dao.ShareDao;
+import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
-import com.infoshareacademy.jjdd6.wilki.DownloadCurrentData;
-import com.infoshareacademy.jjdd6.wilki.Share;
-import com.infoshareacademy.jjdd6.wilki.User;
-import com.infoshareacademy.jjdd6.wilki.Wallet;
+import com.infoshareacademy.jjdd6.wilki.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional
-@WebServlet("/wallet")
-public class ShowWalletServlet extends HttpServlet {
+@WebServlet("/transactions")
+public class TransactionsServlet extends HttpServlet {
+
+    private static Logger logger = LoggerFactory.getLogger(TransactionsServlet.class);
 
     @Inject
     private TemplateProvider templateProvider;
@@ -35,12 +38,19 @@ public class ShowWalletServlet extends HttpServlet {
     @Inject
     private StatsService statsService;
 
+    @Inject
+    private TransactionDao transactionDao;
+
+    @Inject
+    private ShareDao shareDao;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        List<Share> shares = userWallet.walletToDisplay();
+        List<Transaction> transactionList = transactionDao.findAllByWalletId(userWallet.getId());
+        List<Share> shares = shareDao.findAll();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
@@ -57,18 +67,21 @@ public class ShowWalletServlet extends HttpServlet {
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
         model.put("wpReturn", worstPerforming.get("return"));
+        model.put("transactions", transactionList);
         model.put("shares", shares);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", "show_wallet");
+        model.put("content", "transaction");
         model.put("profilePicURL", profilePicURL);
         model.put("userName", user.getName());
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
+        logger.info("Template loaded.");
 
         try {
             template.process(model, resp.getWriter());
         } catch (TemplateException e) {
+            logger.info("Something went wrong");
             resp.getWriter().println("Something went wrong");
         }
 

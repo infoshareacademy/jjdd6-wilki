@@ -1,15 +1,13 @@
 package com.infoshareacademy.jjdd6.dao;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestScoped
-@Transactional
+@Singleton
 public class StatsDao {
 
     @PersistenceContext

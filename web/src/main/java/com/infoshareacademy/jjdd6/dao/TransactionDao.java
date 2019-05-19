@@ -2,13 +2,13 @@ package com.infoshareacademy.jjdd6.dao;
 
 import com.infoshareacademy.jjdd6.wilki.Transaction;
 
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
-@RequestScoped
+@Singleton
 public class TransactionDao {
 
     @PersistenceContext
@@ -36,6 +36,13 @@ public class TransactionDao {
 
     public List<Transaction> findAll() {
         final Query query = entityManager.createNamedQuery("Transaction.findAll");
+
+        return query.getResultList();
+    }
+
+    public List<Transaction> findAllByWalletId(Long walletId) {
+        final Query query = entityManager.createNamedQuery("Transaction.findAllByWalletId");
+        query.setParameter("walletId", walletId);
 
         return query.getResultList();
     }
