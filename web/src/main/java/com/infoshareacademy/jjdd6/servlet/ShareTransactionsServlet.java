@@ -1,10 +1,9 @@
 package com.infoshareacademy.jjdd6.servlet;
 
-import com.infoshareacademy.jjdd6.dao.ShareDao;
-import com.infoshareacademy.jjdd6.dao.TransactionDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.UserService;
+import com.infoshareacademy.jjdd6.validation.Validators;
 import com.infoshareacademy.jjdd6.wilki.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -24,10 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 @Transactional
-@WebServlet("/transactions")
-public class TransactionsServlet extends HttpServlet {
+@WebServlet("/share-transactions")
+public class ShareTransactionsServlet extends HttpServlet {
 
-    private static Logger logger = LoggerFactory.getLogger(TransactionsServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(ShareTransactionsServlet.class);
 
     @Inject
     private TemplateProvider templateProvider;
@@ -39,24 +38,26 @@ public class TransactionsServlet extends HttpServlet {
     private StatsService statsService;
 
     @Inject
-    private TransactionDao transactionDao;
-
-    @Inject
-    private ShareDao shareDao;
+    private Validators validators;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
-        showAllTransactions(req, resp);
+            String ticker = req.getParameter("ticker");
+            if (validators.isTickerNotValid(ticker)) {
+                logger.info("Ticker {} is not valid.", ticker);
+                resp.sendRedirect("/wallet");
+            }
+            showShareTransactions(req, resp);
+        }
 
-    }
-
-    private void showAllTransactions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    private void showShareTransactions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        List<Transaction> transactionList = transactionDao.findAllByWalletId(userWallet.getId());
-        List<Share> shares = shareDao.findAll();
+        String ticker = req.getParameter("ticker");
+        List<Transaction> transactionList = userWallet.scanWalletForShare(ticker).getTransactionHistory();
+        List<Share> shares = userWallet.getShares();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);

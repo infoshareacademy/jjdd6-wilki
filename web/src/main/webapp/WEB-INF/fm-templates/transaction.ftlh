@@ -1,3 +1,20 @@
+<div class="ticker-input_area">
+    <form action="/share-transactions" method="get" style="text-align: center">
+
+        <input type="submit" class="ticker-submit" value="Show all shares" onclick="location.href='/transactions'">
+
+    <input type="text" class="ticker-input" autocomplete="off" required name="ticker" placeholder="Search by ticker..." list="tickersList"/>
+    <datalist id="tickersList">
+        <#list shares as share>
+            <option value="${share.ticker}">${share.ticker}</option>
+        </#list>
+    </datalist>
+        <input type="submit" class="ticker-submit" value="Select">
+    </form>
+</div>
+
+<div><p>" "</br></p></div>
+
 <div id="table_header">
     <div class="date">Date</div>
     <div class="transaction_ticker">Ticker</div>
