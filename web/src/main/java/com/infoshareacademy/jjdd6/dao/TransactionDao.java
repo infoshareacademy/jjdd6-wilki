@@ -40,4 +40,11 @@ public class TransactionDao {
         return query.getResultList();
     }
 
+    public List<Transaction> findAllByWalletId(Long walletId) {
+        final Query query = entityManager.createNamedQuery("Transaction.findAllByWalletId");
+        query.setParameter("walletId", walletId);
+
+        return query.getResultList();
+    }
+
 }
