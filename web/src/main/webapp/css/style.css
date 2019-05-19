@@ -565,7 +565,7 @@ a:active {
     font-size: 18px;
 }
 table, td {
-    border: 1px solid white;
+    border: 1px solid rgba(255, 255, 255 , 0.3);
     text-align: right;
 }
 table th {
