@@ -46,7 +46,7 @@ public class AdminServlet extends HttpServlet {
             return;
         }
 
-        if (req.getParameter("database").equals("fill")) {
+        if ("fill".equals(req.getParameter("database"))) {
             logger.info("Starting downloader service to fill database with historical data...");
             downloaderService.downloadAllFiles();
             logger.info("Downloading finished");
