@@ -48,13 +48,11 @@ public class TickerService {
     }
 
     public String scanTickers(String ticker) {
-        checkDataInDatabase();
         return tickerDao.findById(ticker).getFullName();
     }
 
 
     public Boolean validateTicker(String ticker) {
-        checkDataInDatabase();
         return tickerDao.findById(ticker) != null;
     }
 

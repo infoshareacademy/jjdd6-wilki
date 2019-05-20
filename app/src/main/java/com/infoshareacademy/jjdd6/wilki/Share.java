@@ -4,6 +4,7 @@ package com.infoshareacademy.jjdd6.wilki;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -277,6 +278,43 @@ public class Share implements Serializable {
         return this.transactionHistory.stream()
                 .mapToInt(Transaction::getAmountForCalc)
                 .sum();
+    }
+
+    public BigDecimal getTargetReturn() {
+        try {
+            return (this.getTakeProfitValue()
+                    .divide(this.getBaseValue().setScale(2, RoundingMode.HALF_UP))
+                    .subtract(BigDecimal.ONE))
+                    .multiply(BigDecimal.valueOf(100));
+        } catch (ArithmeticException e) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal getTargetProfit() {
+        return this.getTakeProfitValue()
+                .subtract(this.getBaseValue());
+    }
+
+    public BigDecimal getCurrentProfit() {
+        return this.getCurrentValue()
+                .subtract(this.getBaseValue());
+    }
+
+    public BigDecimal getStopLossProfit() {
+        return this.getStopLossValue()
+                .subtract(this.getBaseValue());
+    }
+
+    public BigDecimal getStopLossReturn() {
+        try {
+            return (this.getStopLossValue()
+                    .divide(this.getBaseValue().setScale(2, RoundingMode.HALF_UP))
+                    .subtract(BigDecimal.ONE))
+                    .multiply(BigDecimal.valueOf(100));
+        } catch (ArithmeticException e) {
+            return BigDecimal.ZERO;
+        }
     }
 
     public BigDecimal getFeeAmount() {
