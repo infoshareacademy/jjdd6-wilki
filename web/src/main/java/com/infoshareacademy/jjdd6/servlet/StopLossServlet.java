@@ -80,6 +80,7 @@ public class StopLossServlet extends HttpServlet {
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
+        String ticker = req.getParameter("ticker");
         Map<String, Object> model = new HashMap<>();
         if (null != status) {
             model.put("status", status);
@@ -97,6 +98,7 @@ public class StopLossServlet extends HttpServlet {
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
+        model.put("ticker", ticker);
 
         model.put("roe", roe);
         model.put("freeCash", freeCash);
@@ -122,11 +124,11 @@ public class StopLossServlet extends HttpServlet {
 
         String ticker = req.getParameter("ticker");
 
-//        if (validators.isTickerNotValid(ticker)) {
-//            showManageStopLoss(req, resp, "Ticker = {" + ticker + "} is not valid");
-//            logger.info("Ticker = {} is not valid.", ticker);
-//            return;
-//        }
+        if (validators.isTickerNotValid(ticker)) {
+            showManageStopLoss(req, resp, "Ticker = {" + ticker + "} is not valid");
+            logger.info("Ticker = {} is not valid.", ticker);
+            return;
+        }
 
         String priceStr = req.getParameter("price");
 
@@ -136,16 +138,12 @@ public class StopLossServlet extends HttpServlet {
             return;
         }
 
-        List<Share> shareList = userWallet.getShares();
+        Share share = userWallet.scanWalletForShare(ticker);
 
-        for (Share share : shareList) {
-            if (share.getTicker().contains(ticker.toUpperCase())) {
-                share.setStopLossPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
-                logger.info("Set stop-loss price for share with id: {}", share.getId());
-                shareDao.update(share);
-                logger.info("Share with id: {} updated!", share.getId());
-            }
-        }
+        share.setStopLossPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
+        logger.info("Set stop-loss price for share with id: {}", share.getId());
+        shareDao.update(share);
+        logger.info("Share with id: {} updated!", share.getId());
         showManageStopLoss(req, resp, "Stop-loss price is now set to: " + priceStr + " PLN");
     }
 
