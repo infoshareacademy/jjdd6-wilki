@@ -59,6 +59,10 @@
             <#include "walletStats.ftlh">
         <#elseif content == "wse_stats">
             <#include "wseStats.ftlh">
+        <#elseif content == "set_sl">
+            <#include "set-sl.ftlh">
+        <#elseif content == "set_tp">
+            <#include "set-tp.ftlh">
         </#if>
     </div>
 </div>
