@@ -51,7 +51,7 @@ public class DownloaderService {
         try {
             downloader(ticker);
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
         return downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
                 .stream()
@@ -72,7 +72,7 @@ public class DownloaderService {
             try {
                 downloadFileWithResume(url, filename);
             } catch (URISyntaxException e) {
-                logger.error(e.getMessage());
+                logger.error(e.getMessage(), e);
             }
         } else {
             logger.info("Historical data for " + ticker.toUpperCase() + " is actual as of " + fileDate + ", skipping download");
