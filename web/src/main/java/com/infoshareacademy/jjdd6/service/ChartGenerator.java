@@ -111,10 +111,15 @@ public class ChartGenerator {
         List<DataFromFile> currentData = downloadCurrentData.get(ticker);
         LocalDate toDate = LocalDate.now();
         List<DataFromFile> data = downloaderService.getHistoricalData(ticker, fromDate, toDate);
-        int i = 0;
-        while (data.size() < Integer.parseInt(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"))) {
-            data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i), toDate);
-            i++;
+        if (data != null && !data.isEmpty()) {
+            int i = 0;
+            while (data.size() < Integer.parseInt(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"))) {
+                data = downloaderService.getHistoricalData(ticker, fromDate.minusDays(i), toDate);
+                logger.info("Loaded days {}, set for {} days, adjusting from date minus days {}", data.size(), webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK"), i);
+                i++;
+            }
+        } else {
+            logger.error("No data in parsed file, check if daily limit is not exceeded");
         }
         String title = tickerService.scanTickers(ticker.toUpperCase()) + " (" + ticker.toUpperCase() + ")";
         String filename = pathGenerator(ticker);
@@ -219,7 +224,8 @@ public class ChartGenerator {
     private void generatePieChart(String title, String path, List<String[]> data) {
         PieChart chart = new PieChartBuilder().width(350).height(300).title(title).build();
         chart.getStyler().setChartBackgroundColor(new Color(13, 15, 58));
-        chart.getStyler().setLegendVisible(false);
+        chart.getStyler().setLegendVisible(true);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideE);
         chart.getStyler().setAnnotationType(PieStyler.AnnotationType.Label);
         chart.getStyler().setChartFontColor(Color.BLACK);
         chart.getStyler().setChartTitleBoxVisible(true);

@@ -11,20 +11,20 @@
 <body>
 <div id="container">
     <div id="left_menu">
-        <img src="" width="20px" height="20px"> DASHBOARD</br>
-        <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>><img src="" width="20px" height="20px"> Show wallet</div></a></br>
-        <a href="/share-buy"><div class="menu_option" <#if content == "buy_shares"> id="selected" </#if>><img src="" width="20px" height="20px"> Report BUY</div></a></br>
-        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell"> id="selected" </#if><#if content == "sell_specified"> id="selected" </#if>><img src="" width="20px" height="20px"> Report SELL</div></a></br>
-        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>><img src="" width="20px" height="20px"> Manage free cash</div></a></br></br></br></br>
-        <img src="" width="20px" height="20px"> ANALYTICS</br>
-        <a href="/stats?view=wallet"><div class="menu_option" <#if content == "wallet_stats"> id="selected" </#if>><img src="" width="20px" height="20px"> Wallet stats</div></a></br>
-        <a href="/stats?view=app"><div class="menu_option" <#if content == "app_stats"> id="selected" </#if>><img src="" width="20px" height="20px"> App stats</div></a></br>
-        <a href="/stats?view=wse"><div class="menu_option" <#if content == "wse_stats"> id="selected" </#if>><img src="" width="20px" height="20px"> WSE stats</div></a></br>
-        <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>><img src="" width="20px" height="20px"> Transactions list</div></a></br>
+        <img src="/icons/dashboard.png" width="20px" height="20px"> &nbsp;DASHBOARD</br>
+        <a href="/wallet"><div class="menu_option" <#if content == "show_wallet"> id="selected" </#if>><img src="/icons/show_wallet.png" width="20px" height="20px"> &nbsp;Show wallet</div></a></br>
+        <a href="/share-buy"><div class="menu_option" <#if content == "buy_shares"> id="selected" </#if>><img src="/icons/report_buy.png" width="20px" height="20px"> &nbsp;Report BUY</div></a></br>
+        <a href="/share-sell"><div class="menu_option" <#if content == "shares_to_sell"> id="selected" </#if><#if content == "sell_specified"> id="selected" </#if>><img src="/icons/report_sell.png" width="20px" height="20px"> &nbsp;Report SELL</div></a></br>
+        <a href="/increase-reduce-free-cash"><div class="menu_option" <#if content == "manage"> id="selected" </#if>><img src="/icons/manage_free_cash.png" width="20px" height="20px"> &nbsp;Manage free cash</div></a></br></br></br></br>
+        <img src="/icons/analytics.png" width="20px" height="20px"> &nbsp;ANALYTICS</br>
+        <a href="/stats?view=wallet"><div class="menu_option" <#if content == "wallet_stats"> id="selected" </#if>><img src="/icons/wallet_stats.png" width="20px" height="20px"> &nbsp;Wallet stats</div></a></br>
+        <a href="/stats?view=app"><div class="menu_option" <#if content == "app_stats"> id="selected" </#if>><img src="/icons/app_stats.png" width="20px" height="20px"> &nbsp;App stats</div></a></br>
+        <a href="/stats?view=wse"><div class="menu_option" <#if content == "wse_stats"> id="selected" </#if>><img src="/icons/wse_stats.png" width="20px" height="20px"> &nbsp;WSE stats</div></a></br>
+        <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>><img src="/icons/transactions_list.png" width="20px" height="20px"> &nbsp;Transactions list</div></a></br>
         </br></br></br></br>
-        <img src="" width="20px" height="20px"> USER</br>
+        <img src="/icons/user.png" width="20px" height="20px"> &nbsp;USER</br>
         <div id="menu_option_user"><img src="${profilePicURL}"/> <span>${userName}</span></div>
-        <a href="/logout"><div class="menu_option"><img src="" width="20px" height="20px"> Log out</div></a></br>
+        <a href="/logout"><div class="menu_option"><img src="/icons/log_out.png" width="20px" height="20px"> &nbsp;Log out</div></a></br>
         <#if isAdmin == 1><a href="/admin"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Admin panel</div></a></br></br></br></br></#if>
 
     </div>
