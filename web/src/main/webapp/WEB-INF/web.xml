@@ -9,7 +9,7 @@
         <class-name>com.mysql.cj.jdbc.MysqlDataSource</class-name>
         <url>jdbc:mysql://db/WalletApp?useLegacyDatetimeCode=false&amp;serverTimezone=Europe/Warsaw</url>
         <user>root</user>
-        <password>w11k17352xd</password>
+        <password>pass123</password>
     </data-source>
 
     <error-page>
