@@ -82,7 +82,7 @@ public class DownloadCurrentData {
                     dataFromFile.setHighestPrice(new BigDecimal((a[2])));
                     dataFromFile.setLowestPrice(new BigDecimal((a[3])));
                     dataFromFile.setClosingPrice(new BigDecimal(a[4]));
-                    dataFromFile.setVolume(Long.parseLong(a[5]));
+//                    dataFromFile.setVolume(Long.parseLong(a[5]));
                     return dataFromFile;
                 }).
                         collect(Collectors.toList());
