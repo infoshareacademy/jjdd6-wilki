@@ -86,6 +86,7 @@ public class TakeProfitServlet extends HttpServlet {
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();
         String profilePicURL = userService.userProfilePicURL(user);
+        String ticker = req.getParameter("ticker");
         Map<String, Object> model = new HashMap<>();
         if (null != status) {
             model.put("status", status);
@@ -103,7 +104,7 @@ public class TakeProfitServlet extends HttpServlet {
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
-
+        model.put("ticker", ticker);
         model.put("roe", roe);
         model.put("freeCash", freeCash);
         model.put("content", "set_tp");
@@ -125,16 +126,6 @@ public class TakeProfitServlet extends HttpServlet {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
-        Long id = userWallet.getId();
-
-
-        if (validators.isUserNotAllowedToWalletModification(user.getId().toString(), id.toString())) {
-            showManageTakeProfit(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id, user.getId());
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
@@ -150,19 +141,12 @@ public class TakeProfitServlet extends HttpServlet {
             logger.info("Incorrect price = {}", priceStr);
             return;
         }
+        Share share = userWallet.scanWalletForShare(ticker);
 
-        final Wallet existingWallet = walletDao.findById(id);
-
-        List<Share> listFromExistingWallet = existingWallet.getShares();
-
-        for (Share share : listFromExistingWallet) {
-            if (share.getTicker().contains(ticker.toUpperCase())) {
-                share.setTakeProfitPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
-                logger.info("Set take-profit price for share with id: {}", share.getId());
-                shareDao.update(share);
-                logger.info("Share with id: {} updated!", share.getId());
-            }
-        }
+        share.setTakeProfitPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
+        logger.info("Set take-profit price for share with id: {}", share.getId());
+        shareDao.update(share);
+        logger.info("Share with id: {} updated!", share.getId());
         showManageTakeProfit(req, resp, "Take-profit price is now set to: " + priceStr + " PLN");
     }
 }
