@@ -9,11 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DownloaderService {
         });
     }
 
-    public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromdate, LocalDate toDate) throws MalformedURLException {
+    public List<DataFromFile> getHistoricalData(String ticker, LocalDate fromDate, LocalDate toDate) throws MalformedURLException {
         logger.info("Downloading and parsing historical data for " + ticker.toUpperCase());
         try {
             downloader(ticker);
@@ -56,10 +57,10 @@ public class DownloaderService {
         }
         List<DataFromFile> output = downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
                 .stream()
-                .filter(o -> o.getDate().isAfter(fromdate))
+                .filter(o -> o.getDate().isAfter(fromDate))
                 .filter(o -> o.getDate().isBefore(toDate))
                 .collect(Collectors.toList());
-        if (output.size()==0) {
+        if (output.size() == 0) {
             logger.error("Parsed file is empty");
         }
         return output;
@@ -74,59 +75,18 @@ public class DownloaderService {
         if (!fileDate.equals(LocalDate.now())) {
 
             String url = "https://stooq.com/q/d/l/?s=" + ticker.toLowerCase() + "&i=d";
-            try {
-                downloadFileWithResume(url, filename);
-            } catch (URISyntaxException e) {
-                logger.error(e.getMessage(), e);
-            }
+            downloadFile(url, filename);
         } else {
             logger.info("Historical data for " + ticker.toUpperCase() + " is actual as of " + fileDate + ", skipping download");
         }
     }
 
-    private long transferDataAndGetBytesDownloaded(URLConnection downloadFileConnection, File outputFile) throws IOException {
-
-        long bytesDownloaded = 0;
-        try (InputStream is = downloadFileConnection.getInputStream(); OutputStream os = new FileOutputStream(outputFile, true)) {
-
-            byte[] buffer = new byte[1024];
-
-            int bytesCount;
-            while ((bytesCount = is.read(buffer)) > 0) {
-                os.write(buffer, 0, bytesCount);
-                bytesDownloaded += bytesCount;
-            }
+    private void downloadFile(String downloadUrl, String saveAsFileName) {
+        try (InputStream in = new URL(downloadUrl).openStream()) {
+            Files.copy(in, Paths.get(saveAsFileName), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            logger.error("Download error" + e);
         }
-        return bytesDownloaded;
-    }
 
-    private long downloadFileWithResume(String downloadUrl, String saveAsFileName) throws IOException, URISyntaxException {
-        File outputFile = new File(saveAsFileName);
-
-        URLConnection downloadFileConnection = addFileResumeFunctionality(downloadUrl, outputFile);
-        return transferDataAndGetBytesDownloaded(downloadFileConnection, outputFile);
-    }
-
-    private URLConnection addFileResumeFunctionality(String downloadUrl, File outputFile) throws IOException, URISyntaxException, ProtocolException, ProtocolException {
-        long existingFileSize = 0L;
-        URLConnection downloadFileConnection = new URI(downloadUrl).toURL()
-                .openConnection();
-
-        if (outputFile.exists() && downloadFileConnection instanceof HttpURLConnection) {
-            HttpURLConnection httpFileConnection = (HttpURLConnection) downloadFileConnection;
-
-            HttpURLConnection tmpFileConn = (HttpURLConnection) new URI(downloadUrl).toURL()
-                    .openConnection();
-            tmpFileConn.setRequestMethod("HEAD");
-            long fileLength = tmpFileConn.getContentLengthLong();
-            existingFileSize = outputFile.length();
-
-            if (existingFileSize < fileLength) {
-                httpFileConnection.setRequestProperty("Range", "bytes=" + existingFileSize + "-" + fileLength);
-            } else {
-                throw new IOException("File Download already completed.");
-            }
-        }
-        return downloadFileConnection;
     }
 }

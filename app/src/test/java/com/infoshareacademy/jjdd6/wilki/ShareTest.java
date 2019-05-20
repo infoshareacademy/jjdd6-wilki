@@ -64,9 +64,8 @@ class ShareTest {
         wallet.getShares().get(0).setTakeProfitPrice(takeProfitPrice);
         Double result = wallet.getShares().get(0).getTargetPE();
         Double expected = wallet.getShares().get(0).getTakeProfitPrice().setScale(4, RoundingMode.HALF_UP).doubleValue()
-                / (wallet.getShares().get(0).getCurrentPE()
-                / wallet.getShares().get(0).getCurrentPrice().setScale(4, RoundingMode.HALF_UP)
-                .doubleValue());
+                / (wallet.getShares().get(0).getCurrentPrice().setScale(4, RoundingMode.HALF_UP).doubleValue()
+                / wallet.getShares().get(0).getCurrentPE());
 
         //then
         assertThat(result).isEqualTo(expected);

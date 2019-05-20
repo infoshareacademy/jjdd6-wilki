@@ -35,10 +35,10 @@
         <td></td>
         <td id="to_left">Price</td>
         <td>${takeProfit?string["###0.00## PLN"]}</td>
-        <td><#if takeProfit == 0>-<#else>${(takeProfit / currentPrice-1)?string["###0.00"]}%</#if></td>
+        <td><#if takeProfit == 0>-<#else>${(takeProfit / currentPrice-1)?string["###0.00 %"]}</#if></td>
         <td id="to_left">Price</td>
         <td>${stopLoss} PLN</td>
-        <td><#if stopLoss == 0>-<#else>${(stopLoss / currentPrice-1)?string["###0.00"]}%</#if></td>
+        <td><#if stopLoss == 0>-<#else>${(stopLoss / currentPrice-1)?string["###0.00 %"]}</#if></td>
     </tr>
     <tr>
         <td id="to_left">Value</td>
@@ -78,10 +78,10 @@
     </tr>
     <tr>
         <td id="to_left">Current P/E</td>
-        <td>${currentPE?string["#0.0"]}</td>
+        <td>${currentPE?string["###0.0"]}</td>
         <td></td>
         <td id="to_left">Target P/E</td>
-        <td>${targetPE?string["#0.0"]}</td>
+        <td>${targetPE?string["###0.0"]}</td>
         <td></td>
         <td id="to_left">Fees Paid</td>
         <td>${feeAmount?string["###0.00 PLN"]}</td>

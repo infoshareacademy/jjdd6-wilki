@@ -1,5 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
+import com.infoshareacademy.jjdd6.properties.WebAppProperties;
 import com.infoshareacademy.jjdd6.service.ChartGenerator;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
@@ -34,6 +35,9 @@ public class ChartServlet extends HttpServlet {
 
     @Inject
     private UserService userService;
+
+    @Inject
+    private WebAppProperties webAppProperties;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -84,7 +88,7 @@ public class ChartServlet extends HttpServlet {
                     .findFirst();
             LocalDate fromDate;
             if (fromDateOpt.isPresent()) {
-                fromDate = fromDateOpt.get();
+                fromDate = fromDateOpt.get().minusDays(Long.parseLong(webAppProperties.getSetting("MINI_CHART_HOW_MANY_DAYS_BACK")));
             } else {
                 fromDate = LocalDate.now().minusMonths(3);
             }
