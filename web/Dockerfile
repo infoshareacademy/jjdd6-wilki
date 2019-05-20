@@ -1,6 +1,7 @@
 FROM jboss/wildfly
 
 ENV LANG en_US.UTF-8
+ENV TZ Europe/Warsaw
 
 ADD target/web.war /opt/jboss/wildfly/standalone/deployments
 
