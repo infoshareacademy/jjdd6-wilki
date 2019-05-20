@@ -102,7 +102,7 @@ public class Share implements Serializable {
 
     public Double getTargetPE() {
 
-        return getTakeProfitPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() / (getCurrentPE() / getCurrentPrice().setScale(4, RoundingMode.HALF_UP).doubleValue());
+        return getTakeProfitPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() / (getCurrentPrice().setScale(4, RoundingMode.HALF_UP).doubleValue() / getCurrentPE());
     }
 
     public Double getCurrentPE() {
