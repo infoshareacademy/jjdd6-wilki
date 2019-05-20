@@ -8,10 +8,7 @@ import com.infoshareacademy.jjdd6.service.StatsService;
 import com.infoshareacademy.jjdd6.service.TickerService;
 import com.infoshareacademy.jjdd6.service.UserService;
 import com.infoshareacademy.jjdd6.validation.Validators;
-import com.infoshareacademy.jjdd6.wilki.Share;
-import com.infoshareacademy.jjdd6.wilki.Transaction;
-import com.infoshareacademy.jjdd6.wilki.User;
-import com.infoshareacademy.jjdd6.wilki.Wallet;
+import com.infoshareacademy.jjdd6.wilki.*;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.slf4j.Logger;
@@ -76,10 +73,12 @@ public class BuySharesServlet extends HttpServlet {
         String profilePicURL = userService.userProfilePicURL(user);
         Map<String, String> bestPerforming = statsService.getMostProfitableShare(userWallet);
         Map<String, String> worstPerforming = statsService.getLeastProfitableShare(userWallet);
+        List<Ticker> tickers = tickerService.getAll();
         int userAdmin = 0;
         if (user.isAdmin()) {
             userAdmin = 1;
         }
+        model.put("tickers", tickers);
         model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
         model.put("mpProfit", bestPerforming.get("profit"));

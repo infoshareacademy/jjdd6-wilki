@@ -1,7 +1,10 @@
 <html xmlns="http://java.sun.com/jsf/facelets">
 <head>
   <meta charset="utf-8">
-  <title>Wallet App</title>
+  <title>Stock Wallet</title>
+    <link rel="icon"
+          type="image/png"
+          href="/welcome/logo.png">
   <link rel="stylesheet" type="text/css" href="/css/style.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
@@ -20,9 +23,9 @@
         <a href="/stats?view=wse"><div class="menu_option" <#if content == "wse_stats"> id="selected" </#if>>WSE stats</div></a></br>
         <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>>Transactions list</div></a></br>
         </br></br></br></br>
-        USER</br>
-        <div class="menu_option" id="menu_option_user"><img src="${profilePicURL}"/></br>${userName}</div>
-        <div class="menu_option">Log out</div></br>
+        <img src="" width="20px" height="20px"> USER</br>
+        <div id="menu_option_user"><img src="${profilePicURL}"/> <span>${userName}</span></div>
+        <div class="menu_option"><img src="" width="20px" height="20px"> Log out</div></br>
         <#if isAdmin == 1><a href="/admin"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Admin panel</div></a></br></br></br></br></#if>
 
     </div>
@@ -47,6 +50,8 @@
             <#include "sell-specified.ftlh">
         <#elseif content == "manage">
             <#include "manage-free-cash.ftlh">
+        <#elseif content == "specified_share">
+            <#include "specified-share.ftlh">
         <#elseif content == "transaction">
             <#include "transaction.ftlh">
         <#elseif content == "app_stats">

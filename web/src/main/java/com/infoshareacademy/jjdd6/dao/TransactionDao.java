@@ -47,4 +47,11 @@ public class TransactionDao {
         return query.getResultList();
     }
 
+    public List<Transaction> findAllByWalletIdAndTicker(Long walletId, String ticker){
+        final Query query = entityManager.createNamedQuery("Transaction.findAllByWalletIdAndTicker");
+        query.setParameter("walletId", walletId);
+        query.setParameter("ticker", ticker);
+        return query.getResultList();
+    }
+
 }

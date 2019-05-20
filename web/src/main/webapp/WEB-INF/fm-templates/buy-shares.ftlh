@@ -1,9 +1,19 @@
-<?php
 <div>
 <form class="buy_form" method="POST" action="/share-buy">
     <div class="input_area">
         TICKER</br>
-        <input type="text" class="text-input" autocomplete="off" name="ticker" required placeholder="e.g. KGH"/></div>
+<#--        <input type="text"   name="ticker"  placeholder="e.g. KGH"/></div>-->
+
+    <input type="text" class="text-input" autocomplete="off" required name="ticker" placeholder="Search by ticker or company name..." list="tickersList"/>
+
+    <datalist id="tickersList">
+            <#list tickers>
+                <#items as ticker>
+                    <option value="${ticker.tickerName}">${ticker.tickerName} - ${ticker.fullName}</option>
+                </#items>
+            </#list>
+    </datalist>
+    </div>
     <div class="input_area">
         AMOUNT</br>
         <input type="number" min="1" step="1" class="text-input" autocomplete="off" id="amount" required name="amount"/></div>
@@ -14,7 +24,7 @@
     <input id="buy" type="submit" value="Report BUY"/>
 </form>
 <div id="info">
-    Total price has fee included!</br>
+    <span id="fee">Total price has fee included!</span></br>
     Available money: ${"${freeCash}"?replace(","," ")} PLN</br>
     Transaction: 0 PLN</br>
     <span>Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>
@@ -39,19 +49,19 @@
         var moneyLeft = money - totalPriceFeeIncluded;
         if (!isNaN(totalPrice)) {
             if(moneyLeft >= 0)
-            document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+            document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                 "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
                 "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
                     "<span>Money left: " + moneyLeft.toFixed(2) + " PLN</span>";
             else{
-                document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+                document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                     "Available money: ${"${freeCash}"?replace(","," ")} PLN </br>" +
                     "Transaction: -" + totalPriceFeeIncluded + " PLN </br>" +
                     "<span style='color:red;'>Money left: " + moneyLeft.toFixed(2)+ " PLN</span>";
             }
         }
         else{
-            document.getElementById("info").innerHTML = "Total price has fee included! </br> " +
+            document.getElementById("info").innerHTML = "<span id='fee'>Total price has fee included!</span> </br> " +
                 "    Available money: ${"${freeCash}"?replace(","," ")} PLN </br> " +
                 "    Transaction: 0 PLN</br>" +
                 "    <span>Money left: ${"${freeCash}"?replace(","," ")} PLN</span></br>"

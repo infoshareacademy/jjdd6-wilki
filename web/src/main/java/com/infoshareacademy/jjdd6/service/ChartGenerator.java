@@ -52,7 +52,7 @@ public class ChartGenerator {
     }
 
     private void generateChart(String title, String path, List<DataFromFile> currentData, List<DataFromFile> data, Double buyPrice) {
-        XYChart chart = new XYChartBuilder().width(600).height(300).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
+        XYChart chart = new XYChartBuilder().width(600).height(150).title(title).xAxisTitle("").yAxisTitle("Closing price").build();
         chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideS);
         chart.getStyler().setAxisTitlesVisible(false);
         chart.getStyler().setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Area);
