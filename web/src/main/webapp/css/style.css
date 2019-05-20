@@ -156,6 +156,16 @@ body{
     background-color: #e8e8e8;
     width: 15%;
 }
+#button_header div{
+    height: 70px;
+    background-color: #72737D;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    float: left;
+    font-size: 20px;
+    text-align: center;
+    line-height: 70px;
+    color: white;
+}
 #table_header div{
     height: 70px;
     background-color: #72737D;
@@ -194,6 +204,29 @@ a:active {
     text-decoration: none;
     color: white;
 }
+.ticker-input{
+    width: 30%;
+    height: 60px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 30px;
+    border-radius: 0px;
+}
+.ticker-submit{
+    width: 20%;
+    height: 60px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 30px;
+    border-radius: 0px;
+}
+.ticker-input_area{
+    float: left;
+    width: 100%;
+    margin-top: 25px;
+    box-shadow: 0px 0px 7px white;
+    border: 1px solid white;
+}
 .text-input{
     width: 800px;
     height: 60px;
@@ -201,16 +234,14 @@ a:active {
     margin-top: 10px;
     font-size: 30px;
     border-radius: 0px;
-
-
 }
+
 .input_area{
     float: left;
     width: 800px;
     margin-top: 25px;
     box-shadow: 0px 0px 7px white;
     border: 1px solid white;
-
 }
 #buy{
     margin: 50px auto;
