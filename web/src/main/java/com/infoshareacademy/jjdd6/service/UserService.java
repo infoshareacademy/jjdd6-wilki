@@ -15,6 +15,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class UserService {
 
     @Inject
     private WalletDao walletDao;
+
+    @Inject
+    UserService userService;
 
     public User loggedUser(HttpServletRequest req) {
         HttpSession session = req.getSession();
@@ -86,7 +92,23 @@ public class UserService {
     }
 
     public void logoutUser(HttpServletRequest req) {
-        req.getSession().invalidate();
+        String userId = userService.loggedUser(req).getFbUserId();
+        String token = userService.loggedUser(req).getUserToken().getAccessToken();
+        HttpURLConnection httpURLConnection = null;
+        try {
+            URL url = new URL("https://graph.facebook.com/" + userId + "/permissions?access_token=" + token);
+            httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            httpURLConnection.setRequestMethod("DELETE");
+            logger.info(String.valueOf(httpURLConnection.getResponseCode()));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
+            }
+            req.getSession().invalidate();
+        }
     }
 
     public User findById(Long id) {

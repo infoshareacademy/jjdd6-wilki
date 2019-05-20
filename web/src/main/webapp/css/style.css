@@ -219,6 +219,18 @@ a:active {
     margin-top: 10px;
     font-size: 30px;
     border-radius: 0px;
+    transition-duration: 0.2s;
+}
+.ticker-submit:hover{
+    width: 20%;
+    height: 60px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 30px;
+    border-radius: 0px;
+    color: white;
+    cursor: pointer;
+    transition-duration: 0.2s;
 }
 .ticker-input_area{
     float: left;
@@ -607,10 +619,12 @@ table th {
 #select_share{
     color: black;
     opacity: 0.9;
+    -webkit-opacity: 0.9;
     transition-duration: 0.1s;
 }
 #select_share:hover{
     opacity: 1;
+    -webkit-opacity: 1;
     transition-duration: 0.1s;
 }
 #menu_option_user{
