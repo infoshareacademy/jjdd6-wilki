@@ -46,7 +46,7 @@ public class ShareTransactionsServlet extends HttpServlet {
             String ticker = req.getParameter("ticker");
             if (validators.isTickerNotValid(ticker)) {
                 logger.info("Ticker {} is not valid.", ticker);
-                resp.sendRedirect("/wallet");
+                resp.sendRedirect("/transactions");
             }
             showShareTransactions(req, resp);
         }

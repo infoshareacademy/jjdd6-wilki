@@ -1,7 +1,7 @@
 <div class="ticker-input_area">
     <form action="/share-transactions" method="get" style="text-align: center">
 
-        <input type="submit" class="ticker-submit" value="Show all shares" onclick="location.href='/transactions'">
+        <input type="submit" class="ticker-submit" value="Show all" onclick="location.href='/transactions'">
 
     <input type="text" class="ticker-input" autocomplete="off" required name="ticker" placeholder="Search by ticker..." list="tickersList"/>
     <datalist id="tickersList">
