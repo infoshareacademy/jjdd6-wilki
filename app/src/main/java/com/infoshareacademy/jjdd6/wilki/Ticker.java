@@ -1,7 +1,11 @@
 package com.infoshareacademy.jjdd6.wilki;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "TICKERS")
 @NamedQueries({@NamedQuery(
@@ -11,7 +15,7 @@ import javax.persistence.*;
                 name = "Tickers.getCount",
                 query = "SELECT COUNT(*) FROM Ticker t")
 })
-public class Ticker {
+public class Ticker implements Serializable {
 
     @Id
     @Column(name = "ticker", length = 4)
