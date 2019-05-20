@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
