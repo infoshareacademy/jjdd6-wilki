@@ -2,6 +2,7 @@ package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.ShareDao;
 import com.infoshareacademy.jjdd6.dao.StatsDao;
+import com.infoshareacademy.jjdd6.dao.TickerDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
 import com.infoshareacademy.jjdd6.service.StatsService;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = "/sl-and-tp")
+@WebServlet(urlPatterns = {"/sl-and-tp", "/sl", "/tp"})
 @Transactional
 public class SetSlAndTpPriceServlet extends HttpServlet {
 
@@ -50,6 +51,9 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
 
     @Inject
     private TemplateProvider templateProvider;
+
+    @Inject
+    private TickerDao tickerDao;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -120,16 +124,11 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         Wallet userWallet = user.getWallet();
         Long id = userWallet.getId();
 
-        if (validators.isWalletNotPresent(id.toString())) {
-            showManageTpAndSl(req, resp, "There is no wallet with id " + id);
-            logger.info("No wallet found for walletId = {}, nothing to be updated", id.toString());
-            return;
-        }
 
-        String userId = String.valueOf(req.getSession().getAttribute("user"));
-        if (validators.isUserNotAllowedToWalletModification(userId, id.toString())) {
+ //       String userId = String.valueOf(req.getSession().getAttribute("user"));
+        if (validators.isUserNotAllowedToWalletModification(user.getId().toString(), id.toString())) {
             showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id.toString(), userId);
+            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id.toString(), user.getId());
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -171,11 +170,11 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         Wallet userWallet = user.getWallet();
         Long id = userWallet.getId();
 
-        String userId = String.valueOf(req.getSession().getAttribute("user"));
+//        String userId = String.valueOf(req.getSession().getAttribute("user"));
 
-        if (validators.isUserNotAllowedToWalletModification(userId, id.toString())) {
+        if (validators.isUserNotAllowedToWalletModification(user.getId().toString(), id.toString())) {
             showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id, userId);
+            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id, user.getId());
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
