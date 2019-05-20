@@ -76,8 +76,8 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         BigDecimal currentPrice = share.getCurrentPrice();
         BigDecimal currentValue = share.getCurrentValue();
         BigDecimal currentReturn = share.getCurrentReturn();
-        BigDecimal targetReturn = (share.getTakeProfitValue().divide(share.getBaseValue().setScale(2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)).multiply(BigDecimal.valueOf(100));
-        BigDecimal stopLossReturn = (share.getStopLossValue().divide(share.getBaseValue().setScale(2, RoundingMode.HALF_UP)).subtract(BigDecimal.ONE)).multiply(BigDecimal.valueOf(100));
+        BigDecimal targetReturn = share.getTargetReturn();
+        BigDecimal stopLossReturn = share.getStopLossReturn();
         BigDecimal stopLoss = share.getStopLossPrice();
         BigDecimal takeProfit = share.getTakeProfitPrice();
         String fullName = share.getFullCompanyName();
@@ -88,9 +88,9 @@ public class SpecifiedShareViewServlet extends HttpServlet {
         BigDecimal feeAmount = share.getFeeAmount();
         Double riskReward = share.getRiskRewardRatio();
         Long volume = share.getVolume();
-        BigDecimal targetProfit = share.getTakeProfitValue().subtract(share.getBaseValue());
-        BigDecimal stopLossProfit = share.getStopLossValue().subtract(share.getBaseValue());
-        BigDecimal currentProfit = share.getCurrentValue().subtract(share.getBaseValue());
+        BigDecimal targetProfit = share.getTargetProfit();
+        BigDecimal stopLossProfit = share.getStopLossProfit();
+        BigDecimal currentProfit = share.getCurrentProfit();
         BigDecimal totalProfit = share.getTotalProfit();
         BigDecimal roe = userWallet.getROE();
         BigDecimal freeCash = userWallet.getFreeCash();

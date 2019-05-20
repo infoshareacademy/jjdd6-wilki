@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
@@ -53,11 +54,15 @@ public class DownloaderService {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        return downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
+        List<DataFromFile> output = downloadCurrentData.parseHistory(new URL("file://" + webAppProperties.getSetting("HISTORICAL_DATA_LOCATION") + "/" + ticker.toLowerCase() + "_d.csv"))
                 .stream()
                 .filter(o -> o.getDate().isAfter(fromdate))
                 .filter(o -> o.getDate().isBefore(toDate))
                 .collect(Collectors.toList());
+        if (output.size()==1) {
+            logger.error(output.get(0).toString());
+        }
+        return output;
     }
 
     public void downloader(String ticker) throws IOException {
