@@ -21,11 +21,13 @@
         <a href="/stats?view=app"><div class="menu_option" <#if content == "app_stats"> id="selected" </#if>><img src="/icons/app_stats.png" width="20px" height="20px"> &nbsp;App stats</div></a></br>
         <a href="/stats?view=wse"><div class="menu_option" <#if content == "wse_stats"> id="selected" </#if>><img src="/icons/wse_stats.png" width="20px" height="20px"> &nbsp;WSE stats</div></a></br>
         <a href="/transactions"><div class="menu_option" <#if content == "transaction"> id="selected" </#if>><img src="/icons/transactions_list.png" width="20px" height="20px"> &nbsp;Transactions list</div></a></br>
-        </br></br></br></br>
+        </br></br></br>
         <img src="/icons/user.png" width="20px" height="20px"> &nbsp;USER</br>
         <div id="menu_option_user"><img src="${profilePicURL}"/> <span>${userName}</span></div>
         <a href="/logout"><div class="menu_option"><img src="/icons/log_out.png" width="20px" height="20px"> &nbsp;Log out</div></a></br>
-        <#if isAdmin == 1><a href="/admin"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Admin panel</div></a></br></br></br></br></#if>
+        <#if isAdmin == 1><a href="/admin"><div class="menu_option" <#if content == "manage"> id="selected" </#if>>Admin panel</div></a></br></#if>
+        </br>
+        <div id="copy">&copy; 2019 Wilki</div>
 
     </div>
     <div id="upper_menu">
