@@ -618,13 +618,11 @@ table th {
 }
 #select_share{
     color: black;
-    opacity: 0.9;
-    -webkit-opacity: 0.9;
+    opacity: 0.8;
     transition-duration: 0.1s;
 }
 #select_share:hover{
     opacity: 1;
-    -webkit-opacity: 1;
     transition-duration: 0.1s;
 }
 #menu_option_user{
@@ -660,4 +658,59 @@ table th {
 }
 #center{
     text-align: center;
+}
+#select_sl_tp{
+    color: black;
+    opacity: 0.8;
+    transition-duration: 0.1s;
+}
+#select_sl_tp:hover{
+    color: black;
+    opacity: 1;
+    transition-duration: 0.1s;
+}
+#select_sl_tp img{
+    position: absolute;
+}
+#sl_tp_form{
+    height: 230px;
+    text-align: center;
+    font-size: 40px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 800;
+    color: white;
+}
+#sl_tp_form input{
+    width: 500px;
+    margin-top: 20px;
+    height: 45px;
+    text-align: center;
+    font-size: 30px;
+}
+#sl_tp_form #submit{
+    width: 200px;
+    margin-top: 20px;
+    height: 45px;
+    font-size: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition-duration: 0.2s;
+}
+#sl_tp_form #submit:hover{
+    width: 200px;
+    margin-top: 20px;
+    height: 45px;
+    font-size: 30px;
+    cursor: pointer;
+    background-color: gray;
+    border-radius: 5px;
+    transition-duration: 0.2s;
+    color: white;
+}
+#sl_tp_status{
+    height: 150px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }

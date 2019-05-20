@@ -19,9 +19,8 @@
             <div class="current-price">${share.currentPrice?string["###0.00##"]} PLN</div>
             <div class="current-value">${share.currentValue?string["###0.00"]} PLN</div>
             <div class="return">${share.currentReturn?string["###0.00"]} %</div></a>
-            <a href="/sl?ticker=${share.ticker}"><div class="sl-price">${share.stopLossPrice?string["###0.00##"]} PLN</div></a>
-            <a href="/tp?ticker=${share.ticker}"><div class="tp-price">${share.takeProfitPrice?string["###0.00##"]} PLN</div></a>
-
+            <a id="select_sl_tp" href="/sl?ticker=${share.ticker}"><div class="sl-price">${share.stopLossPrice?string["###0.00##"]} PLN<img src="/icons/pen.png" width="20px" height="20px"></div></a>
+            <a id="select_sl_tp" href="/tp?ticker=${share.ticker}"><div class="tp-price">${share.takeProfitPrice?string["###0.00##"]} PLN<img src="/icons/pen.png" width="20px" height="20px"></div></a>
         </#items>
     </#list>
 </div>
