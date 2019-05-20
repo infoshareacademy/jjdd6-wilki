@@ -59,8 +59,8 @@ public class DownloaderService {
                 .filter(o -> o.getDate().isAfter(fromdate))
                 .filter(o -> o.getDate().isBefore(toDate))
                 .collect(Collectors.toList());
-        if (output.size()==1) {
-            logger.error(output.get(0).toString());
+        if (output.size()==0) {
+            logger.error("Parsed file is empty");
         }
         return output;
     }
