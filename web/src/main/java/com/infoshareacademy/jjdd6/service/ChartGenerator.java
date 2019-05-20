@@ -224,7 +224,8 @@ public class ChartGenerator {
     private void generatePieChart(String title, String path, List<String[]> data) {
         PieChart chart = new PieChartBuilder().width(350).height(300).title(title).build();
         chart.getStyler().setChartBackgroundColor(new Color(13, 15, 58));
-        chart.getStyler().setLegendVisible(false);
+        chart.getStyler().setLegendVisible(true);
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.OutsideE);
         chart.getStyler().setAnnotationType(PieStyler.AnnotationType.Label);
         chart.getStyler().setChartFontColor(Color.BLACK);
         chart.getStyler().setChartTitleBoxVisible(true);
