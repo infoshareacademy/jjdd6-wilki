@@ -1,7 +1,6 @@
 package com.infoshareacademy.jjdd6.servlet;
 
 import com.infoshareacademy.jjdd6.dao.ShareDao;
-import com.infoshareacademy.jjdd6.dao.StatsDao;
 import com.infoshareacademy.jjdd6.dao.TickerDao;
 import com.infoshareacademy.jjdd6.dao.WalletDao;
 import com.infoshareacademy.jjdd6.freemarker.TemplateProvider;
@@ -28,11 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@WebServlet(urlPatterns = {"/sl-and-tp", "/sl", "/tp"})
+@WebServlet("/tp")
 @Transactional
-public class SetSlAndTpPriceServlet extends HttpServlet {
+public class TakeProfitServlet extends HttpServlet {
 
-    private static Logger logger = LoggerFactory.getLogger(SetSlAndTpPriceServlet.class);
+    private static Logger logger = LoggerFactory.getLogger(TakeProfitServlet.class);
 
     @Inject
     private WalletDao walletDao;
@@ -58,26 +57,29 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        showManageTpAndSl(req, resp, "");
+        String ticker = req.getParameter("ticker");
+
+        if (null != ticker) {
+
+            User user = userService.loggedUser(req);
+            Wallet userWallet = user.getWallet();
+
+            if (!(validators.isTickerNotValid(ticker)) && userWallet.checkIfShareIsPresent(ticker)) {
+                showManageTakeProfit(req, resp, "");
+            } else {
+                resp.sendRedirect("/wallet");
+            }
+        } else {
+            resp.sendRedirect("/wallet");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String action = req.getParameter("action");
-        logger.info("Requested action: {}", action);
-        if (action == null) {
-            return;
-        }
-        if (action.equals("sl")) {
-            setStopLoos(req, resp);
-        } else if (action.equals("tp")) {
-            setTakeProfit(req, resp);
-        } else {
-            showManageTpAndSl(req, resp, "Unknown action.");
-        }
+        setTakeProfit(req, resp);
     }
 
-    private void showManageTpAndSl(HttpServletRequest req, HttpServletResponse resp, String status) throws IOException {
+    private void showManageTakeProfit(HttpServletRequest req, HttpServletResponse resp, String status) throws IOException {
 
         User user = userService.loggedUser(req);
         Wallet userWallet = user.getWallet();
@@ -96,14 +98,15 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         }
         model.put("isAdmin", userAdmin);
         model.put("mpTicker", bestPerforming.get("ticker"));
+        model.put("wpProfit", worstPerforming.get("profit"));
+        model.put("wpReturn", worstPerforming.get("return"));
         model.put("mpProfit", bestPerforming.get("profit"));
         model.put("mpReturn", bestPerforming.get("return"));
         model.put("wpTicker", worstPerforming.get("ticker"));
-        model.put("wpProfit", worstPerforming.get("profit"));
-        model.put("wpReturn", worstPerforming.get("return"));
+
         model.put("roe", roe);
         model.put("freeCash", freeCash);
-        model.put("content", "setTpSl");
+        model.put("content", "set_tp");
         model.put("userName", user.getName());
         model.put("profilePicURL", profilePicURL);
 
@@ -117,52 +120,6 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
 
     }
 
-    private void setStopLoos(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        User user = userService.loggedUser(req);
-        Wallet userWallet = user.getWallet();
-        Long id = userWallet.getId();
-
-
- //       String userId = String.valueOf(req.getSession().getAttribute("user"));
-        if (validators.isUserNotAllowedToWalletModification(user.getId().toString(), id.toString())) {
-            showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
-            logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id.toString(), user.getId());
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-        String ticker = req.getParameter("ticker");
-
-        if (validators.isTickerNotValid(ticker)) {
-            showManageTpAndSl(req, resp, "Ticker = {" + ticker + "} is not valid");
-            logger.info("Ticker = {} is not valid.", ticker);
-            return;
-        }
-
-        String priceStr = req.getParameter("price");
-
-        if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
-            showManageTpAndSl(req, resp, "Price should have a numerical value greater than 0");
-            logger.info("Incorrect price = {}", priceStr);
-            return;
-        }
-        final Wallet existingWallet = walletDao.findById(id);
-
-        List<Share> listFromExistingWallet = existingWallet.getShares();
-
-        for (Share share : listFromExistingWallet) {
-            if (share.getTicker().contains(ticker.toUpperCase())) {
-                share.setStopLossPrice(BigDecimal.valueOf(Double.valueOf(priceStr)));
-                logger.info("Set stop-loss price for share with id: {}", share.getId());
-                shareDao.update(share);
-                logger.info("Share with id: {} updated!", share.getId());
-            }
-        }
-        showManageTpAndSl(req, resp, "Stop-loss price is now set to: " + priceStr + " PLN");
-    }
-
     private void setTakeProfit(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
@@ -170,10 +127,9 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         Wallet userWallet = user.getWallet();
         Long id = userWallet.getId();
 
-//        String userId = String.valueOf(req.getSession().getAttribute("user"));
 
         if (validators.isUserNotAllowedToWalletModification(user.getId().toString(), id.toString())) {
-            showManageTpAndSl(req, resp, "Unauthorized try to modify wallet!");
+            showManageTakeProfit(req, resp, "Unauthorized try to modify wallet!");
             logger.info("Unauthorized try to modify wallet with id = {} by user with id = {}", id, user.getId());
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
@@ -182,7 +138,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         String ticker = req.getParameter("ticker");
 
         if (validators.isTickerNotValid(ticker)) {
-            showManageTpAndSl(req, resp, "Ticker = " + ticker + " is not valid");
+            showManageTakeProfit(req, resp, "Ticker = " + ticker + " is not valid");
             logger.info("Ticker = {} is not valid.", ticker);
             return;
         }
@@ -190,7 +146,7 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
         String priceStr = req.getParameter("price");
 
         if (validators.isNotDoubleOrIsSmallerThanZero(priceStr)) {
-            showManageTpAndSl(req, resp, "Price should have a numerical value greater than 0");
+            showManageTakeProfit(req, resp, "Price should have a numerical value greater than 0");
             logger.info("Incorrect price = {}", priceStr);
             return;
         }
@@ -207,6 +163,6 @@ public class SetSlAndTpPriceServlet extends HttpServlet {
                 logger.info("Share with id: {} updated!", share.getId());
             }
         }
-        showManageTpAndSl(req, resp, "Take-profit price is now set to: " + priceStr + " PLN");
+        showManageTakeProfit(req, resp, "Take-profit price is now set to: " + priceStr + " PLN");
     }
 }
