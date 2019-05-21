@@ -64,7 +64,6 @@ public class Wallet implements Serializable {
                 .map(Share::getBaseValue)
                 .reduce(BigDecimal.ZERO, (a, e) -> a.add(e))
                 .setScale(2, RoundingMode.HALF_UP);
-
     }
 
     public BigDecimal getCurrentWorth() {
@@ -74,7 +73,7 @@ public class Wallet implements Serializable {
 
     public BigDecimal getSharesCurrentWorth() {
 
-        return this.shares.stream()
+        return walletToDisplay().stream()
                 .map(Share::getCurrentValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, RoundingMode.HALF_UP);
@@ -124,7 +123,7 @@ public class Wallet implements Serializable {
 
     public BigDecimal getROE() {
         try {
-            return (getCurrentWorth().divide(getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
+            return (getCurrentWorth().divide(getBaseCash(), RoundingMode.HALF_UP)).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

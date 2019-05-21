@@ -283,9 +283,9 @@ public class Share implements Serializable {
     public BigDecimal getTargetReturn() {
         try {
             return (this.getTakeProfitValue()
-                    .divide(this.getBaseValue().setScale(2, RoundingMode.HALF_UP))
+                    .divide(this.getBaseValue(), RoundingMode.HALF_UP)
                     .subtract(BigDecimal.ONE))
-                    .multiply(BigDecimal.valueOf(100));
+                    .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }
@@ -309,9 +309,9 @@ public class Share implements Serializable {
     public BigDecimal getStopLossReturn() {
         try {
             return (this.getStopLossValue()
-                    .divide(this.getBaseValue().setScale(2, RoundingMode.HALF_UP))
-                    .subtract(BigDecimal.ONE))
-                    .multiply(BigDecimal.valueOf(100));
+                    .divide(this.getBaseValue(), RoundingMode.HALF_UP))
+                    .subtract(BigDecimal.ONE)
+                    .multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
         } catch (ArithmeticException e) {
             return BigDecimal.ZERO;
         }

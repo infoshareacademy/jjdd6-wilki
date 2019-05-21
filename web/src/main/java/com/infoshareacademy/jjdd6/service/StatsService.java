@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestScoped
 @Transactional
@@ -27,11 +28,11 @@ StatsService {
     private DownloadCurrentData downloadCurrentData;
 
     public List<String[]> getMostBoughtStocks() {
-        return statsDao.getMostBoughtStocks();
+        return statsDao.getMostBoughtStocks().stream().limit(10L).collect(Collectors.toList());
     }
 
     public List<String[]> getMostSoldStocks() {
-        return statsDao.getMostSoldStocks();
+        return statsDao.getMostSoldStocks().stream().limit(10L).collect(Collectors.toList());
     }
 
     public List<String[]> getMostProfitableStocks(User user){
@@ -45,7 +46,7 @@ StatsService {
                 output.add(mapping);
             }
         });
-        return output;
+        return output.stream().limit(10L).collect(Collectors.toList());
     }
 
     public List<String[]> getSharesWithLosses(User user){
@@ -59,7 +60,7 @@ StatsService {
                 output.add(mapping);
             }
         });
-        return output;
+        return output.stream().limit(10L).collect(Collectors.toList());
     }
 
     public List<String[]> getMostTradedOnWse() {
