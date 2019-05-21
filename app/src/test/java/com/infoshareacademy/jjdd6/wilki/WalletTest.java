@@ -152,7 +152,7 @@ class WalletTest {
     @Test
     void shouldReturnCorrectRoeInPercentsWithoutSymbol() {
         //given
-        BigDecimal expectedValue = (wallet.getCurrentWorth().divide(wallet.getBaseCash())).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal expectedValue = (wallet.getCurrentWorth().divide(wallet.getBaseCash(), RoundingMode.HALF_UP)).subtract(BigDecimal.ONE).multiply(BigDecimal.valueOf(100.00)).setScale(2, RoundingMode.HALF_UP);
         //when
         BigDecimal result = wallet.getROE();
 
