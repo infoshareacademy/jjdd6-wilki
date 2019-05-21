@@ -46,6 +46,10 @@ public class AdminServlet extends HttpServlet {
             return;
         }
 
+        if (req.getParameter("upload") != null) {
+            resp.sendRedirect("/admin/fileupload.html");
+        }
+
         if ("fill".equals(req.getParameter("database"))) {
             logger.info("Starting downloader service to fill database with historical data...");
             downloaderService.downloadAllFiles();
