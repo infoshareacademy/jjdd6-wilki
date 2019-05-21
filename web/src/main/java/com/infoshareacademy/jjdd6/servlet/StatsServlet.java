@@ -100,6 +100,8 @@ public class StatsServlet extends HttpServlet {
             model.put("content", "wallet_stats");
         } else if (view != null && view.equals("wse")) {
             model.put("content", "wse_stats");
+        } else {
+            resp.sendRedirect("/wallet");
         }
 
         Template template = templateProvider.getTemplate(getServletContext(), "menu.ftlh");
